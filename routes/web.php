@@ -19,7 +19,7 @@ use App\Http\Controllers\KaryawanController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('/login');
 });
 
 // Route::middleware(['auth', 'admin'])->group(function () {
