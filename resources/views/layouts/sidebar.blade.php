@@ -36,7 +36,7 @@
                         <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
                         <li class="nav-item menu-open">
-                            <a href="#" class="nav-link">
+                            <a href="{{ route('admin.dashboard') }}" class="nav-link">
                                 <i class="fas fa-th nav-icon"></i>
                                 <p>
                                     Dashboard
@@ -44,7 +44,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="{{ route('manage-karyawan') }}" class="nav-link">
                                 <i class="nav-icon fas fa-users"></i>
                                 <p>
                                     Manajemen Karyawan

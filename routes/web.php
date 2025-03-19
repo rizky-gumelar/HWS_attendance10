@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\SpvController;
 use App\Http\Controllers\KaryawanController;
+use App\Http\Controllers\ManageKaryawanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,4 +51,8 @@ Route::middleware(['auth', 'role:spv'])->group(function () {
 
 Route::middleware(['auth', 'role:karyawan'])->group(function () {
     Route::get('/karyawan/dashboard', [KaryawanController::class, 'index'])->name('karyawan.dashboard');
+});
+
+Route::middleware(['auth', 'role:admin|spv'])->group(function () {
+    Route::get('/manage-karyawan', [ManageKaryawanController::class, 'index'])->name('manage-karyawan');
 });
