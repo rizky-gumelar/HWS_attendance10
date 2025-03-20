@@ -44,6 +44,14 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('dashboard.admin');
+    Route::prefix('toko')->group(function () {
+        Route::get('/', [ManageShiftController::class, 'index'])->name('shift.index');
+        Route::get('/create', [ManageShiftController::class, 'create'])->name('shift.create');
+        Route::post('/', [ManageShiftController::class, 'store'])->name('shift.store');
+        Route::get('/{shift}/edit', [ManageShiftController::class, 'edit'])->name('shift.edit');
+        Route::put('/{shift}', [ManageShiftController::class, 'update'])->name('shift.update');
+        Route::delete('/{shift}', [ManageShiftController::class, 'destroy'])->name('shift.destroy');
+    });
 });
 
 Route::middleware(['auth', 'role:spv'])->group(function () {

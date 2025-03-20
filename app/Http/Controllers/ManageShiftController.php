@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Shift;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ManageShiftController extends Controller
 {
@@ -22,8 +23,8 @@ class ManageShiftController extends Controller
     {
         $request->validate([
             'nama_shift'  => 'required|string|max:255',
-            'shift_masuk' => 'required|date_format:H:i',
-            'shift_keluar' => 'required|date_format:H:i|after:shift_masuk',
+            'shift_masuk' => 'required',
+            'shift_keluar' => 'required|after:shift_masuk',
         ]);
 
         Shift::create([
@@ -42,25 +43,31 @@ class ManageShiftController extends Controller
 
     public function update(Request $request, Shift $shift)
     {
-        $request->validate([
-            'nama_shift' => 'required|string|max:255',
-            'shift_masuk' => 'required|date_format:H:i',
-            'shift_keluar' => 'required|date_format:H:i|after:shift_masuk',
-        ]);
+        try {
+            $request->validate([
+                'nama_shift' => 'required|string|max:255',
+                'shift_masuk' => 'required',
+                'shift_keluar' => 'required|after:shift_masuk',
+            ]);
 
-        $shift->update([
-            'nama_shift' => $request->nama_shift,
-            'shift_masuk' => $request->shift_masuk,
-            'shift_keluar' => $request->shift_keluar,
-        ]);
+            $shift->update([
+                'nama_shift' => $request->nama_shift,
+                'shift_masuk' => $request->shift_masuk,
+                'shift_keluar' => $request->shift_keluar,
+            ]);
 
-        // Redirect ke halaman shift dan beri pesan sukses
-        return redirect()->route('shift.index')->with('success', 'Shift berhasil diperbarui!');
+            // Redirect ke halaman shift dan beri pesan sukses
+            return redirect()->route('shift.index')->with('success', 'Shift berhasil diperbarui!');
+        } catch (\Exception $e) {
+            // Log error for debugging
+            Log::error('Error updating shift: ' . $e->getMessage());
+            return redirect()->route('shift.index')->with('error', 'Failed to update shift.');
+        }
     }
 
     public function destroy(Shift $shift)
     {
         $shift->delete();
-        return redirect()->route('shift.index')->with('success', 'Employee deleted successfully.');
+        return redirect()->route('shift.index')->with('success', 'Shift deleted successfully.');
     }
 }

@@ -48,7 +48,8 @@ class ManageKaryawanController extends Controller
 
     public function edit(User $karyawan)
     {
-        return view('manage-karyawan.edit', compact('karyawan'));
+        $tokos = Toko::all();
+        return view('manage-karyawan.edit', compact('karyawan', 'tokos'));
     }
 
     public function update(Request $request, User $karyawan)
