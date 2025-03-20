@@ -7,6 +7,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\SpvController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\ManageKaryawanController;
+use App\Http\Controllers\ManageShiftController;
 
 /*
 |--------------------------------------------------------------------------
@@ -61,5 +62,13 @@ Route::middleware(['auth', 'role:admin|spv'])->group(function () {
         Route::get('/{karyawan}/edit', [ManageKaryawanController::class, 'edit'])->name('manage-karyawan.edit');
         Route::put('/{karyawan}', [ManageKaryawanController::class, 'update'])->name('manage-karyawan.update');
         Route::delete('/{karyawan}', [ManageKaryawanController::class, 'destroy'])->name('manage-karyawan.destroy');
+    });
+    Route::prefix('shift')->group(function () {
+        Route::get('/', [ManageShiftController::class, 'index'])->name('shift.index');
+        Route::get('/create', [ManageShiftController::class, 'create'])->name('shift.create');
+        Route::post('/', [ManageShiftController::class, 'store'])->name('shift.store');
+        Route::get('/{shift}/edit', [ManageShiftController::class, 'edit'])->name('shift.edit');
+        Route::put('/{shift}', [ManageShiftController::class, 'update'])->name('shift.update');
+        Route::delete('/{shift}', [ManageShiftController::class, 'destroy'])->name('shift.destroy');
     });
 });
