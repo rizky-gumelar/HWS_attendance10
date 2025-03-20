@@ -22,7 +22,7 @@ class RoleMiddleware
         // Cek apakah role pengguna ada dalam array peran yang diberikan
         if (!auth()->user() || !in_array(auth()->user()->role, $rolesArray)) {
             // Jika role tidak cocok, redirect atau tampilkan unauthorized
-            return redirect('/'); // Bisa disesuaikan dengan halaman yang tepat
+            return abort(403, 'Unauthorized'); // Bisa disesuaikan dengan halaman yang tepat
         }
 
         // Lanjutkan request jika role cocok

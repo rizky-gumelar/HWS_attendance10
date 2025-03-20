@@ -22,7 +22,7 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
-            return redirect()->route($user->role . '.dashboard');
+            return redirect()->route('dashboard.' . $user->role);
         }
 
         return back()->withErrors(['email' => 'Email atau password salah']);

@@ -48,4 +48,18 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function getRoleNameAttribute()
+    {
+        switch ($this->role) {
+            case 'admin':
+                return 'Admin';
+            case 'spv':
+                return 'Supervisor';
+            case 'karyawan':
+                return 'Karyawan';
+            default:
+                return 'Unknown';
+        }
+    }
 }

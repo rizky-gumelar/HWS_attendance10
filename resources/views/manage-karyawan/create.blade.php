@@ -1,0 +1,66 @@
+@extends('layouts.manage')
+
+@section('title', 'Manage')
+
+@section('page-title', 'Manage')
+
+@section('content')
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- general form elements -->
+    <div class="card card-primary m-4">
+        <div class="card-header">
+            <h3 class="card-title">Tambah Karyawan</h3>
+        </div>
+        <!-- /.card-header -->
+        <!-- form start -->
+        <form action="{{ route('manage-karyawan.store') }}" method="POST">
+            @csrf
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="nama_karyawan">Nama Karyawan</label>
+                    <input type="text" class="form-control" id="nama_karyawan" name="nama_karyawan" placeholder="Masukkan nama" required>
+                </div>
+                <div class="form-group">
+                    <label>Toko</label>
+                    <select class="form-control" id="toko_id" name="toko_id" required>
+                        <option value="1">HWS</option>
+                        <option value="2">HIJ</option>
+                        <option value="3">SS</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="divisi">Divisi</label>
+                    <input type="text" class="form-control" id="divisi" name="divisi" placeholder="Masukkan divisi" required>
+                </div>
+                <div class="form-group">
+                    <label for="no_hp">Nomor Handphone</label>
+                    <input type="text" class="form-control" id="no_hp" name="no_hp" placeholder="Masukkan Nomor Handphone">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Masukkan Email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+                </div>
+                <div class="form-group">
+                    <label>Role</label>
+                    <select class="form-control" name="role" required>
+                        <option value="admin">Admin</option>
+                        <option value="spv">Supervisor</option>
+                        <option value="karyawan">Karyawan</option>
+                    </select>
+                </div>
+            </div>
+            <!-- /.card-body -->
+
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+    </div>
+    <!-- /.card -->
+</div>
+@endsection

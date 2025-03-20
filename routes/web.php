@@ -42,17 +42,24 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 //dashboard route
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('dashboard.admin');
 });
 
 Route::middleware(['auth', 'role:spv'])->group(function () {
-    Route::get('/spv/dashboard', [SpvController::class, 'index'])->name('spv.dashboard');
+    Route::get('/spv/dashboard', [SpvController::class, 'index'])->name('dashboard.spv');
 });
 
 Route::middleware(['auth', 'role:karyawan'])->group(function () {
-    Route::get('/karyawan/dashboard', [KaryawanController::class, 'index'])->name('karyawan.dashboard');
+    Route::get('/karyawan/dashboard', [KaryawanController::class, 'index'])->name('dashboard.karyawan');
 });
 
 Route::middleware(['auth', 'role:admin|spv'])->group(function () {
-    Route::get('/manage-karyawan', [ManageKaryawanController::class, 'index'])->name('manage-karyawan');
+    Route::prefix('manage-karyawan')->group(function () {
+        Route::get('/', [ManageKaryawanController::class, 'index'])->name('manage-karyawan.index');
+        Route::get('/create', [ManageKaryawanController::class, 'create'])->name('manage-karyawan.create');
+        Route::post('/', [ManageKaryawanController::class, 'store'])->name('manage-karyawan.store');
+        Route::get('/{karyawan}/edit', [ManageKaryawanController::class, 'edit'])->name('manage-karyawan.edit');
+        Route::put('/{karyawan}', [ManageKaryawanController::class, 'update'])->name('manage-karyawan.update');
+        Route::delete('/{karyawan}', [ManageKaryawanController::class, 'destroy'])->name('manage-karyawan.destroy');
+    });
 });
