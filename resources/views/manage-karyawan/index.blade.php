@@ -1,8 +1,8 @@
 @extends('layouts.manage')
 
-@section('title', 'Manage')
+@section('title', 'Manage Karyawan')
 
-@section('page-title', 'Manage')
+@section('page-title', 'Manage Karyawan')
 
 @section('content')
 <!-- Main content -->
@@ -18,7 +18,7 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">DataTables</li>
+                        <li class="breadcrumb-item active">Manage Karyawan</li>
                     </ol>
                 </div>
             </div>
@@ -53,7 +53,7 @@
                                     <tr>
                                         <td>{{ $karyawan->id }}</td>
                                         <td>{{ $karyawan->nama_karyawan }}</td>
-                                        <td>{{ $karyawan->toko_id }}</td>
+                                        <td>{{ $karyawan->toko->nama_toko ?? 'Toko Tidak Ditemukan' }}</td>
                                         <td>{{ $karyawan->divisi }}</td>
                                         <td>{{ $karyawan->email }}</td>
                                         <td>{{ $karyawan->no_hp }}</td>

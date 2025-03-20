@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\Toko;
 
 class ManageKaryawanController extends Controller
 {
@@ -15,7 +16,8 @@ class ManageKaryawanController extends Controller
 
     public function create()
     {
-        return view('manage-karyawan.create');
+        $tokos = Toko::all();
+        return view('manage-karyawan.create', compact('tokos'));
     }
 
     public function store(Request $request)

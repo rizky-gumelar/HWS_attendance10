@@ -29,9 +29,10 @@
                 <div class="form-group">
                     <label>Toko</label>
                     <select class="form-control" name="toko_id" required>
-                        <option value="1" {{ $karyawan->toko_id == 1 ? 'selected' : '' }}>HWS</option>
-                        <option value="2" {{ $karyawan->toko_id == 2 ? 'selected' : '' }}>HIJ</option>
-                        <option value="3" {{ $karyawan->toko_id == 3 ? 'selected' : '' }}>SS</option>
+                        <option value="" disabled selected>Pilih Toko</option>
+                        @foreach($tokos as $toko)
+                        <option value="{{ $toko->id }}">{{ $toko->nama_toko }}</option>
+                        @endforeach
                     </select>
                 </div>
 
@@ -74,6 +75,8 @@
 
             <div class="card-footer">
                 <button type="submit" class="btn btn-primary">Update</button>
+                <!-- Tombol Batal -->
+                <a href="{{ url()->previous() }}" class="btn btn-danger">Batal</a>
             </div>
         </form>
     </div>

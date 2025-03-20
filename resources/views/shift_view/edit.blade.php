@@ -38,6 +38,8 @@
 
             <div class="card-footer">
                 <button type="submit" class="btn btn-primary">Update</button>
+                <!-- Tombol Batal -->
+                <a href="{{ url()->previous() }}" class="btn btn-danger">Batal</a>
             </div>
         </form>
     </div>

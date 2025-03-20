@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Model;
 
 class User extends Authenticatable
 {
@@ -61,5 +62,19 @@ class User extends Authenticatable
             default:
                 return 'Unknown';
         }
+    }
+
+    public function toko()
+    {
+        return $this->belongsTo(Toko::class, 'toko_id');
+    }
+
+    public function index()
+    {
+        // Ambil seluruh user beserta nama toko mereka
+        $users = User::with('toko')->get();
+
+        // Kirim data ke view
+        return view('manage-karyawan.index', compact('users'));
     }
 }
