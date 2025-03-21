@@ -9,6 +9,7 @@ use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\ManageKaryawanController;
 use App\Http\Controllers\ManageShiftController;
 use App\Http\Controllers\ManageTokoController;
+use App\Http\Controllers\ManageAbsensiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,6 +55,14 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/{toko}/edit', [ManageTokoController::class, 'edit'])->name('toko.edit');
         Route::put('/{toko}', [ManageTokoController::class, 'update'])->name('toko.update');
         Route::delete('/{toko}', [ManageTokoController::class, 'destroy'])->name('toko.destroy');
+    });
+    Route::prefix('absensi')->group(function () {
+        Route::get('/', [ManageAbsensiController::class, 'index'])->name('absensi.index');
+        Route::get('/create', [ManageAbsensiController::class, 'create'])->name('absensi.create');
+        Route::post('/', [ManageAbsensiController::class, 'store'])->name('absensi.store');
+        Route::get('/{absensi}/edit', [ManageAbsensiController::class, 'edit'])->name('absensi.edit');
+        Route::put('/{absensi}', [ManageAbsensiController::class, 'update'])->name('absensi.update');
+        Route::delete('/{absensi}', [ManageAbsensiController::class, 'destroy'])->name('absensi.destroy');
     });
 });
 

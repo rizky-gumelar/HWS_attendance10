@@ -68,7 +68,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="{{ route('absensi.index') }}" class="nav-link">
                                 <i class="nav-icon fas fa-calendar-check"></i>
                                 <p>
                                     Absen
@@ -82,6 +82,20 @@
                                     Cuti
                                 </p>
                             </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="./index.html" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Persetujuan Cuti</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="./index2.html" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Kelola Jenis Cuti</p>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link">
