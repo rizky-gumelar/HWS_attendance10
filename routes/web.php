@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\JenisCutiController;
 use App\Http\Controllers\SpvController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\ManageKaryawanController;
@@ -63,6 +64,14 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/{absensi}/edit', [ManageAbsensiController::class, 'edit'])->name('absensi.edit');
         Route::put('/{absensi}', [ManageAbsensiController::class, 'update'])->name('absensi.update');
         Route::delete('/{absensi}', [ManageAbsensiController::class, 'destroy'])->name('absensi.destroy');
+    });
+    Route::prefix('jenis-cuti')->group(function () {
+        Route::get('/', [JenisCutiController::class, 'index'])->name('jenis-cuti.index');
+        Route::get('/create', [JenisCutiController::class, 'create'])->name('jenis-cuti.create');
+        Route::post('/', [JenisCutiController::class, 'store'])->name('jenis-cuti.store');
+        Route::get('/{jenis-cuti}/edit', [JenisCutiController::class, 'edit'])->name('jenis-cuti.edit');
+        Route::put('/{jenis-cuti}', [JenisCutiController::class, 'update'])->name('jenis-cuti.update');
+        Route::delete('/{jenis-cuti}', [JenisCutiController::class, 'destroy'])->name('jenis-cuti.destroy');
     });
 });
 
