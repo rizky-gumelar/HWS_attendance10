@@ -13,12 +13,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Manage Shift</h1>
+                    <h1>Manage Toko</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">DataTables</li>
+                        <li class="breadcrumb-item active">Toko</li>
                     </ol>
                 </div>
             </div>
@@ -34,27 +34,25 @@
                     <div class="card">
                         <!-- /.card-header -->
                         <div class="card-body">
-                            <a href="{{ route('shift.create') }}" class="btn btn-success my-4">Tambah Shift</a>
+                            <a href="{{ route('toko.create') }}" class="btn btn-success my-4">Tambah Toko</a>
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Nama Shift</th>
-                                        <th>Shift Masuk</th>
-                                        <th>Shift Keluar</th>
+                                        <th>Nama Toko</th>
+                                        <th>Alamat</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($shifts as $shift)
+                                    @foreach ($tokos as $toko)
                                     <tr>
-                                        <td>{{ $shift->id }}</td>
-                                        <td>{{ $shift->nama_shift }}</td>
-                                        <td>{{ $shift->shift_masuk }}</td>
-                                        <td>{{ $shift->shift_keluar }}</td>
+                                        <td>{{ $toko->id }}</td>
+                                        <td>{{ $toko->nama_toko }}</td>
+                                        <td>{{ $toko->alamat }}</td>
                                         <td>
-                                            <a href="{{ route('shift.edit', $shift->id) }}" class="btn btn-warning">Edit</a>
-                                            <form action="{{ route('shift.destroy', $shift->id) }}" method="POST" class="d-inline">
+                                            <a href="{{ route('toko.edit', $toko->id) }}" class="btn btn-warning">Edit</a>
+                                            <form action="{{ route('toko.destroy', $toko->id) }}" method="POST" class="d-inline">
                                                 @csrf @method('DELETE')
                                                 <button class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
                                             </form>

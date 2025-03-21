@@ -10,24 +10,20 @@
     <!-- general form elements -->
     <div class="card card-primary m-4">
         <div class="card-header">
-            <h3 class="card-title">Tambah Shift</h3>
+            <h3 class="card-title">Tambah Toko</h3>
         </div>
         <!-- /.card-header -->
         <!-- form start -->
-        <form action="{{ route('shift.store') }}" method="POST">
+        <form action="{{ route('toko.store') }}" method="POST">
             @csrf
             <div class="card-body">
                 <div class="form-group">
-                    <label for="nama_shift">Nama Shift</label>
-                    <input type="text" class="form-control" id="nama_shift" name="nama_shift" placeholder="Masukkan nama" required>
+                    <label for="nama_toko">Nama Toko</label>
+                    <input type="text" class="form-control" id="nama_toko" name="nama_toko" placeholder="Masukkan nama" required>
                 </div>
                 <div class="form-group">
-                    <label for="shift_masuk">Jam Masuk</label>
-                    <input type="time" class="form-control" id="shift_masuk" name="shift_masuk" required>
-                </div>
-                <div class="form-group">
-                    <label for="shift_keluar">Jam Keluar</label>
-                    <input type="time" class="form-control" id="shift_keluar" name="shift_keluar" required>
+                    <label for="alamat">Alamat</label>
+                    <input type="text" class="form-control" id="alamat" name="alamat" required>
                 </div>
             </div>
             <!-- /.card-body -->

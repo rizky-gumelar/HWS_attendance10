@@ -8,6 +8,7 @@ use App\Http\Controllers\SpvController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\ManageKaryawanController;
 use App\Http\Controllers\ManageShiftController;
+use App\Http\Controllers\ManageTokoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,6 +24,8 @@ use App\Http\Controllers\ManageShiftController;
 Route::get('/', function () {
     return redirect('/login');
 });
+
+// Route::get('/{role}/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
 // Route::middleware(['auth', 'admin'])->group(function () {
 //     Route::get('/admin/dashboard', [DashboardController::class, 'admin'])->name('admin.dashboard');
@@ -45,12 +48,12 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('dashboard.admin');
     Route::prefix('toko')->group(function () {
-        Route::get('/', [ManageShiftController::class, 'index'])->name('shift.index');
-        Route::get('/create', [ManageShiftController::class, 'create'])->name('shift.create');
-        Route::post('/', [ManageShiftController::class, 'store'])->name('shift.store');
-        Route::get('/{shift}/edit', [ManageShiftController::class, 'edit'])->name('shift.edit');
-        Route::put('/{shift}', [ManageShiftController::class, 'update'])->name('shift.update');
-        Route::delete('/{shift}', [ManageShiftController::class, 'destroy'])->name('shift.destroy');
+        Route::get('/', [ManageTokoController::class, 'index'])->name('toko.index');
+        Route::get('/create', [ManageTokoController::class, 'create'])->name('toko.create');
+        Route::post('/', [ManageTokoController::class, 'store'])->name('toko.store');
+        Route::get('/{toko}/edit', [ManageTokoController::class, 'edit'])->name('toko.edit');
+        Route::put('/{toko}', [ManageTokoController::class, 'update'])->name('toko.update');
+        Route::delete('/{toko}', [ManageTokoController::class, 'destroy'])->name('toko.destroy');
     });
 });
 
