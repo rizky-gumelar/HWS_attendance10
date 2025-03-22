@@ -11,6 +11,7 @@ use App\Http\Controllers\ManageKaryawanController;
 use App\Http\Controllers\ManageShiftController;
 use App\Http\Controllers\ManageTokoController;
 use App\Http\Controllers\ManageAbsensiController;
+use App\Http\Controllers\ManageDivisiController;
 use App\Http\Controllers\InputJadwalKaryawanController;
 
 /*
@@ -76,6 +77,15 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/{jenis-cuti}/edit', [JenisCutiController::class, 'edit'])->name('jenis-cuti.edit');
         Route::put('/{jenis-cuti}', [JenisCutiController::class, 'update'])->name('jenis-cuti.update');
         Route::delete('/{jenis-cuti}', [JenisCutiController::class, 'destroy'])->name('jenis-cuti.destroy');
+    });
+    //DIVISI
+    Route::prefix('divisi')->group(function () {
+        Route::get('/', [ManageDivisiController::class, 'index'])->name('divisi.index');
+        Route::get('/create', [ManageDivisiController::class, 'create'])->name('divisi.create');
+        Route::post('/', [ManageDivisiController::class, 'store'])->name('divisi.store');
+        Route::get('/{divisi}/edit', [ManageDivisiController::class, 'edit'])->name('divisi.edit');
+        Route::put('/{divisi}', [ManageDivisiController::class, 'update'])->name('divisi.update');
+        Route::delete('/{divisi}', [ManageDivisiController::class, 'destroy'])->name('divisi.destroy');
     });
 });
 

@@ -46,10 +46,13 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="divisi">Divisi</label>
-                    <input type="text" class="form-control" id="divisi" name="divisi"
-                        value="{{ old('divisi', $karyawan->divisi) }}"
-                        placeholder="Masukkan divisi" required>
+                    <label>Shift Default</label>
+                    <select class="form-control" id="default_shift_id" name="default_shift_id" required>
+                        <option value="" disabled selected>Pilih Divisi</option>
+                        @foreach($divisis as $divisi)
+                        <option value="{{ $divisi->id }}" {{ $divisi->nama_divisi ? 'selected' : '' }}>{{ $divisi->nama_divisi }}</option>
+                        @endforeach
+                    </select>
                 </div>
 
                 <div class="form-group">

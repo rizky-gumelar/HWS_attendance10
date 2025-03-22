@@ -56,7 +56,8 @@ class ManageKaryawanController extends Controller
     {
         $tokos = Toko::all();
         $shifts = Shift::all();
-        return view('manage-karyawan_view.edit', compact('karyawan', 'tokos', 'shifts'));
+        $divisis = Divisi::all();
+        return view('manage-karyawan_view.edit', compact('karyawan', 'tokos', 'shifts', 'divisis'));
     }
 
     public function update(Request $request, User $karyawan)
