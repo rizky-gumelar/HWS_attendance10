@@ -16,4 +16,9 @@ class Shift extends Model
     {
         return $this->hasMany(JadwalKaryawan::class, 'id');
     }
+
+    public function users()
+    {
+        return $this->hasMany(User::class, 'id');
+    }
 }

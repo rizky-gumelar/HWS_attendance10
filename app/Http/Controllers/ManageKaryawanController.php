@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Toko;
+use App\Models\Shift;
 
 class ManageKaryawanController extends Controller
 {
@@ -17,7 +18,8 @@ class ManageKaryawanController extends Controller
     public function create()
     {
         $tokos = Toko::all();
-        return view('manage-karyawan_view.create', compact('tokos'));
+        $shifts = Shift::all();
+        return view('manage-karyawan_view.create', compact('tokos', 'shifts'));
     }
 
     public function store(Request $request)
@@ -27,6 +29,7 @@ class ManageKaryawanController extends Controller
             'email' => 'required|email|unique:users',
             'password' => 'required|min:8', // Perbaikan validasi password
             'toko_id' => 'required|exists:toko,id',
+            'default_shift_id' => 'exists:shift,id',
             'divisi' => 'required',
             'no_hp' => 'nullable|numeric', // Boleh kosong, tetapi harus angka jika diisi
             'role' => 'required|in:admin,spv,karyawan',
@@ -37,6 +40,7 @@ class ManageKaryawanController extends Controller
             'email' => $request->email,
             'password' => bcrypt($request->password), // Simpan password dengan hashing
             'toko_id' => $request->toko_id,
+            'default_shift_id' => $request->default_shift_id,
             'divisi' => $request->divisi,
             'no_hp' => $request->no_hp,
             'role' => $request->role,
@@ -49,13 +53,15 @@ class ManageKaryawanController extends Controller
     public function edit(User $karyawan)
     {
         $tokos = Toko::all();
-        return view('manage-karyawan_view.edit', compact('karyawan', 'tokos'));
+        $shifts = Shift::all();
+        return view('manage-karyawan_view.edit', compact('karyawan', 'tokos', 'shifts'));
     }
 
     public function update(Request $request, User $karyawan)
     {
         $request->validate([
             'toko_id' => 'required|exists:toko,id',
+            'default_shift_id' => 'exists:shift,id',
             'nama_karyawan' => 'required|string|max:255',
             'divisi' => 'required|string|max:255',
             'no_hp' => 'required|numeric|unique:users,no_hp,' . $karyawan->id, // Unik kecuali untuk user ini
@@ -67,6 +73,7 @@ class ManageKaryawanController extends Controller
         // Update data karyawan
         $karyawan->update([
             'toko_id' => $request->toko_id,
+            'default_shift_id' => $request->default_shift_id,
             'nama_karyawan' => $request->nama_karyawan,
             'divisi' => $request->divisi,
             'no_hp' => $request->no_hp,
@@ -79,12 +86,12 @@ class ManageKaryawanController extends Controller
             $karyawan->update(['password' => bcrypt($request->password)]);
         }
 
-        return redirect()->route('manage-karyawan_view.index')->with('success', 'Data karyawan berhasil diperbarui.');
+        return redirect()->route('manage-karyawan.index')->with('success', 'Data karyawan berhasil diperbarui.');
     }
 
     public function destroy(User $karyawan)
     {
         $karyawan->delete();
-        return redirect()->route('manage-karyawan_view.index')->with('success', 'Employee deleted successfully.');
+        return redirect()->route('manage-karyawan.index')->with('success', 'Employee deleted successfully.');
     }
 }

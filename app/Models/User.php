@@ -20,6 +20,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'toko_id',
+        'default_shift_id',
         'nama_karyawan',
         'email',
         'email_verified_at',
@@ -67,6 +68,11 @@ class User extends Authenticatable
     public function toko()
     {
         return $this->belongsTo(Toko::class, 'toko_id');
+    }
+
+    public function shift()
+    {
+        return $this->belongsTo(Shift::class, 'default_shift_id');
     }
 
     // Relasi ke tabel jadwal_karyawan

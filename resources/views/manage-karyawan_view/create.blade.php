@@ -10,7 +10,7 @@
     <!-- general form elements -->
     <div class="card card-primary m-4">
         <div class="card-header">
-            <h3 class="card-title">Input Jadwal Karyawan</h3>
+            <h3 class="card-title">Tambah Karyawan</h3>
         </div>
         <!-- /.card-header -->
         <!-- form start -->
@@ -27,6 +27,15 @@
                         <option value="" disabled selected>Pilih Toko</option>
                         @foreach($tokos as $toko)
                         <option value="{{ $toko->id }}">{{ $toko->nama_toko }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Shift Default</label>
+                    <select class="form-control" id="default_shift_id" name="default_shift_id" required>
+                        <option value="" disabled selected>Pilih Shift</option>
+                        @foreach($shifts as $shift)
+                        <option value="{{ $shift->id }}">{{ $shift->nama_shift }}</option>
                         @endforeach
                     </select>
                 </div>

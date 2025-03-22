@@ -16,4 +16,11 @@ class InputJadwalKaryawanController extends Controller
         $input_jadwals = JadwalKaryawan::all();
         return view('input-jadwal_view.index', compact('input_jadwals'));
     }
+
+    public function create()
+    {
+        $users = User::all();
+        $shifts = Shift::all();
+        return view('input-jadwal_view.create', compact('users', 'shifts'));
+    }
 }

@@ -50,6 +50,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('dashboard.admin');
+    // TOKO
     Route::prefix('toko')->group(function () {
         Route::get('/', [ManageTokoController::class, 'index'])->name('toko.index');
         Route::get('/create', [ManageTokoController::class, 'create'])->name('toko.create');
@@ -58,6 +59,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::put('/{toko}', [ManageTokoController::class, 'update'])->name('toko.update');
         Route::delete('/{toko}', [ManageTokoController::class, 'destroy'])->name('toko.destroy');
     });
+    // ABSENSI
     Route::prefix('absensi')->group(function () {
         Route::get('/', [ManageAbsensiController::class, 'index'])->name('absensi.index');
         Route::get('/create', [ManageAbsensiController::class, 'create'])->name('absensi.create');
@@ -66,6 +68,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::put('/{absensi}', [ManageAbsensiController::class, 'update'])->name('absensi.update');
         Route::delete('/{absensi}', [ManageAbsensiController::class, 'destroy'])->name('absensi.destroy');
     });
+    // JENIS CUTI
     Route::prefix('jenis-cuti')->group(function () {
         Route::get('/', [JenisCutiController::class, 'index'])->name('jenis-cuti.index');
         Route::get('/create', [JenisCutiController::class, 'create'])->name('jenis-cuti.create');
@@ -85,6 +88,7 @@ Route::middleware(['auth', 'role:karyawan'])->group(function () {
 });
 
 Route::middleware(['auth', 'role:admin|spv'])->group(function () {
+    // CRUD KARYAWAN
     Route::prefix('manage-karyawan')->group(function () {
         Route::get('/', [ManageKaryawanController::class, 'index'])->name('manage-karyawan.index');
         Route::get('/create', [ManageKaryawanController::class, 'create'])->name('manage-karyawan.create');
@@ -93,6 +97,7 @@ Route::middleware(['auth', 'role:admin|spv'])->group(function () {
         Route::put('/{karyawan}', [ManageKaryawanController::class, 'update'])->name('manage-karyawan.update');
         Route::delete('/{karyawan}', [ManageKaryawanController::class, 'destroy'])->name('manage-karyawan.destroy');
     });
+    // CRUD SHIFT
     Route::prefix('shift')->group(function () {
         Route::get('/', [ManageShiftController::class, 'index'])->name('shift.index');
         Route::get('/create', [ManageShiftController::class, 'create'])->name('shift.create');
@@ -101,6 +106,7 @@ Route::middleware(['auth', 'role:admin|spv'])->group(function () {
         Route::put('/{shift}', [ManageShiftController::class, 'update'])->name('shift.update');
         Route::delete('/{shift}', [ManageShiftController::class, 'destroy'])->name('shift.destroy');
     });
+    // INPUT JADWAL KARYAWAN
     Route::prefix('input-jadwal')->group(function () {
         Route::get('/', [InputJadwalKaryawanController::class, 'index'])->name('input-jadwal.index');
         Route::get('/create', [InputJadwalKaryawanController::class, 'create'])->name('input-jadwal.create');

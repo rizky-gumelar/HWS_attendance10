@@ -41,6 +41,7 @@
                                         <th>ID</th>
                                         <th>Nama Karyawan</th>
                                         <th>Store</th>
+                                        <th>Shift</th>
                                         <th>Divisi</th>
                                         <th>Email</th>
                                         <th>No Telepon</th>
@@ -54,6 +55,7 @@
                                         <td>{{ $karyawan->id }}</td>
                                         <td>{{ $karyawan->nama_karyawan }}</td>
                                         <td>{{ $karyawan->toko->nama_toko ?? 'Toko Tidak Ditemukan' }}</td>
+                                        <td>{{ $karyawan->shift->nama_shift ?? 'Shift Tidak Ditemukan' }}</td>
                                         <td>{{ $karyawan->divisi }}</td>
                                         <td>{{ $karyawan->email }}</td>
                                         <td>{{ $karyawan->no_hp }}</td>
