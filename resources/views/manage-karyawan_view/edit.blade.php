@@ -37,6 +37,15 @@
                 </div>
 
                 <div class="form-group">
+                    <label>Shift Default</label>
+                    <select class="form-control" id="default_shift_id" name="default_shift_id" required>
+                        <option value="" disabled selected>Pilih Shift</option>
+                        @foreach($shifts as $shift)
+                        <option value="{{ $shift->id }}">{{ $shift->nama_shift }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group">
                     <label for="divisi">Divisi</label>
                     <input type="text" class="form-control" id="divisi" name="divisi"
                         value="{{ old('divisi', $karyawan->divisi) }}"

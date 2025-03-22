@@ -60,7 +60,7 @@ class ManageKaryawanController extends Controller
     public function update(Request $request, User $karyawan)
     {
         $request->validate([
-            'toko_id' => 'required|exists:toko,id',
+            'toko_id' => 'exists:toko,id',
             'default_shift_id' => 'exists:shift,id',
             'nama_karyawan' => 'required|string|max:255',
             'divisi' => 'required|string|max:255',
