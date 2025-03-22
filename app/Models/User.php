@@ -69,12 +69,18 @@ class User extends Authenticatable
         return $this->belongsTo(Toko::class, 'toko_id');
     }
 
-    public function index()
+    // Relasi ke tabel jadwal_karyawan
+    public function jadwal_karyawan()
     {
-        // Ambil seluruh user beserta nama toko mereka
-        $users = User::with('toko')->get();
-
-        // Kirim data ke view
-        return view('manage-karyawan.index', compact('users'));
+        return $this->hasMany(JadwalKaryawan::class, 'id');
     }
+
+    // public function index()
+    // {
+    //     // Ambil seluruh user beserta nama toko mereka
+    //     $users = User::with('toko')->get();
+
+    //     // Kirim data ke view
+    //     return view('manage-karyawan.index', compact('users'));
+    // }
 }

@@ -11,13 +11,13 @@ class ManageKaryawanController extends Controller
     public function index()
     {
         $karyawans = User::all();
-        return view('manage-karyawan.index', compact('karyawans'));
+        return view('manage-karyawan_view.index', compact('karyawans'));
     }
 
     public function create()
     {
         $tokos = Toko::all();
-        return view('manage-karyawan.create', compact('tokos'));
+        return view('manage-karyawan_view.create', compact('tokos'));
     }
 
     public function store(Request $request)
@@ -43,13 +43,13 @@ class ManageKaryawanController extends Controller
             'total_cuti' => 0, // Set default ke 0
         ]);
 
-        return redirect()->route('manage-karyawan.index')->with('success', 'Karyawan berhasil ditambahkan.');
+        return redirect()->route('manage-karyawan_view.index')->with('success', 'Karyawan berhasil ditambahkan.');
     }
 
     public function edit(User $karyawan)
     {
         $tokos = Toko::all();
-        return view('manage-karyawan.edit', compact('karyawan', 'tokos'));
+        return view('manage-karyawan_view.edit', compact('karyawan', 'tokos'));
     }
 
     public function update(Request $request, User $karyawan)
@@ -79,12 +79,12 @@ class ManageKaryawanController extends Controller
             $karyawan->update(['password' => bcrypt($request->password)]);
         }
 
-        return redirect()->route('manage-karyawan.index')->with('success', 'Data karyawan berhasil diperbarui.');
+        return redirect()->route('manage-karyawan_view.index')->with('success', 'Data karyawan berhasil diperbarui.');
     }
 
     public function destroy(User $karyawan)
     {
         $karyawan->delete();
-        return redirect()->route('manage-karyawan.index')->with('success', 'Employee deleted successfully.');
+        return redirect()->route('manage-karyawan_view.index')->with('success', 'Employee deleted successfully.');
     }
 }

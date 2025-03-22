@@ -11,6 +11,7 @@ use App\Http\Controllers\ManageKaryawanController;
 use App\Http\Controllers\ManageShiftController;
 use App\Http\Controllers\ManageTokoController;
 use App\Http\Controllers\ManageAbsensiController;
+use App\Http\Controllers\InputJadwalKaryawanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -99,5 +100,13 @@ Route::middleware(['auth', 'role:admin|spv'])->group(function () {
         Route::get('/{shift}/edit', [ManageShiftController::class, 'edit'])->name('shift.edit');
         Route::put('/{shift}', [ManageShiftController::class, 'update'])->name('shift.update');
         Route::delete('/{shift}', [ManageShiftController::class, 'destroy'])->name('shift.destroy');
+    });
+    Route::prefix('input-jadwal')->group(function () {
+        Route::get('/', [InputJadwalKaryawanController::class, 'index'])->name('input-jadwal.index');
+        Route::get('/create', [InputJadwalKaryawanController::class, 'create'])->name('input-jadwal.create');
+        Route::post('/', [InputJadwalKaryawanController::class, 'store'])->name('input-jadwal.store');
+        Route::get('/{input_jadwal}/edit', [InputJadwalKaryawanController::class, 'edit'])->name('input-jadwal.edit');
+        Route::put('/{input_jadwal}', [InputJadwalKaryawanController::class, 'update'])->name('input-jadwal.update');
+        Route::delete('/{input-jadwal}', [InputJadwalKaryawanController::class, 'destroy'])->name('input-jadwal.destroy');
     });
 });

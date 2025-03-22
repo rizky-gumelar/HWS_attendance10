@@ -14,6 +14,6 @@ class Toko extends Model
     // Relasi ke tabel User
     public function users()
     {
-        return $this->hasMany(User::class, 'id_toko');
+        return $this->hasMany(User::class, 'id');
     }
 }
