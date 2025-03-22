@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('toko_id')->constrained('toko')->onDelete('cascade');
             $table->foreignId('default_shift_id')->constrained('shift')->onDelete('cascade');
             $table->string('nama_karyawan');
-            $table->string('divisi');
+            $table->foreignId('divisi_id')->constrained('divisi')->onDelete('cascade');
             $table->string('no_hp')->unique();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();

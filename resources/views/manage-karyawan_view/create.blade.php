@@ -40,8 +40,13 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="divisi">Divisi</label>
-                    <input type="text" class="form-control" id="divisi" name="divisi" placeholder="Masukkan divisi" required>
+                    <label>Divisi</label>
+                    <select class="form-control" id="divisi" name="divisi" required>
+                        <option value="" disabled selected>Pilih Divisi</option>
+                        @foreach($divisis as $divisi)
+                        <option value="{{ $divisi->id }}">{{ $divisi->nama_divisi }}</option>
+                        @endforeach
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="no_hp">Nomor Handphone</label>

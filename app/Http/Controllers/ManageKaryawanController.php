@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Toko;
 use App\Models\Shift;
+use App\Models\Divisi;
 
 class ManageKaryawanController extends Controller
 {
@@ -19,7 +20,8 @@ class ManageKaryawanController extends Controller
     {
         $tokos = Toko::all();
         $shifts = Shift::all();
-        return view('manage-karyawan_view.create', compact('tokos', 'shifts'));
+        $divisis = Divisi::all();
+        return view('manage-karyawan_view.create', compact('tokos', 'shifts', 'divisis'));
     }
 
     public function store(Request $request)

@@ -31,7 +31,7 @@
                     <select class="form-control" name="toko_id" required>
                         <option value="" disabled selected>Pilih Toko</option>
                         @foreach($tokos as $toko)
-                        <option value="{{ $toko->id }}">{{ $toko->nama_toko }}</option>
+                        <option value="{{ $toko->id }}" {{ $toko->nama_toko ? 'selected' : '' }}>{{ $toko->nama_toko }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -41,7 +41,7 @@
                     <select class="form-control" id="default_shift_id" name="default_shift_id" required>
                         <option value="" disabled selected>Pilih Shift</option>
                         @foreach($shifts as $shift)
-                        <option value="{{ $shift->id }}">{{ $shift->nama_shift }}</option>
+                        <option value="{{ $shift->id }}" {{ $shift->nama_shift ? 'selected' : '' }}>{{ $shift->nama_shift }}</option>
                         @endforeach
                     </select>
                 </div>

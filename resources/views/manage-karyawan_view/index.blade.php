@@ -56,7 +56,7 @@
                                         <td>{{ $karyawan->nama_karyawan }}</td>
                                         <td>{{ $karyawan->toko->nama_toko ?? 'Toko Tidak Ditemukan' }}</td>
                                         <td>{{ $karyawan->shift->nama_shift ?? 'Shift Tidak Ditemukan' }}</td>
-                                        <td>{{ $karyawan->divisi }}</td>
+                                        <td>{{ $karyawan->divisi->nama_divisi }}</td>
                                         <td>{{ $karyawan->email }}</td>
                                         <td>{{ $karyawan->no_hp }}</td>
                                         <td>{{ $karyawan->role_name  }}</td>

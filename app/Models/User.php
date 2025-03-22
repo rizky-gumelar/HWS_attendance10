@@ -25,7 +25,7 @@ class User extends Authenticatable
         'email',
         'email_verified_at',
         'password',
-        'divisi',
+        'divisi_id',
         'no_hp',
         'role',
         'total_cuti',
@@ -73,6 +73,11 @@ class User extends Authenticatable
     public function shift()
     {
         return $this->belongsTo(Shift::class, 'default_shift_id');
+    }
+
+    public function divisi()
+    {
+        return $this->belongsTo(Divisi::class, 'divisi_id');
     }
 
     // Relasi ke tabel jadwal_karyawan
