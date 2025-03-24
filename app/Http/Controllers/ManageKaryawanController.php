@@ -53,7 +53,7 @@ class ManageKaryawanController extends Controller
             'status' => 'aktif',
         ]);
 
-        return redirect()->route('manage-karyawan_view.index')->with('success', 'Karyawan berhasil ditambahkan.');
+        return redirect()->route('manage-karyawan.index')->with('success', 'Karyawan berhasil ditambahkan.');
     }
 
     public function edit(User $karyawan)

@@ -33,6 +33,15 @@ class JadwalKaryawan extends Model
         return $this->belongsTo(Shift::class, 'shift_id');
     }
 
+    public function absensi()
+    {
+        return $this->belongsTo(Absensi::class, 'absen_id');
+    }
+
+    public function lembur()
+    {
+        return $this->belongsTo(Absensi::class, 'lembur_id');
+    }
     // public function index()
     // {
     //     // Ambil seluruh user beserta nama toko mereka

@@ -14,4 +14,9 @@ class Absensi extends Model
         'tanggal',
         'jam_masuk',
     ];
+
+    public function jadwalKaryawan()
+    {
+        return $this->hasMany(JadwalKaryawan::class);
+    }
 }

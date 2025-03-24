@@ -68,6 +68,13 @@
                         <option value="karyawan">Karyawan</option>
                     </select>
                 </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select class="form-control" name="status" required>
+                        <option value="aktif">Aktif</option>
+                        <option value="nonaktif">Nonaktif</option>
+                    </select>
+                </div>
             </div>
             <!-- /.card-body -->
 

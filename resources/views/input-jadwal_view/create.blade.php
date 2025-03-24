@@ -35,6 +35,10 @@
                         @endforeach
                     </select>
                 </div>
+                <div class="form-group">
+                    <label for="tanggal">Tanggal</label>
+                    <input type="date" class="form-control" id="tanggal" name="tanggal" required>
+                </div>
             </div>
             <!-- /.card-body -->
 
