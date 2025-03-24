@@ -29,6 +29,7 @@ class User extends Authenticatable
         'no_hp',
         'role',
         'total_cuti',
+        'status',
     ];
 
     /**

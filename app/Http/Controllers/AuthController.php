@@ -22,11 +22,19 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
+
+            // Cek jika user nonaktif
+            if ($user->status !== 'aktif') {
+                Auth::logout();
+                return back()->withErrors(['email' => 'Akun Anda tidak aktif. Silakan hubungi admin.']);
+            }
+
             return redirect()->route('dashboard.' . $user->role);
         }
 
         return back()->withErrors(['email' => 'Email atau password salah']);
     }
+
 
     public function logout()
     {

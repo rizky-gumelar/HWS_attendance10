@@ -12,6 +12,7 @@ class ManageKaryawanController extends Controller
 {
     public function index()
     {
+        // $karyawans = User::where('status', 'aktif')->get();
         $karyawans = User::all();
         return view('manage-karyawan_view.index', compact('karyawans'));
     }
@@ -35,6 +36,7 @@ class ManageKaryawanController extends Controller
             'divisi_id' => 'required|exists:divisi,id',
             'no_hp' => 'nullable|numeric', // Boleh kosong, tetapi harus angka jika diisi
             'role' => 'required|in:admin,spv,karyawan',
+            'status' => 'required|in:aktif,nonaktif',
         ]);
 
         User::create([
@@ -47,6 +49,7 @@ class ManageKaryawanController extends Controller
             'no_hp' => $request->no_hp,
             'role' => $request->role,
             'total_cuti' => 0, // Set default ke 0
+            'status' => 'aktif',
         ]);
 
         return redirect()->route('manage-karyawan_view.index')->with('success', 'Karyawan berhasil ditambahkan.');
@@ -71,6 +74,7 @@ class ManageKaryawanController extends Controller
             'email' => 'required|email|unique:users,email,' . $karyawan->id,
             'password' => 'nullable|min:8', // Opsional, hanya diupdate jika diisi
             'role' => 'required|in:admin,spv,karyawan',
+            'status' => 'required|in:aktif,nonaktif',
         ]);
 
         // Update data karyawan
@@ -82,6 +86,7 @@ class ManageKaryawanController extends Controller
             'no_hp' => $request->no_hp,
             'email' => $request->email,
             'role' => $request->role,
+            'status' => $request->status,
         ]);
 
         // Jika password diisi, update dengan hash baru

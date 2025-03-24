@@ -25,6 +25,7 @@ return new class extends Migration
             $table->integer('total_cuti')->default(0);
             $table->rememberToken();
             $table->timestamps();
+            $table->enum('status', ['aktif', 'nonaktif'])->default('aktif');
         });
     }
 

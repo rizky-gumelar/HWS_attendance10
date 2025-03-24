@@ -54,6 +54,7 @@ class UserSeeder extends Seeder
             'password' => Hash::make('password'),
             'role' => 'admin',
             'total_cuti' => 0,
+            'status' => 'aktif',
         ]);
 
         User::create([
@@ -67,6 +68,7 @@ class UserSeeder extends Seeder
             'password' => Hash::make('password'),
             'role' => 'spv',
             'total_cuti' => 0,
+            'status' => 'aktif',
         ]);
 
         User::create([
@@ -80,6 +82,21 @@ class UserSeeder extends Seeder
             'password' => Hash::make('password'),
             'role' => 'karyawan',
             'total_cuti' => 0,
+            'status' => 'aktif',
+        ]);
+
+        User::create([
+            'toko_id' => 1,
+            'nama_karyawan' => 'Karyawan Nonaktif',
+            'default_shift_id' => 1,
+            'divisi_id' => 1,
+            'no_hp' => '08827364712',
+            'email' => 'karyawan2@example.com',
+            'email_verified_at' => now(),
+            'password' => Hash::make('password'),
+            'role' => 'karyawan',
+            'total_cuti' => 0,
+            'status' => 'nonaktif',
         ]);
     }
 }

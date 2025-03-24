@@ -82,6 +82,13 @@
                         <option value="karyawan" {{ $karyawan->role == 'karyawan' ? 'selected' : '' }}>Karyawan</option>
                     </select>
                 </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select class="form-control" name="status" required>
+                        <option value="aktif" {{ $karyawan->status == 'aktif' ? 'selected' : '' }}>Aktif</option>
+                        <option value="nonaktif" {{ $karyawan->status == 'nonaktif' ? 'selected' : '' }}>Nonaktif</option>
+                    </select>
+                </div>
             </div>
             <!-- /.card-body -->
 
