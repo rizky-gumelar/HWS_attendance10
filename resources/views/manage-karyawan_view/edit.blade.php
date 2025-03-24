@@ -47,7 +47,7 @@
                 </div>
                 <div class="form-group">
                     <label>Shift Default</label>
-                    <select class="form-control" id="default_shift_id" name="default_shift_id" required>
+                    <select class="form-control" id="divisi_id" name="divisi_id" required>
                         <option value="" disabled selected>Pilih Divisi</option>
                         @foreach($divisis as $divisi)
                         <option value="{{ $divisi->id }}" {{ $divisi->nama_divisi ? 'selected' : '' }}>{{ $divisi->nama_divisi }}</option>

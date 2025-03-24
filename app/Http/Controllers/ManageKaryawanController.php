@@ -32,7 +32,7 @@ class ManageKaryawanController extends Controller
             'password' => 'required|min:8', // Perbaikan validasi password
             'toko_id' => 'required|exists:toko,id',
             'default_shift_id' => 'exists:shift,id',
-            'divisi' => 'required',
+            'divisi_id' => 'required|exists:divisi,id',
             'no_hp' => 'nullable|numeric', // Boleh kosong, tetapi harus angka jika diisi
             'role' => 'required|in:admin,spv,karyawan',
         ]);
@@ -43,7 +43,7 @@ class ManageKaryawanController extends Controller
             'password' => bcrypt($request->password), // Simpan password dengan hashing
             'toko_id' => $request->toko_id,
             'default_shift_id' => $request->default_shift_id,
-            'divisi' => $request->divisi,
+            'divisi_id' => $request->divisi_id,
             'no_hp' => $request->no_hp,
             'role' => $request->role,
             'total_cuti' => 0, // Set default ke 0
@@ -66,7 +66,7 @@ class ManageKaryawanController extends Controller
             'toko_id' => 'exists:toko,id',
             'default_shift_id' => 'exists:shift,id',
             'nama_karyawan' => 'required|string|max:255',
-            'divisi' => 'required|string|max:255',
+            'divisi_id' => 'required|string|max:255',
             'no_hp' => 'required|numeric|unique:users,no_hp,' . $karyawan->id, // Unik kecuali untuk user ini
             'email' => 'required|email|unique:users,email,' . $karyawan->id,
             'password' => 'nullable|min:8', // Opsional, hanya diupdate jika diisi
@@ -78,7 +78,7 @@ class ManageKaryawanController extends Controller
             'toko_id' => $request->toko_id,
             'default_shift_id' => $request->default_shift_id,
             'nama_karyawan' => $request->nama_karyawan,
-            'divisi' => $request->divisi,
+            'divisi_id' => $request->divisi_id,
             'no_hp' => $request->no_hp,
             'email' => $request->email,
             'role' => $request->role,
