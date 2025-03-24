@@ -39,7 +39,7 @@
                 </div>
                 <div class="form-group">
                     <label>Jenis Lembur</label>
-                    <select class="form-control" id="lembur_id" name="lembur_id" required>
+                    <select class="form-control" id="lembur_id" name="lembur_id">
                         <option value="" disabled selected>Pilih Jenis Lembur</option>
                         @foreach($lemburs as $lembur)
                         <option value="{{ $lembur->id }}" {{ $lembur->nama_lembur ? 'selected' : '' }}>{{ $lembur->nama_lembur }}</option>

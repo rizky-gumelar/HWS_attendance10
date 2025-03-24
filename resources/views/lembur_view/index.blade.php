@@ -13,12 +13,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Input Jadwal Karyawan</h1>
+                    <h1>Manage Lembur</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">Input Jadwal Karyawan</li>
+                        <li class="breadcrumb-item active">Lembur</li>
                     </ol>
                 </div>
             </div>
@@ -34,35 +34,25 @@
                     <div class="card">
                         <!-- /.card-header -->
                         <div class="card-body">
-                            <a href="{{ route('input-jadwal.create') }}" class="btn btn-success my-4">Input Jadwal</a>
+                            <a href="{{ route('lembur.create') }}" class="btn btn-success my-4">Tambah Jenis Lembur</a>
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Nama Karyawan</th>
-                                        <th>Tanggal</th>
-                                        <th>Shift</th>
-                                        <th>Jam Masuk</th>
-                                        <th>Jam Lembur</th>
-                                        <th>Keterangan</th>
-                                        <th>Minggu ke</th>
+                                        <th>Tipe Lembur</th>
+                                        <th>Biaya Lembur / jam</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($input_jadwals as $input_jadwal)
+                                    @foreach ($lemburs as $lembur)
                                     <tr>
-                                        <td>{{ $input_jadwal->id }}</td>
-                                        <td>{{ $input_jadwal->users->nama_karyawan }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($input_jadwal->tanggal)->locale('id')->isoFormat('dddd, D MMMM YYYY') }}</td>
-                                        <td>{{ $input_jadwal->shift->nama_shift }}</td>
-                                        <td>{{ $input_jadwal->cek_keterlambatan }}</td>
-                                        <td>{{ $input_jadwal->lembur_jam }}</td>
-                                        <td>{{ $input_jadwal->keterangan }}</td>
-                                        <td>{{ $input_jadwal->minggu_ke }}</td>
+                                        <td>{{ $lembur->id }}</td>
+                                        <td>{{ $lembur->tipe_lembur }}</td>
+                                        <td>{{ $lembur->biaya }}</td>
                                         <td>
-                                            <a href="{{ route('input-jadwal.edit', $input_jadwal->id) }}" class="btn btn-warning">Edit</a>
-                                            <form action="{{ route('input-jadwal.destroy', $input_jadwal->id) }}" method="POST" class="d-inline">
+                                            <a href="{{ route('lembur.edit', $lembur->id) }}" class="btn btn-warning">Edit</a>
+                                            <form action="{{ route('lembur.destroy', $lembur->id) }}" method="POST" class="d-inline">
                                                 @csrf @method('DELETE')
                                                 <button class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
                                             </form>

@@ -12,6 +12,7 @@ use App\Http\Controllers\ManageShiftController;
 use App\Http\Controllers\ManageTokoController;
 use App\Http\Controllers\ManageAbsensiController;
 use App\Http\Controllers\ManageDivisiController;
+use App\Http\Controllers\ManageLemburController;
 use App\Http\Controllers\InputJadwalKaryawanController;
 
 /*
@@ -86,6 +87,15 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/{divisi}/edit', [ManageDivisiController::class, 'edit'])->name('divisi.edit');
         Route::put('/{divisi}', [ManageDivisiController::class, 'update'])->name('divisi.update');
         Route::delete('/{divisi}', [ManageDivisiController::class, 'destroy'])->name('divisi.destroy');
+    });
+    //LEMBUR
+    Route::prefix('lembur')->group(function () {
+        Route::get('/', [ManageLemburController::class, 'index'])->name('lembur.index');
+        Route::get('/create', [ManageLemburController::class, 'create'])->name('lembur.create');
+        Route::post('/', [ManageLemburController::class, 'store'])->name('lembur.store');
+        Route::get('/{lembur}/edit', [ManageLemburController::class, 'edit'])->name('lembur.edit');
+        Route::put('/{lembur}', [ManageLemburController::class, 'update'])->name('lembur.update');
+        Route::delete('/{lembur}', [ManageLemburController::class, 'destroy'])->name('lembur.destroy');
     });
 });
 
