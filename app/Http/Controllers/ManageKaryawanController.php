@@ -14,6 +14,7 @@ class ManageKaryawanController extends Controller
     {
         // $karyawans = User::where('status', 'aktif')->get();
         $karyawans = User::all();
+        // $karyawans = User::orderBy('status', 'asc')->orderBy('id', 'asc')->get();
         return view('manage-karyawan_view.index', compact('karyawans'));
     }
 

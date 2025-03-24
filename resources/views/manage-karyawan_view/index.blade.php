@@ -46,12 +46,15 @@
                                         <th>Email</th>
                                         <th>No Telepon</th>
                                         <th>Role</th>
+                                        <th>Status</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($karyawans as $karyawan)
-                                    <tr>
+                                    <tr @if($karyawan->status == 'nonaktif')
+                                        style="color: red;"
+                                        @endif>
                                         <td>{{ $karyawan->id }}</td>
                                         <td>{{ $karyawan->nama_karyawan }}</td>
                                         <td>{{ $karyawan->toko->nama_toko ?? 'Toko Tidak Ditemukan' }}</td>
@@ -60,6 +63,7 @@
                                         <td>{{ $karyawan->email }}</td>
                                         <td>{{ $karyawan->no_hp }}</td>
                                         <td>{{ $karyawan->role_name  }}</td>
+                                        <td>{{ $karyawan->status  }}</td>
                                         <td>
                                             <a href="{{ route('manage-karyawan.edit', $karyawan->id) }}" class="btn btn-warning">Edit</a>
                                             <form action="{{ route('manage-karyawan.destroy', $karyawan->id) }}" method="POST" class="d-inline">
