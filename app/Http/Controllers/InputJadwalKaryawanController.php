@@ -107,7 +107,7 @@ class InputJadwalKaryawanController extends Controller
             ]);
 
             // Ambil data absen dan shift berdasarkan ID
-            $absensi = Absensi::findOrFail($request->absen_id);
+            $absensi = Absensi::find($input_jadwal->absen_id);
             $shift = Shift::findOrFail($request->shift_id);
 
             // Membandingkan jam masuk shift dengan jam masuk absen
@@ -127,16 +127,16 @@ class InputJadwalKaryawanController extends Controller
             $totalLembur = $lembur->biaya * ($request->lembur_jam ?? 0);
 
             $input_jadwal->update([
-                'user_id' => $request->user_id,
+                // 'user_id' => $request->user_id,
                 'shift_id' => $request->shift_id,
-                'absen_id' => $request->absen_id,
+                // 'absen_id' => $request->absen_id,
                 'lembur_id' => $request->lembur_id,
                 'tanggal' => $request->tanggal,
                 'cek_keterlambatan' => $terlambat,
                 'lembur_jam' => $request->lembur_jam ?? 0,
                 'total_lembur' => $totalLembur ?? 0,
                 'keterangan' => $request->keterangan,
-                'minggu_ke' => Carbon::today()->weekOfYear,
+                // 'minggu_ke' => Carbon::today()->weekOfYear,
             ]);
 
             // Redirect ke halaman input-jadwal dan beri pesan sukses
