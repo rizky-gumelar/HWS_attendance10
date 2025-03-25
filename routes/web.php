@@ -64,6 +64,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     // ABSENSI
     Route::prefix('absensi')->group(function () {
         Route::get('/', [ManageAbsensiController::class, 'index'])->name('absensi.index');
+        Route::post('/import', [ManageAbsensiController::class, 'import'])->name('absensi.import');
         Route::get('/create', [ManageAbsensiController::class, 'create'])->name('absensi.create');
         Route::post('/', [ManageAbsensiController::class, 'store'])->name('absensi.store');
         Route::get('/{absensi}/edit', [ManageAbsensiController::class, 'edit'])->name('absensi.edit');

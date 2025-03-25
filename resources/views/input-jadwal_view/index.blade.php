@@ -38,7 +38,7 @@
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                        <th>ID</th>
+                                        <!-- <th>ID</th> -->
                                         <th>Nama Karyawan</th>
                                         <th>Tanggal</th>
                                         <th>Shift</th>
@@ -52,14 +52,14 @@
                                 <tbody>
                                     @foreach ($input_jadwals as $input_jadwal)
                                     <tr>
-                                        <td>{{ $input_jadwal->id }}</td>
+                                        <!-- <td>{{ $input_jadwal->id }}</td> -->
                                         <td>{{ $input_jadwal->users->nama_karyawan }}</td>
                                         <td>{{ \Carbon\Carbon::parse($input_jadwal->tanggal)->locale('id')->isoFormat('dddd, D MMMM YYYY') }}</td>
                                         <td>{{ $input_jadwal->shift->nama_shift }}</td>
-                                        <td>{{ $input_jadwal->cek_keterlambatan }}</td>
+                                        <td>{{ $input_jadwal->absensi->jam_masuk ?? '-' }}</td>
                                         <td>{{ $input_jadwal->lembur_jam }}</td>
-                                        <td>{{ $input_jadwal->keterangan }}</td>
-                                        <td>{{ $input_jadwal->minggu_ke }}</td>
+                                        <td>{{ $input_jadwal->keterlambatan_name }}</td>
+                                        <td>Minggu ke-{{ $input_jadwal->minggu_ke }}</td>
                                         <td>
                                             <a href="{{ route('input-jadwal.edit', $input_jadwal->id) }}" class="btn btn-warning">Edit</a>
                                             <form action="{{ route('input-jadwal.destroy', $input_jadwal->id) }}" method="POST" class="d-inline">

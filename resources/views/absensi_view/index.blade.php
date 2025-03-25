@@ -34,7 +34,7 @@
                     <!-- /.card-header -->
                     <div class="card-body">
                         <!-- <a href="{{ route('absensi.create') }}" class="btn btn-success my-4">Tambah Absensi</a> -->
-                        <div class="card-body">
+                        <!-- <div class="card-body">
                             <div id="actions" class="row">
                                 <div class="col-lg-6">
                                     <div class="btn-group">
@@ -87,7 +87,12 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
+                        <form action="{{ route('absensi.import') }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <input type="file" name="file" required>
+                            <button type="submit">Import</button>
+                        </form>
                         <table id="example1" class="table table-bordered table-striped">
                             <thead>
                                 <tr>

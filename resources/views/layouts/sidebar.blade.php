@@ -71,7 +71,7 @@
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-calendar-check"></i>
                                 <p>
-                                    Absen
+                                    Kehadiran
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">

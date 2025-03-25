@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Absensi;
+use App\Models\Shift;
+use App\Models\JadwalKaryawan;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class ManageAbsensiController extends Controller
 {
@@ -11,6 +14,101 @@ class ManageAbsensiController extends Controller
     {
         $absensis = Absensi::all();
         return view('absensi_view.index', compact('absensis'));
+    }
+
+    public function import(Request $request)
+    {
+        // Validasi file yang diunggah
+        $request->validate([
+            'file' => 'required|mimes:dat,csv,txt',
+        ]);
+
+        // Mendapatkan minggu yang akan diimpor, misalnya menggunakan tanggal sekarang
+        $mingguKe = Carbon::now()->weekOfYear;
+
+        // Mengosongkan absen_id untuk minggu yang sama
+        JadwalKaryawan::where('minggu_ke', $mingguKe)->update(['absen_id' => null]);
+
+        // Mendapatkan file yang diunggah
+        $file = $request->file('file');
+        $handle = fopen($file, 'r'); // Membuka file untuk dibaca
+
+        if ($handle === false) {
+            return back()->with('error', 'File tidak dapat dibuka.');
+        }
+
+        // Skip header baris pertama jika ada
+        fgetcsv($handle);
+
+        // Membaca file baris per baris
+        while (($row = fgetcsv($handle)) !== false) {
+            $userId = $row[0];
+            // Asumsi kolom: user_id, tanggal_jam_masuk (gabungan)
+            // Misalnya data di file: 2025-03-01 08:00:00
+            $tanggalJamMasuk = $row[1]; // Mengambil nilai kolom tanggal_jam_masuk
+
+            // Pisahkan tanggal dan jam jika menggunakan spasi sebagai pemisah
+            $tanggal = Carbon::parse(explode(' ', $tanggalJamMasuk)[0])->format('Y-m-d');
+            $jamMasuk = explode(' ', $tanggalJamMasuk)[1];
+
+            // Cek apakah absensi ada untuk tanggal dan user tertentu
+            $absensi = Absensi::where('user_id', $userId)
+                ->where('tanggal', $tanggal)
+                ->first();
+
+            if (!$absensi) {
+                // Simpan ke dalam database jika belum ada
+                Absensi::create([
+                    'user_id' => $row[0],
+                    'tanggal' => $tanggal,
+                    'jam_masuk' => $jamMasuk,
+                ]);
+            }
+        }
+        // Setelah data absensi berhasil diimpor, update jadwal karyawan
+        $this->updateJadwalKaryawanWithAbsensi();
+
+        fclose($handle); // Menutup file setelah selesai dibaca
+
+        return redirect()->back()->with('success', 'Data berhasil diimpor!');
+    }
+
+    private function updateJadwalKaryawanWithAbsensi()
+    {
+        // Ambil semua data absensi yang baru diimpor
+        $absensi = Absensi::all();
+
+        // Loop untuk setiap absensi
+        foreach ($absensi as $item) {
+            /// Ambil shift_id dari jadwal karyawan berdasarkan user_id dan tanggal
+            $jadwalKaryawan = JadwalKaryawan::where('user_id', $item->user_id)
+                ->where('tanggal', $item->tanggal)
+                ->first();
+
+            // Cek jika jadwal karyawan ditemukan
+            if ($jadwalKaryawan && $jadwalKaryawan->shift_id) {
+                // Ambil shift dari jadwal karyawan
+                $shift = Shift::where('id', $jadwalKaryawan->shift_id)->first();
+
+                // Cek jika shift ditemukan dan shift_masuk tidak kosong
+                if ($shift && $shift->shift_masuk) {
+                    // Bandingkan jam_masuk dengan shift_masuk
+                    $shiftMasuk = Carbon::parse($shift->shift_masuk);
+                    $jamMasuk = Carbon::parse($item->jam_masuk);
+
+                    // Cek keterlambatan
+                    $cekKeterlambatan = $jamMasuk->gt($shiftMasuk); // Perbandingan jika jam_masuk > shift_masuk
+
+                    // Update jadwal karyawan
+                    JadwalKaryawan::where('user_id', $item->user_id)
+                        ->where('tanggal', $item->tanggal)
+                        ->update([
+                            'absen_id' => $item->id,
+                            'cek_keterlambatan' => $cekKeterlambatan,  // Update keterlambatan
+                        ]);
+                }
+            }
+        }
     }
 
     // public function create()

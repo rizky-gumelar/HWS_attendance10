@@ -42,6 +42,18 @@ class JadwalKaryawan extends Model
     {
         return $this->belongsTo(Absensi::class, 'lembur_id');
     }
+
+    public function getKeterlambatanNameAttribute()
+    {
+        switch ($this->cek_keterlambatan) {
+            case '0':
+                return 'Tepat Waktu';
+            case '1':
+                return 'Terlambat';
+            default:
+                return '-';
+        }
+    }
     // public function index()
     // {
     //     // Ambil seluruh user beserta nama toko mereka
