@@ -24,7 +24,7 @@
                     <select class="form-control" id="user_id" name="user_id" required>
                         <option value="" disabled selected>Pilih Karyawan</option>
                         @foreach($users as $user)
-                        <option value="{{ $user->id }}" {{ $user->nama_karyawan ? 'selected' : '' }}>{{ $user->nama_karyawan }}</option>
+                        <option value="{{ $user->id }}" {{ $user->id == $input_jadwal->user_id ? 'selected' : '' }}>{{ $user->nama_karyawan }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -33,7 +33,7 @@
                     <select class="form-control" id="shift_id" name="shift_id" required>
                         <option value="" disabled selected>Pilih Shift</option>
                         @foreach($shifts as $shift)
-                        <option value="{{ $shift->id }}" {{ $shift->nama_shift ? 'selected' : '' }}>{{ $shift->nama_shift }}</option>
+                        <option value="{{ $shift->id }}" {{ $shift->id == $input_jadwal->shift_id ? 'selected' : '' }}>{{ $shift->nama_shift }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -42,7 +42,7 @@
                     <select class="form-control" id="lembur_id" name="lembur_id">
                         <option value="" disabled selected>Pilih Jenis Lembur</option>
                         @foreach($lemburs as $lembur)
-                        <option value="{{ $lembur->id }}" {{ $lembur->nama_lembur ? 'selected' : '' }}>{{ $lembur->nama_lembur }}</option>
+                        <option value="{{ $lembur->id }}" {{ $lembur->id == $input_jadwal->lembur_id ? 'selected' : '' }}>{{ $lembur->tipe_lembur }}</option>
                         @endforeach
                     </select>
                 </div>
