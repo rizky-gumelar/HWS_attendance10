@@ -134,6 +134,6 @@ Route::middleware(['auth', 'role:admin|spv'])->group(function () {
         Route::post('/', [InputJadwalKaryawanController::class, 'store'])->name('input-jadwal.store');
         Route::get('/{input_jadwal}/edit', [InputJadwalKaryawanController::class, 'edit'])->name('input-jadwal.edit');
         Route::put('/{input_jadwal}', [InputJadwalKaryawanController::class, 'update'])->name('input-jadwal.update');
-        Route::delete('/{input-jadwal}', [InputJadwalKaryawanController::class, 'destroy'])->name('input-jadwal.destroy');
+        Route::delete('/{input_jadwal}', [InputJadwalKaryawanController::class, 'destroy'])->name('input-jadwal.destroy');
     });
 });

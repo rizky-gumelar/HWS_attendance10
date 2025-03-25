@@ -38,7 +38,7 @@
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                        <!-- <th>ID</th> -->
+                                        <th>ID</th>
                                         <th>Nama Karyawan</th>
                                         <th>Tanggal</th>
                                         <th>Shift</th>
@@ -52,7 +52,7 @@
                                 <tbody>
                                     @foreach ($input_jadwals as $input_jadwal)
                                     <tr>
-                                        <!-- <td>{{ $input_jadwal->id }}</td> -->
+                                        <td>{{ $input_jadwal->id }}</td>
                                         <td>{{ $input_jadwal->users->nama_karyawan }}</td>
                                         <td>{{ \Carbon\Carbon::parse($input_jadwal->tanggal)->locale('id')->isoFormat('dddd, D MMMM YYYY') }}</td>
                                         <td>{{ $input_jadwal->shift->nama_shift }}</td>
