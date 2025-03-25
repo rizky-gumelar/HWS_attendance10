@@ -119,25 +119,42 @@ class InputJadwalKaryawanController extends Controller
 
             // Hitung keterlambatan dalam menit
             // $keterlambatan = $terlambat ? $absenJamMasuk->diffInMinutes($shiftJamMasuk) : 0;
+            if ($request->lembur_id == "No") {
+                $input_jadwal->update([
+                    // 'user_id' => $request->user_id,
+                    'shift_id' => $request->shift_id,
+                    // 'absen_id' => $request->absen_id,
+                    'lembur_id' => null,
+                    'tanggal' => $request->tanggal,
+                    'cek_keterlambatan' => $terlambat,
+                    'lembur_jam' => $request->lembur_jam ?? 0,
+                    'total_lembur' => $totalLembur ?? 0,
+                    'keterangan' => $request->keterangan,
+                    // 'minggu_ke' => Carbon::today()->weekOfYear,
+                ]);
+            } else {
+                // Ambil data lembur berdasarkan lembur_id
+                $lembur = Lembur::findOrFail($request->lembur_id);
 
-            // Ambil data lembur berdasarkan lembur_id
-            $lembur = Lembur::findOrFail($request->lembur_id);
+                // Menghitung total lembur: biaya_per_jam * lembur_jam
+                $totalLembur = $lembur->biaya * ($request->lembur_jam ?? 0);
 
-            // Menghitung total lembur: biaya_per_jam * lembur_jam
-            $totalLembur = $lembur->biaya * ($request->lembur_jam ?? 0);
+                $input_jadwal->update([
+                    // 'user_id' => $request->user_id,
+                    'shift_id' => $request->shift_id,
+                    // 'absen_id' => $request->absen_id,
+                    'lembur_id' => $request->lembur_id,
+                    'tanggal' => $request->tanggal,
+                    'cek_keterlambatan' => $terlambat,
+                    'lembur_jam' => $request->lembur_jam ?? 0,
+                    'total_lembur' => $totalLembur ?? 0,
+                    'keterangan' => $request->keterangan,
+                    // 'minggu_ke' => Carbon::today()->weekOfYear,
+                ]);
+            }
 
-            $input_jadwal->update([
-                // 'user_id' => $request->user_id,
-                'shift_id' => $request->shift_id,
-                // 'absen_id' => $request->absen_id,
-                'lembur_id' => $request->lembur_id,
-                'tanggal' => $request->tanggal,
-                'cek_keterlambatan' => $terlambat,
-                'lembur_jam' => $request->lembur_jam ?? 0,
-                'total_lembur' => $totalLembur ?? 0,
-                'keterangan' => $request->keterangan,
-                // 'minggu_ke' => Carbon::today()->weekOfYear,
-            ]);
+
+
 
             // Redirect ke halaman input-jadwal dan beri pesan sukses
             return redirect()->route('input-jadwal.index')->with('success', 'input-jadwal berhasil diperbarui!');

@@ -43,7 +43,7 @@
                                         <th>Tanggal</th>
                                         <th>Shift</th>
                                         <th>Jam Masuk</th>
-                                        <th>Jam Lembur</th>
+                                        <th>Lembur</th>
                                         <th>Keterangan</th>
                                         <th>Minggu ke</th>
                                         <th>Aksi</th>
@@ -57,7 +57,7 @@
                                         <td>{{ \Carbon\Carbon::parse($input_jadwal->tanggal)->locale('id')->isoFormat('dddd, D MMMM YYYY') }}</td>
                                         <td>{{ $input_jadwal->shift->nama_shift }}</td>
                                         <td>{{ $input_jadwal->absensi->jam_masuk ?? '-' }}</td>
-                                        <td>{{ $input_jadwal->lembur_jam }}</td>
+                                        <td>{{ $input_jadwal->lembur->tipe_lembur ?? '-' }}</td>
                                         <td>{{ $input_jadwal->keterlambatan_name }}</td>
                                         <td>Minggu ke-{{ $input_jadwal->minggu_ke }}</td>
                                         <td>
