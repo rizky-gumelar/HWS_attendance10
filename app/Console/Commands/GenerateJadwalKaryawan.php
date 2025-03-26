@@ -26,13 +26,23 @@ class GenerateJadwalKaryawan extends Command
 
         foreach ($karyawanList as $karyawan) {
             for ($i = 0; $i < 7; $i++) {
+                // Menentukan tanggal yang akan diproses
+                $tanggal = $today->copy()->addDays($i);
+
+                // Jika hari tersebut adalah Minggu (Carbon::SUNDAY == 0)
+                if ($tanggal->dayOfWeek == Carbon::SUNDAY) {
+                    $shift_id = 99; // Ganti shift_id menjadi 99 untuk hari Minggu
+                } else {
+                    $shift_id = $karyawan->ShiftID; // Gunakan shift_id default jika bukan Minggu
+                }
+
                 JadwalKaryawan::updateOrCreate(
                     [
                         'user_id' => $karyawan->KaryawanID,
-                        'tanggal' => $today->copy()->addDays($i),
+                        'tanggal' => $tanggal,
                     ],
                     [
-                        'shift_id' => $karyawan->ShiftID,
+                        'shift_id' => $shift_id,
                         'cek_keterlambatan' => null,
                         'lembur_jam' => 0,
                         'total_lembur' => 0,

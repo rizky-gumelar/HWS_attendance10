@@ -40,7 +40,7 @@
                 <div class="form-group">
                     <label>Jenis Lembur</label>
                     <select class="form-control" id="lembur_id" name="lembur_id">
-                        <option value="" selected>Pilih Jenis Lembur</option>
+                        <option value="No" selected>Pilih Jenis Lembur</option>
                         <option value="No">-</option>
                         @foreach($lemburs as $lembur)
                         <option value="{{ $lembur->id }}" {{ $lembur->id == $input_jadwal->lembur_id ? 'selected' : '' }}>{{ $lembur->tipe_lembur }}</option>
