@@ -47,7 +47,7 @@ class GenerateJadwalKaryawan extends Command
                         'lembur_jam' => 0,
                         'total_lembur' => 0,
                         'keterangan' => null,
-                        'minggu_ke' => $today->copy()->addDays($i)->weekOfYear,
+                        'minggu_ke' => $today->copy()->addDays($i)->startOfWeek(Carbon::SATURDAY)->weekOfYear,
                     ]
                 );
             }

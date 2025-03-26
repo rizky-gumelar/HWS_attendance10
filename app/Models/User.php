@@ -87,6 +87,12 @@ class User extends Authenticatable
         return $this->hasMany(JadwalKaryawan::class, 'id');
     }
 
+    // Relasi ke tabel jadwal_karyawan
+    public function laporan_mingguan()
+    {
+        return $this->hasMany(LaporanMingguan::class, 'id');
+    }
+
     // public function index()
     // {
     //     // Ambil seluruh user beserta nama toko mereka

@@ -7,17 +7,25 @@ use Illuminate\Database\Eloquent\Model;
 
 class LaporanMingguan extends Model
 {
+    public $table = 'laporan_mingguan';
     use HasFactory;
     protected $fillable = [
         'user_id',
         'minggu_ke',
-        'nama_karyawan',
-        'toko',
-        'total_kehadiran',
-        'total_terlambat',
-        'total_lembur',
+        'd1',
+        'd2',
+        'd3',
+        'd4',
+        'd5',
+        'd6',
+        'd7',
         'uang_mingguan',
         'uang_kedatangan',
         'uang_lembur_mingguan',
     ];
+
+    public function users()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

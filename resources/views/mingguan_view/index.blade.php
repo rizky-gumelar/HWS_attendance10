@@ -34,43 +34,46 @@
                     <div class="card">
                         <!-- /.card-header -->
                         <div class="card-body">
-                            <a href="{{ route('manage-karyawan.create') }}" class="btn btn-success my-4">Export Mingguan</a>
+                            <a href="#" class="btn btn-success my-4">Export Mingguan</a>
+                            <a href="{{ route('mingguan.generateLaporanMingguanForAll', 13) }}" class="btn btn-success my-4">Refresh</a>
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                        <th>ID</th>
+                                        <!-- <th>ID</th> -->
                                         <th>Nama Karyawan</th>
-                                        <th>Store</th>
-                                        <th>Shift</th>
-                                        <th>Divisi</th>
-                                        <th>Email</th>
-                                        <th>No Telepon</th>
-                                        <th>Role</th>
-                                        <th>Status</th>
+                                        <th>S</th>
+                                        <th>M</th>
+                                        <th>S</th>
+                                        <th>S</th>
+                                        <th>R</th>
+                                        <th>K</th>
+                                        <th>J</th>
+                                        <th>Mingguan</th>
+                                        <th>Kehadiran</th>
+                                        <th>Lembur</th>
+                                        <th>Total</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($karyawans as $karyawan)
-                                    <tr @if($karyawan->status == 'nonaktif')
-                                        style="color: red;"
-                                        @endif>
-                                        <td>{{ $karyawan->id }}</td>
-                                        <td>{{ $karyawan->nama_karyawan }}</td>
-                                        <td>{{ $karyawan->toko->nama_toko ?? 'Toko Tidak Ditemukan' }}</td>
-                                        <td>{{ $karyawan->shift->nama_shift ?? 'Shift Tidak Ditemukan' }}</td>
-                                        <td>{{ $karyawan->divisi->nama_divisi }}</td>
-                                        <td>{{ $karyawan->email }}</td>
-                                        <td>{{ $karyawan->no_hp }}</td>
-                                        <td>{{ $karyawan->role_name  }}</td>
-                                        <td>{{ $karyawan->status  }}</td>
+                                    @foreach ($mingguans as $mingguan)
+                                    <tr>
+                                        <!-- <td>{{ $mingguan->id }}</td> -->
+                                        <td>{{ $mingguan->users->nama_karyawan }}</td>
+                                        <td>{{ $mingguan->d1 ?? '-' }}</td>
+                                        <td>{{ $mingguan->d2 ?? '-' }}</td>
+                                        <td>{{ $mingguan->d3 ?? '-' }}</td>
+                                        <td>{{ $mingguan->d4 ?? '-' }}</td>
+                                        <td>{{ $mingguan->d5 ?? '-' }}</td>
+                                        <td>{{ $mingguan->d6 ?? '-' }}</td>
+                                        <td>{{ $mingguan->d7 ?? '-' }}</td>
+                                        <td>{{ $mingguan->uang_mingguan }}</td>
+                                        <td>{{ $mingguan->uang_kedatangan }}</td>
+                                        <td>{{ $mingguan->uang_lembur_mingguan  }}</td>
+                                        <td>{{ $mingguan->uang_mingguan + $mingguan->uang_kedatangan + $mingguan->uang_lembur_mingguan }}</td>
                                         <td>
-                                            <!-- <a href="{{ route('manage-karyawan.edit', $karyawan->id) }}" class="btn btn-warning">Edit</a> -->
-                                            <a href="{{ route('input-jadwal.export', $karyawan->id) }}" class="btn btn-success">Export</a>
-                                            <!-- <form action="{{ route('manage-karyawan.destroy', $karyawan->id) }}" method="POST" class="d-inline">
-                                                @csrf @method('DELETE')
-                                                <button class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
-                                            </form> -->
+
+                                            <a href="{{ route('input-jadwal.export', $mingguan->users->id) }}" class="btn btn-success">Export</a>
                                         </td>
                                     </tr>
                                     @endforeach
