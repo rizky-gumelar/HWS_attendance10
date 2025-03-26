@@ -15,11 +15,13 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->integer('minggu_ke');
-            $table->string('nama_karyawan');
-            $table->string('toko');
-            $table->integer('total_kehadiran');
-            $table->integer('total_terlambat');
-            $table->integer('total_lembur');
+            $table->string('D1');
+            $table->string('D2');
+            $table->string('D3');
+            $table->string('D4');
+            $table->string('D5');
+            $table->string('D6');
+            $table->string('D7');
             $table->integer('uang_mingguan');
             $table->integer('uang_kedatangan');
             $table->integer('uang_lembur_mingguan');
