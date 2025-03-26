@@ -10,6 +10,8 @@ use App\Models\Absensi;
 use App\Models\Lembur;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class InputJadwalKaryawanController extends Controller
 {
@@ -170,4 +172,153 @@ class InputJadwalKaryawanController extends Controller
         $input_jadwal->delete();
         return redirect()->route('input-jadwal.index')->with('success', 'input-jadwal deleted successfully.');
     }
+
+    public function export()
+    {
+        // Fetch the data from the database for a specific employee
+        $employee = JadwalKaryawan::with(['users', 'shift', 'lembur', 'absensi'])
+            ->where('user_id', 1) // Replace with actual employee ID or loop through employees
+            ->whereBetween('tanggal', ['2025-03-26', '2025-04-04'])
+            ->get();
+
+        // Create a new Spreadsheet object
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Setting the period
+        $sheet->setCellValue('B1', 'Periode');
+        $sheet->setCellValue('C1', '15-21 Maret 2025');
+
+        // Employee name
+        $sheet->setCellValue('B3', 'Nama');
+        $sheet->setCellValue('C3', $employee->first()->users->nama_karyawan); // Replace with actual employee name
+
+        // Shift (BJ or other)
+        $sheet->setCellValue('C4', 'BJ'); // Replace with shift info (e.g., from the shift relationship)
+
+        // Daily Attendance (Date and Time)
+        $sheet->setCellValue('B6', 'Tanggal');
+        $sheet->setCellValue('C6', 'Shift');
+        $sheet->setCellValue('D6', 'Jam Masuk');
+        $sheet->setCellValue('E6', 'Keterangan');
+
+        $row = 7;
+        $mingguan = 0;
+        $tottelat = 0;
+        $kedatangan = 0;
+        $totlembur = 0;
+        $total = 0;
+        foreach ($employee as $item) {
+            $sheet->setCellValue('B' . $row, $item->tanggal->format('d-m-y'));
+            $sheet->setCellValue('C' . $row, $item->shift->nama_shift); // Change as per the condition
+            if ($item->shift->id == 99) {
+                $sheet->setCellValue('D' . $row, ''); // Change as per the condition
+                $sheet->setCellValue('E' . $row, ''); // Change as per the condition
+            } else {
+                $sheet->setCellValue('D' . $row, $item->absensi->jam_masuk); // Change as per the condition
+                $sheet->setCellValue('E' . $row, $item->keterlambatan_name); // Change as per the condition
+            }
+            if ($item->cek_keterlambatan == 0) {
+                $mingguan = $mingguan + 15000;
+            } else {
+                $tottelat++;
+            }
+            $totlembur = $totlembur + $item->total_lembur;
+            $row++;
+        }
+
+        if ($tottelat > 0) {
+            $kedatangan = 0;
+        } else {
+            $kedatangan = 40000;
+        }
+
+        // Weekly Summary
+        $sheet->setCellValue('B15', 'Mingguan');
+        $sheet->setCellValue('C15', $mingguan); // Replace with actual weekly total
+
+        $sheet->setCellValue('B16', 'Kedatangan');
+        $sheet->setCellValue('C16', $kedatangan); // Replace with actual attendance total
+
+        $sheet->setCellValue('B17', 'Lembur');
+        $sheet->setCellValue('C17', $totlembur); // Replace with actual overtime hours
+
+        $sheet->setCellValue('B18', 'Total');
+        $sheet->setCellValue('C18', $mingguan + $kedatangan + $totlembur); // Replace with the actual total
+
+        $sheet->setCellValue('B19', 'Tanda Tangan');
+
+        // Create a Writer instance
+        $writer = new Xlsx($spreadsheet);
+
+        // Set the response headers for downloading the Excel file
+        $filename = 'jadwal_karyawan_' . now()->format('Y_m_d_H_i_s') . '.xlsx';
+        return response()->stream(
+            function () use ($writer) {
+                $writer->save('php://output');
+            },
+            200,
+            [
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'Content-Disposition' => 'attachment;filename="' . $filename . '"',
+                'Cache-Control' => 'max-age=0',
+            ]
+        );
+    }
+
+    // public function export()
+    // {
+    //     // Fetch the data from the database
+    //     $jadwalKaryawan = JadwalKaryawan::with(['users', 'shift', 'lembur', 'absensi'])
+    //         ->get();
+
+    //     // Create a new Spreadsheet object
+    //     $spreadsheet = new Spreadsheet();
+    //     $sheet = $spreadsheet->getActiveSheet();
+
+    //     // Set the headers for the Excel sheet
+    //     $sheet->setCellValue('A1', 'Nama Karyawan');
+    //     $sheet->setCellValue('B1', 'Shift ID');
+    //     $sheet->setCellValue('C1', 'Lembur ID');
+    //     $sheet->setCellValue('D1', 'Absen ID');
+    //     $sheet->setCellValue('E1', 'Tanggal');
+    //     $sheet->setCellValue('F1', 'Cek Keterlambatan');
+    //     $sheet->setCellValue('G1', 'Lembur Jam');
+    //     $sheet->setCellValue('H1', 'Total Lembur');
+    //     $sheet->setCellValue('I1', 'Keterangan');
+    //     $sheet->setCellValue('J1', 'Minggu ke');
+
+    //     // Fill the data into the Excel sheet
+    //     $row = 2; // Start from the second row for the data
+    //     foreach ($jadwalKaryawan as $item) {
+    //         $sheet->setCellValue('A' . $row, $item->users->nama_karyawan); // Name of the employee
+    //         $sheet->setCellValue('B' . $row, $item->shift->nama_shift); // Shift Name
+    //         $sheet->setCellValue('C' . $row, $item->lembur ? $item->lembur->tipe_lembur : 'No Lembur');
+    //         $sheet->setCellValue('D' . $row, $item->absensi->id ? $item->absensi->id : 'No Absen');
+    //         $sheet->setCellValue('E' . $row, $item->tanggal);
+    //         $sheet->setCellValue('F' . $row, $item->cek_keterlambatan ? 'Yes' : 'No');
+    //         $sheet->setCellValue('G' . $row, $item->lembur_jam);
+    //         $sheet->setCellValue('H' . $row, $item->total_lembur);
+    //         $sheet->setCellValue('I' . $row, $item->keterangan);
+    //         $sheet->setCellValue('J' . $row, $item->minggu_ke);
+    //         $row++;
+    //     }
+
+    //     // Create a Writer instance
+    //     $writer = new Xlsx($spreadsheet);
+
+    //     // Set the response headers for downloading the Excel file
+    //     $filename = 'jadwal_karyawan_' . now()->format('Y_m_d_H_i_s') . '.xlsx';
+    //     return response()->stream(
+    //         function () use ($writer) {
+    //             $writer->save('php://output');
+    //         },
+    //         200,
+    //         [
+    //             'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    //             'Content-Disposition' => 'attachment;filename="' . $filename . '"',
+    //             'Cache-Control' => 'max-age=0',
+    //         ]
+    //     );
+    // }
 }
