@@ -66,6 +66,7 @@
                                         <td>{{ $karyawan->status  }}</td>
                                         <td>
                                             <a href="{{ route('manage-karyawan.edit', $karyawan->id) }}" class="btn btn-warning">Edit</a>
+                                            <a href="{{ route('input-jadwal.export', $karyawan->id) }}" class="btn btn-warning">Export</a>
                                             <form action="{{ route('manage-karyawan.destroy', $karyawan->id) }}" method="POST" class="d-inline">
                                                 @csrf @method('DELETE')
                                                 <button class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>

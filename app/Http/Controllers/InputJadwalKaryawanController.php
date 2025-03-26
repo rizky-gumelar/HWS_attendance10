@@ -173,11 +173,11 @@ class InputJadwalKaryawanController extends Controller
         return redirect()->route('input-jadwal.index')->with('success', 'input-jadwal deleted successfully.');
     }
 
-    public function export()
+    public function export($user_id)
     {
         // Fetch the data from the database for a specific employee
         $employee = JadwalKaryawan::with(['users', 'shift', 'lembur', 'absensi'])
-            ->where('user_id', 1) // Replace with actual employee ID or loop through employees
+            ->where('user_id', $user_id) // Replace with actual employee ID or loop through employees
             ->whereBetween('tanggal', ['2025-03-26', '2025-04-04'])
             ->get();
 
@@ -200,7 +200,7 @@ class InputJadwalKaryawanController extends Controller
         $sheet->setCellValue('B6', 'Tanggal');
         $sheet->setCellValue('C6', 'Shift');
         $sheet->setCellValue('D6', 'Jam Masuk');
-        $sheet->setCellValue('E6', 'Keterangan');
+        // $sheet->setCellValue('E6', 'Keterangan');
 
         $row = 7;
         $mingguan = 0;
@@ -209,17 +209,19 @@ class InputJadwalKaryawanController extends Controller
         $totlembur = 0;
         $total = 0;
         foreach ($employee as $item) {
-            $sheet->setCellValue('B' . $row, $item->tanggal->format('d-m-y'));
+            $sheet->setCellValue('B' . $row, \Carbon\Carbon::parse($item->tanggal)->format('d-m-y'));
             $sheet->setCellValue('C' . $row, $item->shift->nama_shift); // Change as per the condition
             if ($item->shift->id == 99) {
                 $sheet->setCellValue('D' . $row, ''); // Change as per the condition
-                $sheet->setCellValue('E' . $row, ''); // Change as per the condition
+                // $sheet->setCellValue('E' . $row, ''); // Change as per the condition
             } else {
                 $sheet->setCellValue('D' . $row, $item->absensi->jam_masuk); // Change as per the condition
-                $sheet->setCellValue('E' . $row, $item->keterlambatan_name); // Change as per the condition
+                // $sheet->setCellValue('E' . $row, $item->keterlambatan_name); // Change as per the condition
             }
             if ($item->cek_keterlambatan == 0) {
-                $mingguan = $mingguan + 15000;
+                if ($item->shift->id != 99) {
+                    $mingguan = $mingguan + 15000;
+                }
             } else {
                 $tottelat++;
             }

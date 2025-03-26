@@ -23,7 +23,7 @@ class JadwalKaryawan extends Model
     ];
 
     protected $casts = [
-        'tanggal' => 'date',  // This will cast 'tanggal' to a Carbon instance
+        // 'tanggal' => 'date',  // This will cast 'tanggal' to a Carbon instance
     ];
 
 
