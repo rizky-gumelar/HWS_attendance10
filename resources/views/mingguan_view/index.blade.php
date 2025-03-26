@@ -60,13 +60,13 @@
                                     <tr>
                                         <!-- <td>{{ $mingguan->id }}</td> -->
                                         <td>{{ $mingguan->users->nama_karyawan }}</td>
-                                        <td>{{ $mingguan->d1 ?? '-' }}</td>
-                                        <td>{{ $mingguan->d2 ?? '-' }}</td>
-                                        <td>{{ $mingguan->d3 ?? '-' }}</td>
-                                        <td>{{ $mingguan->d4 ?? '-' }}</td>
-                                        <td>{{ $mingguan->d5 ?? '-' }}</td>
-                                        <td>{{ $mingguan->d6 ?? '-' }}</td>
-                                        <td>{{ $mingguan->d7 ?? '-' }}</td>
+                                        <td>{{ $mingguan->d1 }}</td>
+                                        <td>{{ $mingguan->d2 }}</td>
+                                        <td>{{ $mingguan->d3 }}</td>
+                                        <td>{{ $mingguan->d4 }}</td>
+                                        <td>{{ $mingguan->d5 }}</td>
+                                        <td>{{ $mingguan->d6 }}</td>
+                                        <td>{{ $mingguan->d7 }}</td>
                                         <td>{{ $mingguan->uang_mingguan }}</td>
                                         <td>{{ $mingguan->uang_kedatangan }}</td>
                                         <td>{{ $mingguan->uang_lembur_mingguan  }}</td>

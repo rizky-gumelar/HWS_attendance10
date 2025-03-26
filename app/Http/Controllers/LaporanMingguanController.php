@@ -117,13 +117,13 @@ class LaporanMingguanController extends Controller
         foreach ($jadwalKaryawan as $userId => $jadwals) {
             // Inisialisasi array untuk menyimpan hari-hari dalam minggu
             $hari = [
-                'D1' => null, // Sabtu
-                'D2' => null, // Minggu
-                'D3' => null, // Senin
-                'D4' => null, // Selasa
-                'D5' => null, // Rabu
-                'D6' => null, // Kamis
-                'D7' => null, // Jumat
+                'd1' => null, // Sabtu
+                'd2' => null, // Minggu
+                'd3' => null, // Senin
+                'd4' => null, // Selasa
+                'd5' => null, // Rabu
+                'd6' => null, // Kamis
+                'd7' => null, // Jumat
             ];
 
             // Proses setiap jadwal karyawan untuk user ini
@@ -135,25 +135,25 @@ class LaporanMingguanController extends Controller
                 // Tentukan hari sesuai dengan dayOfWeek
                 switch ($dayOfWeek) {
                     case 0:
-                        $hari['D2'] = $jadwalKaryawan->shift_id;
+                        $hari['d2'] = $jadwalKaryawan->shift->nama_shift;
                         break;
                     case 1:
-                        $hari['D3'] = $jadwalKaryawan->shift_id;
+                        $hari['d3'] = $jadwalKaryawan->shift_id;
                         break;
                     case 2:
-                        $hari['D4'] = $jadwalKaryawan->shift_id;
+                        $hari['d4'] = $jadwalKaryawan->shift_id;
                         break;
                     case 3:
-                        $hari['D5'] = $jadwalKaryawan->shift_id;
+                        $hari['d5'] = $jadwalKaryawan->shift_id;
                         break;
                     case 4:
-                        $hari['D6'] = $jadwalKaryawan->shift_id;
+                        $hari['d6'] = $jadwalKaryawan->shift_id;
                         break;
                     case 5:
-                        $hari['D7'] = $jadwalKaryawan->shift_id;
+                        $hari['d7'] = $jadwalKaryawan->shift_id;
                         break;
                     case 6:
-                        $hari['D1'] = $jadwalKaryawan->shift_id;
+                        $hari['d1'] = $jadwalKaryawan->shift_id;
                         break;
                 }
             }
@@ -162,13 +162,13 @@ class LaporanMingguanController extends Controller
             $laporanMingguan = LaporanMingguan::create([
                 'user_id' => $userId,
                 'minggu_ke' => $mingguKe,
-                'D1' => $hari['D1'],
-                'D2' => $hari['D2'],
-                'D3' => $hari['D3'],
-                'D4' => $hari['D4'],
-                'D5' => $hari['D5'],
-                'D6' => $hari['D6'],
-                'D7' => $hari['D7'],
+                'd1' => $hari['d1'],
+                'd2' => $hari['d2'],
+                'd3' => $hari['d3'],
+                'd4' => $hari['d4'],
+                'd5' => $hari['d5'],
+                'd6' => $hari['d6'],
+                'd7' => $hari['d7'],
                 'uang_mingguan' => 0,  // Sementara kosongkan
                 'uang_kedatangan' => 0,  // Sementara kosongkan
                 'uang_lembur_mingguan' => 0,  // Sementara kosongkan
