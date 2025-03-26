@@ -178,7 +178,8 @@ class InputJadwalKaryawanController extends Controller
         // Fetch the data from the database for a specific employee
         $employee = JadwalKaryawan::with(['users', 'shift', 'lembur', 'absensi'])
             ->where('user_id', $user_id) // Replace with actual employee ID or loop through employees
-            ->whereBetween('tanggal', ['2025-03-26', '2025-04-04'])
+            ->where('minggu_ke', 13)
+            // ->whereBetween('tanggal', ['2025-03-26', '2025-04-04'])
             ->get();
 
         // Create a new Spreadsheet object

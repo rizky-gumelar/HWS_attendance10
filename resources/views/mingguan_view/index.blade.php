@@ -13,12 +13,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Manage Karyawan</h1>
+                    <h1>Laporan Mingguan</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">Manage Karyawan</li>
+                        <li class="breadcrumb-item active">Laporan Mingguan</li>
                     </ol>
                 </div>
             </div>
@@ -34,7 +34,7 @@
                     <div class="card">
                         <!-- /.card-header -->
                         <div class="card-body">
-                            <a href="{{ route('manage-karyawan.create') }}" class="btn btn-success my-4">Tambah Karyawan</a>
+                            <a href="{{ route('manage-karyawan.create') }}" class="btn btn-success my-4">Export Mingguan</a>
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
@@ -65,12 +65,12 @@
                                         <td>{{ $karyawan->role_name  }}</td>
                                         <td>{{ $karyawan->status  }}</td>
                                         <td>
-                                            <a href="{{ route('manage-karyawan.edit', $karyawan->id) }}" class="btn btn-warning">Edit</a>
-                                            <!-- <a href="{{ route('input-jadwal.export', $karyawan->id) }}" class="btn btn-warning">Export</a> -->
-                                            <form action="{{ route('manage-karyawan.destroy', $karyawan->id) }}" method="POST" class="d-inline">
+                                            <!-- <a href="{{ route('manage-karyawan.edit', $karyawan->id) }}" class="btn btn-warning">Edit</a> -->
+                                            <a href="{{ route('input-jadwal.export', $karyawan->id) }}" class="btn btn-success">Export</a>
+                                            <!-- <form action="{{ route('manage-karyawan.destroy', $karyawan->id) }}" method="POST" class="d-inline">
                                                 @csrf @method('DELETE')
                                                 <button class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
-                                            </form>
+                                            </form> -->
                                         </td>
                                     </tr>
                                     @endforeach

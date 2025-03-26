@@ -14,6 +14,7 @@ use App\Http\Controllers\ManageAbsensiController;
 use App\Http\Controllers\ManageDivisiController;
 use App\Http\Controllers\ManageLemburController;
 use App\Http\Controllers\InputJadwalKaryawanController;
+use App\Http\Controllers\LaporanMingguanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -98,6 +99,16 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::put('/{lembur}', [ManageLemburController::class, 'update'])->name('lembur.update');
         Route::delete('/{lembur}', [ManageLemburController::class, 'destroy'])->name('lembur.destroy');
     });
+    //MINGGUAN
+    Route::prefix('mingguan')->group(function () {
+        Route::get('/', [LaporanMingguanController::class, 'index'])->name('mingguan.index');
+        Route::get('/export/{user}', [InputJadwalKaryawanController::class, 'export'])->name('input-jadwal.export');
+        // Route::get('/create', [LaporanMingguanController::class, 'create'])->name('mingguan.create');
+        // Route::post('/', [LaporanMingguanController::class, 'store'])->name('mingguan.store');
+        // Route::get('/{lembur}/edit', [LaporanMingguanController::class, 'edit'])->name('mingguan.edit');
+        // Route::put('/{lembur}', [LaporanMingguanController::class, 'update'])->name('mingguan.update');
+        // Route::delete('/{lembur}', [LaporanMingguanController::class, 'destroy'])->name('mingguan.destroy');
+    });
 });
 
 Route::middleware(['auth', 'role:spv'])->group(function () {
@@ -135,6 +146,5 @@ Route::middleware(['auth', 'role:admin|spv'])->group(function () {
         Route::get('/{input_jadwal}/edit', [InputJadwalKaryawanController::class, 'edit'])->name('input-jadwal.edit');
         Route::put('/{input_jadwal}', [InputJadwalKaryawanController::class, 'update'])->name('input-jadwal.update');
         Route::delete('/{input_jadwal}', [InputJadwalKaryawanController::class, 'destroy'])->name('input-jadwal.destroy');
-        Route::get('/export/{user}', [InputJadwalKaryawanController::class, 'export'])->name('input-jadwal.export');
     });
 });

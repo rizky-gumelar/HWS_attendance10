@@ -118,7 +118,7 @@
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('input-jadwal.export', 2) }}" class="nav-link">
+                            <a href="{{ route('mingguan.index') }}" class="nav-link">
                                 <i class="nav-icon fas fa-file-alt"></i>
                                 <p>
                                     Laporan Mingguan
