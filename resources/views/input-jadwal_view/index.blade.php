@@ -35,6 +35,13 @@
                         <!-- /.card-header -->
                         <div class="card-body">
                             <a href="{{ route('input-jadwal.create') }}" class="btn btn-success my-4">Input Jadwal</a>
+                            <!-- <a href="{{ route('input-jadwal.import') }}" class="btn btn-primary my-4">Import CSV</a> -->
+                            <form action="{{ route('input-jadwal.import') }}" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                <label for="csv_file">Upload File CSV:</label>
+                                <input type="file" name="csv_file" accept=".csv" required>
+                                <button type="submit">Impor Jadwal</button>
+                            </form>
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>

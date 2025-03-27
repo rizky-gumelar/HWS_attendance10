@@ -143,6 +143,8 @@ Route::middleware(['auth', 'role:admin|spv'])->group(function () {
     Route::prefix('input-jadwal')->group(function () {
         Route::get('/', [InputJadwalKaryawanController::class, 'index'])->name('input-jadwal.index');
         Route::get('/create', [InputJadwalKaryawanController::class, 'create'])->name('input-jadwal.create');
+        // Route::get('/import', [InputJadwalKaryawanController::class, 'import'])->name('input-jadwal.import');
+        Route::post('/import', [InputJadwalKaryawanController::class, 'import'])->name('input-jadwal.import');
         Route::post('/', [InputJadwalKaryawanController::class, 'store'])->name('input-jadwal.store');
         Route::get('/{input_jadwal}/edit', [InputJadwalKaryawanController::class, 'edit'])->name('input-jadwal.edit');
         Route::put('/{input_jadwal}', [InputJadwalKaryawanController::class, 'update'])->name('input-jadwal.update');

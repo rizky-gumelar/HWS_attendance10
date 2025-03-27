@@ -12,6 +12,8 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use Illuminate\Support\Facades\Validator;
 
 class InputJadwalKaryawanController extends Controller
 {
@@ -73,7 +75,7 @@ class InputJadwalKaryawanController extends Controller
             // 'lembur_jam' => $request->lembur_jam ?? 0,
             // 'total_lembur' => $totalLembur, // Menyimpan total lembur
             // 'keterangan' => $request->keterangan,
-            'minggu_ke' => Carbon::today()->weekOfYear,
+            'minggu_ke' => Carbon::today()->startOfWeek(Carbon::SATURDAY)->weekOfYear,
         ]);
         // } catch (\Exception $e) {
         //     // Log error for debugging
@@ -81,6 +83,79 @@ class InputJadwalKaryawanController extends Controller
         //     return redirect()->route('input-jadwal.index')->with('error', 'Failed to update input-jadwal.');
         // }
         return redirect()->route('input-jadwal.index')->with('success', 'input-jadwal berhasil ditambahkan.');
+    }
+
+    public function import(Request $request)
+    {
+        // Validasi file CSV yang di-upload
+        $request->validate([
+            'csv_file' => 'required|mimes:csv,txt|max:10240', // Maksimal 10MB
+        ]);
+
+        // Ambil file CSV yang di-upload
+        $file = $request->file('csv_file');
+        $filePath = $file->getRealPath();
+
+        // Baca file CSV menggunakan PhpSpreadsheet
+        $spreadsheet = IOFactory::load($filePath);
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Ambil data dari sheet (dimulai dari baris kedua untuk mengabaikan header)
+        $csvData = $sheet->toArray(null, true, true, true); // toArray mengubah ke array
+
+        // Skip header jika ada
+        $header = array_shift($csvData);
+
+        // Validasi dan import data dari CSV
+        foreach ($csvData as $row) {
+            // Misalnya format CSV: nama_user, nama_shift, tanggal
+            $userName = $row['A']; // Kolom A untuk nama_user
+            $shiftName = $row['B']; // Kolom B untuk nama_shift
+            $tanggal = $row['C']; // Kolom C untuk tanggal
+
+            // Cek apakah user dan shift ada di database
+            $user = User::where('nama_karyawan', $userName)->first();
+            $shift = Shift::where('nama_shift', $shiftName)->first();
+
+            // Debug: Cek apakah user dan shift ditemukan
+            if (!$user) {
+                dd("User tidak ditemukan: $userName");
+            }
+
+            if (!$shift) {
+                dd("Shift tidak ditemukan: $shiftName");
+            }
+
+            // Validasi tanggal
+            $validator = Validator::make(['tanggal' => $tanggal], [
+                'tanggal' => 'required|date',
+            ]);
+
+            if ($validator->fails()) {
+                dd("Tanggal tidak valid: $tanggal");
+            }
+
+            if ($user && $shift) {
+                // Validasi tanggal
+                $validator = Validator::make(['tanggal' => $tanggal], [
+                    'tanggal' => 'required',
+                ]);
+
+                if ($validator->fails()) {
+                    continue; // Skip jika ada tanggal yang tidak valid
+                }
+
+                // Buat JadwalKaryawan
+                JadwalKaryawan::create([
+                    'user_id' => $user->id,
+                    'shift_id' => $shift->id,
+                    'tanggal' => Carbon::parse($tanggal),
+                    'minggu_ke' => Carbon::parse($tanggal)->startOfWeek(Carbon::SATURDAY)->weekOfYear,
+                ]);
+            }
+        }
+
+        return redirect()->route('input-jadwal.index')->with('success', 'Jadwal berhasil diimpor.');
     }
 
     public function edit(JadwalKaryawan $input_jadwal)
