@@ -138,22 +138,22 @@ class LaporanMingguanController extends Controller
                         $hari['d2'] = $jadwalKaryawan->shift->nama_shift;
                         break;
                     case 1:
-                        $hari['d3'] = $jadwalKaryawan->shift_id;
+                        $hari['d3'] = $jadwalKaryawan->shift->nama_shift;
                         break;
                     case 2:
-                        $hari['d4'] = $jadwalKaryawan->shift_id;
+                        $hari['d4'] = $jadwalKaryawan->shift->nama_shift;
                         break;
                     case 3:
-                        $hari['d5'] = $jadwalKaryawan->shift_id;
+                        $hari['d5'] = $jadwalKaryawan->shift->nama_shift;
                         break;
                     case 4:
-                        $hari['d6'] = $jadwalKaryawan->shift_id;
+                        $hari['d6'] = $jadwalKaryawan->shift->nama_shift;
                         break;
                     case 5:
-                        $hari['d7'] = $jadwalKaryawan->shift_id;
+                        $hari['d7'] = $jadwalKaryawan->shift->nama_shift;
                         break;
                     case 6:
-                        $hari['d1'] = $jadwalKaryawan->shift_id;
+                        $hari['d1'] = $jadwalKaryawan->shift->nama_shift;
                         break;
                 }
             }
