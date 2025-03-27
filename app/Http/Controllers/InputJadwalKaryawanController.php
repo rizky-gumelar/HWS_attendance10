@@ -32,6 +32,17 @@ class InputJadwalKaryawanController extends Controller
 
     public function store(Request $request)
     {
+        // Cek apakah jadwal sudah ada untuk user_id, shift_id, dan tanggal
+        $existingSchedule = JadwalKaryawan::where('user_id', $request->user_id)
+            // ->where('shift_id', $request->shift_id)
+            ->whereDate('tanggal', $request->tanggal)
+            ->first();
+
+        if ($existingSchedule) {
+            // Jika jadwal sudah ada, kembalikan dengan pesan error
+            return redirect()->back()->with('error', 'Jadwal sudah ada untuk tanggal tersebut.');
+        }
+
         // try {
         $request->validate([
             'user_id' => 'required|exists:users,id',
@@ -143,6 +154,17 @@ class InputJadwalKaryawanController extends Controller
 
                 if ($validator->fails()) {
                     continue; // Skip jika ada tanggal yang tidak valid
+                }
+
+                // Cek apakah jadwal sudah ada untuk user_id, shift_id, dan tanggal
+                $existingSchedule = JadwalKaryawan::where('user_id', $user->id)
+                    // ->where('shift_id', $shift->id)
+                    ->whereDate('tanggal', $tanggal)
+                    ->first();
+
+                if ($existingSchedule) {
+                    // Jika jadwal sudah ada, lanjutkan dengan pesan kesalahan
+                    return redirect()->back()->with('error', "Jadwal sudah ada untuk $userName pada tanggal $tanggal.");
                 }
 
                 // Buat JadwalKaryawan
