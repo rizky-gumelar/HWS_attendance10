@@ -55,27 +55,6 @@ class InputJadwalKaryawanController extends Controller
             'minggu_ke' => 'nullable|numeric',
         ]);
 
-        // // Ambil data absen dan shift berdasarkan ID
-        // $shift = Shift::findOrFail($request->shift_id);
-        // $absensi = Absensi::find($request->absen_id);
-
-        // $terlambat = false;
-
-        // if ($absensi) {
-        //     // Jika data absensi ditemukan, periksa jam masuknya
-        //     $shiftJamMasuk = Carbon::parse($shift->shift_masuk);
-        //     $absenJamMasuk = Carbon::parse($absensi->jam_masuk);
-
-        //     // Cek apakah karyawan terlambat
-        //     $terlambat = $absenJamMasuk->greaterThan($shiftJamMasuk);
-        // }
-
-        // // Ambil data lembur berdasarkan lembur_id
-        // $lembur = Lembur::findOrFail($request->lembur_id);
-
-        // // Menghitung total lembur: biaya_per_jam * lembur_jam
-        // $totalLembur = $lembur->biaya_per_jam * ($request->lembur_jam ?? 0);
-
         JadwalKaryawan::create([
             'user_id' => $request->user_id,
             'shift_id' => $request->shift_id,
@@ -162,18 +141,36 @@ class InputJadwalKaryawanController extends Controller
                     ->whereDate('tanggal', $tanggal)
                     ->first();
 
+                // JIKA JADWAL SUDAH ADA MAKA UPDATE
                 if ($existingSchedule) {
-                    // Jika jadwal sudah ada, lanjutkan dengan pesan kesalahan
-                    return redirect()->back()->with('error', "Jadwal sudah ada untuk $userName pada tanggal $tanggal.");
+                    // Jika jadwal sudah ada, update jadwal yang ada
+                    $existingSchedule->update([
+                        'shift_id' => $shift->id,
+                        'tanggal' => Carbon::parse($tanggal),
+                        'minggu_ke' => Carbon::parse($tanggal)->startOfWeek(Carbon::SATURDAY)->weekOfYear,
+                    ]);
+                } else {
+                    // Jika jadwal belum ada, buat jadwal baru
+                    JadwalKaryawan::create([
+                        'user_id' => $user->id,
+                        'shift_id' => $shift->id,
+                        'tanggal' => Carbon::parse($tanggal),
+                        'minggu_ke' => Carbon::parse($tanggal)->startOfWeek(Carbon::SATURDAY)->weekOfYear,
+                    ]);
                 }
 
-                // Buat JadwalKaryawan
-                JadwalKaryawan::create([
-                    'user_id' => $user->id,
-                    'shift_id' => $shift->id,
-                    'tanggal' => Carbon::parse($tanggal),
-                    'minggu_ke' => Carbon::parse($tanggal)->startOfWeek(Carbon::SATURDAY)->weekOfYear,
-                ]);
+                // // JIKA JADWAL SUDAH ADA MAKA GAGAL
+                // if ($existingSchedule) {
+                //     // Jika jadwal sudah ada, lanjutkan dengan pesan kesalahan
+                //     return redirect()->back()->with('error', "Jadwal sudah ada untuk $userName pada tanggal $tanggal.");
+                // }
+                // // Buat JadwalKaryawan
+                // JadwalKaryawan::create([
+                //     'user_id' => $user->id,
+                //     'shift_id' => $shift->id,
+                //     'tanggal' => Carbon::parse($tanggal),
+                //     'minggu_ke' => Carbon::parse($tanggal)->startOfWeek(Carbon::SATURDAY)->weekOfYear,
+                // ]);
             }
         }
 
