@@ -35,7 +35,7 @@
                         <!-- /.card-header -->
                         <div class="card-body">
                             <a href="#" class="btn btn-success my-4">Export Mingguan</a>
-                            <a href="{{ route('mingguan.generateLaporanMingguanForAll', 13) }}" class="btn btn-success my-4">Refresh</a>
+                            <a href="{{ route('mingguan.generateLaporanMingguanForAll', 12) }}" class="btn btn-success my-4">Refresh</a>
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>

@@ -97,6 +97,7 @@
                             <thead>
                                 <tr>
                                     <th>ID</th>
+                                    <th>ID Karyawan</th>
                                     <th>Nama Karyawan</th>
                                     <th>Tanggal</th>
                                     <th>Jam Masuk</th>
@@ -108,6 +109,7 @@
                                 <tr>
                                     <td>{{ $absensi->id }}</td>
                                     <td>{{ $absensi->user_id }}</td>
+                                    <td>{{ $absensi->users->nama_karyawan }}</td>
                                     <td>{{ $absensi->tanggal }}</td>
                                     <td>{{ $absensi->jam_masuk }}</td>
                                     <td>

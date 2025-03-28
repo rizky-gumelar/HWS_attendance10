@@ -23,18 +23,15 @@ class GenerateJadwalKaryawan extends Command
             ->get();
 
         $today = Carbon::today();
+        // Tentukan awal minggu (Sabtu) berdasarkan hari ini
+        $startOfWeek = $today->copy()->startOfWeek(Carbon::SATURDAY);
+        $endOfWeek = $startOfWeek->copy()->addDays(6); // Jumat
+        $mingguKe = $startOfWeek->weekOfYear; // Pastikan minggu ke-berapa
 
         foreach ($karyawanList as $karyawan) {
-            for ($i = 0; $i < 7; $i++) {
-                // Menentukan tanggal yang akan diproses
-                $tanggal = $today->copy()->addDays($i);
-
-                // Jika hari tersebut adalah Minggu (Carbon::SUNDAY == 0)
-                if ($tanggal->dayOfWeek == Carbon::SUNDAY) {
-                    $shift_id = 99; // Ganti shift_id menjadi 99 untuk hari Minggu
-                } else {
-                    $shift_id = $karyawan->ShiftID; // Gunakan shift_id default jika bukan Minggu
-                }
+            for ($tanggal = $startOfWeek->copy(); $tanggal <= $endOfWeek; $tanggal->addDay()) {
+                // Jika hari tersebut adalah Minggu, shift_id = 99
+                $shift_id = ($tanggal->dayOfWeek == Carbon::SUNDAY) ? 99 : $karyawan->ShiftID;
 
                 JadwalKaryawan::updateOrCreate(
                     [
@@ -47,7 +44,7 @@ class GenerateJadwalKaryawan extends Command
                         'lembur_jam' => 0,
                         'total_lembur' => 0,
                         'keterangan' => null,
-                        'minggu_ke' => $today->copy()->addDays($i)->startOfWeek(Carbon::SATURDAY)->weekOfYear,
+                        'minggu_ke' => $mingguKe,
                     ]
                 );
             }

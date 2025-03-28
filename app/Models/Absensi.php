@@ -19,4 +19,9 @@ class Absensi extends Model
     {
         return $this->hasMany(JadwalKaryawan::class);
     }
+
+    public function users()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }
