@@ -29,7 +29,7 @@ class UserSeeder extends Seeder
         ]);
 
         Divisi::create([
-            'nama_divisi' => 'Data',
+            'nama_divisi' => 'Admin',
         ]);
 
         Shift::create([

@@ -141,7 +141,7 @@ class InputJadwalKaryawanController extends Controller
                     ->whereDate('tanggal', $tanggal)
                     ->first();
 
-                // JIKA JADWAL SUDAH ADA MAKA UPDATE
+                // 1. JIKA JADWAL SUDAH ADA MAKA UPDATE
                 if ($existingSchedule) {
                     // Jika jadwal sudah ada, update jadwal yang ada
                     $existingSchedule->update([
@@ -159,7 +159,7 @@ class InputJadwalKaryawanController extends Controller
                     ]);
                 }
 
-                // // JIKA JADWAL SUDAH ADA MAKA GAGAL
+                // // 2. JIKA JADWAL SUDAH ADA MAKA GAGAL
                 // if ($existingSchedule) {
                 //     // Jika jadwal sudah ada, lanjutkan dengan pesan kesalahan
                 //     return redirect()->back()->with('error', "Jadwal sudah ada untuk $userName pada tanggal $tanggal.");
@@ -248,9 +248,6 @@ class InputJadwalKaryawanController extends Controller
                     // 'minggu_ke' => Carbon::today()->weekOfYear,
                 ]);
             }
-
-
-
 
             // Redirect ke halaman input-jadwal dan beri pesan sukses
             return redirect()->route('input-jadwal.index')->with('success', 'input-jadwal berhasil diperbarui!');

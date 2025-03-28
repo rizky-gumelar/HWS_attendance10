@@ -126,6 +126,12 @@ class LaporanMingguanController extends Controller
                 'd7' => null, // Jumat
             ];
 
+            $row = 7;
+            $mingguan = 0;
+            $tottelat = 0;
+            $kedatangan = 0;
+            $totlembur = 0;
+
             // Proses setiap jadwal karyawan untuk user ini
             foreach ($jadwals as $jadwalKaryawan) {
                 // Ambil hari dalam minggu dari tanggal
@@ -156,27 +162,65 @@ class LaporanMingguanController extends Controller
                         $hari['d1'] = $jadwalKaryawan->shift->nama_shift;
                         break;
                 }
+                if ($jadwalKaryawan->cek_keterlambatan == 0) {
+                    if ($jadwalKaryawan->shift->id != 99) {
+                        $mingguan = $mingguan + 15000;
+                    }
+                } else {
+                    $tottelat++;
+                }
+                $totlembur = $totlembur + $jadwalKaryawan->total_lembur;
             }
 
-            // Simpan laporan mingguan untuk user
-            $laporanMingguan = LaporanMingguan::create([
-                'user_id' => $userId,
-                'minggu_ke' => $mingguKe,
-                'd1' => $hari['d1'],
-                'd2' => $hari['d2'],
-                'd3' => $hari['d3'],
-                'd4' => $hari['d4'],
-                'd5' => $hari['d5'],
-                'd6' => $hari['d6'],
-                'd7' => $hari['d7'],
-                'uang_mingguan' => 0,  // Sementara kosongkan
-                'uang_kedatangan' => 0,  // Sementara kosongkan
-                'uang_lembur_mingguan' => 0,  // Sementara kosongkan
-            ]);
+            if ($tottelat > 0) {
+                $kedatangan = 0;
+            } else {
+                $kedatangan = 40000;
+            }
+
+            $existingSchedule = LaporanMingguan::where('user_id', $userId)
+                ->where('minggu_ke', $mingguKe)
+                ->first();
+
+            // JIKA JADWAL SUDAH ADA MAKA UPDATE
+            if ($existingSchedule) {
+                // Jika jadwal sudah ada, update jadwal yang ada
+                $existingSchedule->update([
+                    'user_id' => $userId,
+                    'minggu_ke' => $mingguKe,
+                    'd1' => $hari['d1'],
+                    'd2' => $hari['d2'],
+                    'd3' => $hari['d3'],
+                    'd4' => $hari['d4'],
+                    'd5' => $hari['d5'],
+                    'd6' => $hari['d6'],
+                    'd7' => $hari['d7'],
+                    'uang_mingguan' => $mingguan,  // Sementara kosongkan
+                    'uang_kedatangan' => $kedatangan,  // Sementara kosongkan
+                    'uang_lembur_mingguan' => $totlembur,  // Sementara kosongkan
+                ]);
+            } else {
+                // Simpan laporan mingguan untuk user
+                $laporanMingguan = LaporanMingguan::create([
+                    'user_id' => $userId,
+                    'minggu_ke' => $mingguKe,
+                    'd1' => $hari['d1'],
+                    'd2' => $hari['d2'],
+                    'd3' => $hari['d3'],
+                    'd4' => $hari['d4'],
+                    'd5' => $hari['d5'],
+                    'd6' => $hari['d6'],
+                    'd7' => $hari['d7'],
+                    'uang_mingguan' => $mingguan,  // Sementara kosongkan
+                    'uang_kedatangan' => $kedatangan,  // Sementara kosongkan
+                    'uang_lembur_mingguan' => $totlembur,  // Sementara kosongkan
+                ]);
+            }
         }
 
-        return response()->json([
-            'message' => 'Laporan mingguan berhasil dibuat untuk seluruh karyawan.',
-        ]);
+        // return response()->json([
+        //     'message' => 'Laporan mingguan berhasil dibuat untuk seluruh karyawan.',
+        // ]);
+        return redirect()->route('mingguan.index')->with('success', 'Jadwal berhasil diimpor.');
     }
 }
