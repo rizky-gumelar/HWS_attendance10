@@ -33,6 +33,22 @@
                 <div class="card">
                     <!-- /.card-header -->
                     <div class="card-body">
+                        <form action="{{ route('absensi.index') }}" method="GET">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label for="start_date">Dari Tanggal:</label>
+                                    <input type="date" name="start_date" id="start_date" class="form-control" value="{{ request('start_date') }}">
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="end_date">Sampai Tanggal:</label>
+                                    <input type="date" name="end_date" id="end_date" class="form-control" value="{{ request('end_date') }}">
+                                </div>
+                                <div class="col-md-4 d-flex align-items-end">
+                                    <button type="submit" class="btn btn-primary">Cari</button>
+                                    <a href="{{ route('absensi.index') }}" class="btn btn-secondary ml-2">Reset</a>
+                                </div>
+                            </div>
+                        </form>
                         <!-- <a href="{{ route('absensi.create') }}" class="btn btn-success my-4">Tambah Absensi</a> -->
                         <!-- <div class="card-body">
                             <div id="actions" class="row">

@@ -10,10 +10,24 @@ use Carbon\Carbon;
 
 class ManageAbsensiController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $absensis = Absensi::all();
-        return view('absensi_view.index', compact('absensis'));
+        $query = Absensi::with(['users']);
+        // Ambil nilai rentang tanggal dari request
+        $startDate = $request->query('start_date');
+        $endDate = $request->query('end_date');
+
+        // Jika ada rentang tanggal, filter berdasarkan tanggal
+        if ($startDate && $endDate) {
+            $query->whereBetween('tanggal', [$startDate, $endDate]);
+        }
+        // Ambil data yang sudah difilter
+        $absensis = $query->get();
+
+        return view('absensi_view.index', compact('absensis', 'startDate', 'endDate'));
+
+        // $absensis = Absensi::all();
+        // return view('absensi_view.index', compact('absensis'));
     }
 
     public function import(Request $request)
