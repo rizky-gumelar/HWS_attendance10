@@ -33,21 +33,31 @@
 
                     <div class="card">
                         <!-- /.card-header -->
+
                         <div class="card-body">
+                            <form action="{{ route('mingguan.index') }}" method="GET">
+                                <label for="minggu_ke">Pilih Minggu Ke:</label>
+                                <select name="minggu_ke" id="minggu_ke" class="form-control">
+                                    @for ($i = 1; $i <= 52; $i++)
+                                        <option value="{{ $i }}" {{ $i == $mingguKe ? 'selected' : '' }}>Minggu ke-{{ $i }}</option>
+                                        @endfor
+                                </select>
+                                <button type="submit" class="btn btn-primary mt-2">Tampilkan</button>
+                            </form>
                             <a href="#" class="btn btn-success my-4">Export Mingguan</a>
-                            <a href="{{ route('mingguan.generateLaporanMingguanForAll', 12) }}" class="btn btn-success my-4">Refresh</a>
+                            <a href="{{ route('mingguan.generateLaporanMingguanForAll', $mingguKe) }}" class="btn btn-success my-4">Refresh</a>
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
                                         <!-- <th>ID</th> -->
                                         <th>Nama Karyawan</th>
-                                        <th>S</th>
-                                        <th>M</th>
-                                        <th>S</th>
-                                        <th>S</th>
-                                        <th>R</th>
-                                        <th>K</th>
-                                        <th>J</th>
+                                        <th>Sabtu</th>
+                                        <th>Minggu</th>
+                                        <th>Senin</th>
+                                        <th>Selasa</th>
+                                        <th>Rabu</th>
+                                        <th>Kamis</th>
+                                        <th>Jumat</th>
                                         <th>Mingguan</th>
                                         <th>Kehadiran</th>
                                         <th>Lembur</th>
@@ -73,7 +83,7 @@
                                         <td>{{ $mingguan->uang_mingguan + $mingguan->uang_kedatangan + $mingguan->uang_lembur_mingguan }}</td>
                                         <td>
 
-                                            <a href="{{ route('input-jadwal.export', $mingguan->users->id) }}" class="btn btn-success">Export</a>
+                                            <a href="{{ route('input-jadwal.export', ['user_id' => $mingguan->users->id, 'minggu_ke' => $mingguan->minggu_ke]) }}" class="btn btn-success">Export</a>
                                         </td>
                                     </tr>
                                     @endforeach

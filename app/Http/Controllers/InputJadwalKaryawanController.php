@@ -264,12 +264,14 @@ class InputJadwalKaryawanController extends Controller
         return redirect()->route('input-jadwal.index')->with('success', 'input-jadwal deleted successfully.');
     }
 
-    public function export($user_id)
+    public function export(Request $request)
     {
+        $user_id = $request->query('user_id');
+        $minggu_ke = $request->query('minggu_ke');
         // Fetch the data from the database for a specific employee
         $employee = JadwalKaryawan::with(['users', 'shift', 'lembur', 'absensi'])
             ->where('user_id', $user_id) // Replace with actual employee ID or loop through employees
-            ->where('minggu_ke', 13)
+            ->where('minggu_ke', $minggu_ke)
             // ->whereBetween('tanggal', ['2025-03-26', '2025-04-04'])
             ->get();
 
@@ -279,12 +281,11 @@ class InputJadwalKaryawanController extends Controller
 
         // Setting the period
         $sheet->setCellValue('B1', 'Periode');
-        $sheet->setCellValue('C1', '15-21 Maret 2025');
+        $sheet->setCellValue('C1', 'Minggu ke-' . $minggu_ke);
 
         // Employee name
         $sheet->setCellValue('B3', 'Nama');
-        $sheet->setCellValue('C3', $employee->first()->users->nama_karyawan); // Replace with actual employee name
-
+        $sheet->setCellValue('C3', $employee->first()->users->nama_karyawan);
         // Shift (BJ or other)
         $sheet->setCellValue('C4', 'BJ'); // Replace with shift info (e.g., from the shift relationship)
 
@@ -346,7 +347,7 @@ class InputJadwalKaryawanController extends Controller
         $writer = new Xlsx($spreadsheet);
 
         // Set the response headers for downloading the Excel file
-        $filename = 'jadwal_karyawan_' . now()->format('Y_m_d_H_i_s') . '.xlsx';
+        $filename = $employee->first()->users->nama_karyawan . '_' . now()->format('Y_m_d_H_i_s') . '.xlsx';
         return response()->stream(
             function () use ($writer) {
                 $writer->save('php://output');

@@ -13,13 +13,20 @@ use Carbon\Carbon;
 
 class LaporanMingguanController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         // $karyawans = User::where('status', 'aktif')->get();
-        $mingguans = LaporanMingguan::all();
-        $karyawans = User::all();
+        // $mingguans = LaporanMingguan::all();
+        // $karyawans = User::all();
+        $mingguKe = $request->query('minggu_ke', Carbon::today()->startOfWeek(Carbon::SATURDAY)->weekOfYear);
+
+        $mingguans = LaporanMingguan::where('minggu_ke', $mingguKe)
+            ->with('users') // Pastikan relasi users dipanggil
+            ->get();
+
+        $karyawans = User::where('status', 'aktif')->get();
         // $mingguan = User::orderBy('status', 'asc')->orderBy('id', 'asc')->get();
-        return view('mingguan_view.index', compact('mingguans', 'karyawans'));
+        return view('mingguan_view.index', compact('mingguans', 'karyawans', 'mingguKe'));
     }
 
     // Fungsi untuk membuat laporan mingguan untuk seluruh user
