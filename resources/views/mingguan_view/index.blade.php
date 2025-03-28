@@ -44,6 +44,10 @@
                                 </select>
                                 <button type="submit" class="btn btn-primary mt-2">Tampilkan</button>
                             </form>
+                            <!-- Menampilkan rentang tanggal dari minggu yang dipilih -->
+                            @if(isset($startDate) && isset($endDate))
+                            <p class="mt-3"><strong>Periode Tanggal:</strong> {{ \Carbon\Carbon::parse($startDate)->translatedFormat('d M Y') }} - {{ \Carbon\Carbon::parse($endDate)->translatedFormat('d M Y') }}</p>
+                            @endif
                             <a href="#" class="btn btn-success my-4">Export Mingguan</a>
                             <a href="{{ route('mingguan.generateLaporanMingguanForAll', $mingguKe) }}" class="btn btn-success my-4">Refresh</a>
                             <table id="example1" class="table table-bordered table-striped">
