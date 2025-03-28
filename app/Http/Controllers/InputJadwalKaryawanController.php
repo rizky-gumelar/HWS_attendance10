@@ -17,10 +17,23 @@ use Illuminate\Support\Facades\Validator;
 
 class InputJadwalKaryawanController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $input_jadwals = JadwalKaryawan::all();
-        return view('input-jadwal_view.index', compact('input_jadwals'));
+        $query = JadwalKaryawan::with(['users', 'shift', 'absensi', 'lembur']);
+        // Ambil nilai rentang tanggal dari request
+        $startDate = $request->query('start_date');
+        $endDate = $request->query('end_date');
+
+        // Jika ada rentang tanggal, filter berdasarkan tanggal
+        if ($startDate && $endDate) {
+            $query->whereBetween('tanggal', [$startDate, $endDate]);
+        }
+        // Ambil data yang sudah difilter
+        $input_jadwals = $query->get();
+
+        return view('input-jadwal_view.index', compact('input_jadwals', 'startDate', 'endDate'));
+        // $input_jadwals = JadwalKaryawan::all();
+        // return view('input-jadwal_view.index', compact('input_jadwals'));
     }
 
     public function create()
