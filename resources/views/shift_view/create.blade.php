@@ -1,4 +1,8 @@
-@extends('layouts.manage')
+@php
+$layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_manage';
+@endphp
+
+@extends($layout)
 
 @section('title', 'Manage')
 
