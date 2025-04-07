@@ -56,18 +56,16 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                                 </thead>
                                 <tbody>
                                     @foreach ($karyawans as $karyawan)
-                                    <tr @if($karyawan->status == 'nonaktif')
-                                        style="color: red;"
-                                        @endif>
-                                        <td>{{ $karyawan->id }}</td>
-                                        <td>{{ $karyawan->nama_karyawan }}</td>
-                                        <td>{{ $karyawan->toko->nama_toko ?? 'Toko Tidak Ditemukan' }}</td>
-                                        <td>{{ $karyawan->shift->nama_shift ?? 'Shift Tidak Ditemukan' }}</td>
-                                        <td>{{ $karyawan->divisi->nama_divisi }}</td>
-                                        <td>{{ $karyawan->email }}</td>
-                                        <td>{{ $karyawan->no_hp }}</td>
-                                        <td>{{ $karyawan->role_name  }}</td>
-                                        <td>{{ $karyawan->status  }}</td>
+                                    <tr>
+                                        <td @if($karyawan->status == 'nonaktif') style="color: red;" @endif>{{ $karyawan->id }}</td>
+                                        <td @if($karyawan->status == 'nonaktif') style="color: red;" @endif>{{ $karyawan->nama_karyawan }}</td>
+                                        <td @if($karyawan->status == 'nonaktif') style="color: red;" @endif>{{ $karyawan->toko->nama_toko ?? 'Toko Tidak Ditemukan' }}</td>
+                                        <td @if($karyawan->status == 'nonaktif') style="color: red;" @endif>{{ $karyawan->shift->nama_shift ?? 'Shift Tidak Ditemukan' }}</td>
+                                        <td @if($karyawan->status == 'nonaktif') style="color: red;" @endif>{{ $karyawan->divisi->nama_divisi }}</td>
+                                        <td @if($karyawan->status == 'nonaktif') style="color: red;" @endif>{{ $karyawan->email }}</td>
+                                        <td @if($karyawan->status == 'nonaktif') style="color: red;" @endif>{{ $karyawan->no_hp }}</td>
+                                        <td @if($karyawan->status == 'nonaktif') style="color: red;" @endif>{{ $karyawan->role_name  }}</td>
+                                        <td @if($karyawan->status == 'nonaktif') style="color: red;" @endif>{{ $karyawan->status  }}</td>
                                         <td>
                                             <a href="{{ route('manage-karyawan.edit', $karyawan->id) }}" class="btn btn-warning">Edit</a>
                                             <!-- <a href="{{ route('input-jadwal.export', $karyawan->id) }}" class="btn btn-warning">Export</a> -->
