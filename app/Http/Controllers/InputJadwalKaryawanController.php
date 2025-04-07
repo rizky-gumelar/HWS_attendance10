@@ -14,6 +14,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Artisan;
 
 class InputJadwalKaryawanController extends Controller
 {
@@ -372,6 +373,15 @@ class InputJadwalKaryawanController extends Controller
                 'Cache-Control' => 'max-age=0',
             ]
         );
+    }
+
+    public function generate()
+    {
+        // Menjalankan command generate:jadwal
+        Artisan::call('generate:jadwal');
+
+        // Redirect kembali dengan pesan sukses
+        return redirect()->back()->with('success', 'Jadwal karyawan berhasil digenerate.');
     }
 
     // public function export()

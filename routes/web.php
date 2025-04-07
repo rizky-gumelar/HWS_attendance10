@@ -150,4 +150,6 @@ Route::middleware(['auth', 'role:admin|spv'])->group(function () {
         Route::put('/{input_jadwal}', [InputJadwalKaryawanController::class, 'update'])->name('input-jadwal.update');
         Route::delete('/{input_jadwal}', [InputJadwalKaryawanController::class, 'destroy'])->name('input-jadwal.destroy');
     });
+    // GENERATE JADWAL
+    Route::get('/generate-jadwal', [InputJadwalKaryawanController::class, 'generate'])->name('generate.jadwal');
 });

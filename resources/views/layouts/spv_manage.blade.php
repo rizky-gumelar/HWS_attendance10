@@ -30,7 +30,7 @@
         @include('layouts.navbar')
 
         <!-- Sidebar -->
-        @include('layouts.sidebar')
+        @include('layouts.spv_sidebar')
 
         <!-- Content -->
         @yield('content')
