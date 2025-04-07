@@ -143,6 +143,7 @@ class LaporanMingguanController extends Controller
             $tottelat = 0;
             $kedatangan = 0;
             $totlembur = 0;
+            $status = 'selesai';
 
             // Proses setiap jadwal karyawan untuk user ini
             foreach ($jadwals as $jadwalKaryawan) {
@@ -178,16 +179,19 @@ class LaporanMingguanController extends Controller
                     if ($jadwalKaryawan->shift->id != 99) {
                         $mingguan = $mingguan + 15000;
                     }
+                } else if ($jadwalKaryawan->cek_keterlambatan == 2) {
+                    $status = 'kurang';
                 } else {
                     $tottelat++;
                 }
                 $totlembur = $totlembur + $jadwalKaryawan->total_lembur;
             }
 
-            if ($tottelat > 0) {
+            if ($tottelat > 0 || $status == 'kurang') {
                 $kedatangan = 0;
             } else {
                 $kedatangan = 40000;
+                // $status = 'selesai';
             }
 
             $existingSchedule = LaporanMingguan::where('user_id', $userId)
@@ -210,6 +214,7 @@ class LaporanMingguanController extends Controller
                     'uang_mingguan' => $mingguan,  // Sementara kosongkan
                     'uang_kedatangan' => $kedatangan,  // Sementara kosongkan
                     'uang_lembur_mingguan' => $totlembur,  // Sementara kosongkan
+                    'status' => $status,  // Sementara kosongkan
                 ]);
             } else {
                 // Simpan laporan mingguan untuk user
@@ -226,6 +231,7 @@ class LaporanMingguanController extends Controller
                     'uang_mingguan' => $mingguan,  // Sementara kosongkan
                     'uang_kedatangan' => $kedatangan,  // Sementara kosongkan
                     'uang_lembur_mingguan' => $totlembur,  // Sementara kosongkan
+                    'status' => $status,  // Sementara kosongkan
                 ]);
             }
         }

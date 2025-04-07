@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('lembur_id')->nullable()->constrained('lembur')->onDelete('set null');
             $table->foreignId('absen_id')->nullable()->constrained('absensi_harian')->onDelete('set null');
             $table->date('tanggal');
-            $table->boolean('cek_keterlambatan')->nullable();
+            $table->integer('cek_keterlambatan')->default(2);
             $table->integer('lembur_jam')->default(0);
             $table->integer('total_lembur')->default(0);
             $table->text('keterangan')->nullable();

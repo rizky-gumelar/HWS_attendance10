@@ -25,6 +25,7 @@ return new class extends Migration
             $table->integer('uang_mingguan');
             $table->integer('uang_kedatangan');
             $table->integer('uang_lembur_mingguan');
+            $table->enum('status', ['selesai', 'kurang']);
             $table->timestamps();
         });
     }

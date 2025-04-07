@@ -22,6 +22,7 @@ class LaporanMingguan extends Model
         'uang_mingguan',
         'uang_kedatangan',
         'uang_lembur_mingguan',
+        'status',
     ];
 
     public function users()

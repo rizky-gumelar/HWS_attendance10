@@ -66,6 +66,7 @@
                                         <th>Kehadiran</th>
                                         <th>Lembur</th>
                                         <th>Total</th>
+                                        <th>Status</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
@@ -85,9 +86,11 @@
                                         <td>{{ $mingguan->uang_kedatangan }}</td>
                                         <td>{{ $mingguan->uang_lembur_mingguan  }}</td>
                                         <td>{{ $mingguan->uang_mingguan + $mingguan->uang_kedatangan + $mingguan->uang_lembur_mingguan }}</td>
+                                        <td @if($mingguan->status == 'kurang') style="color: red;" @endif>{{ $mingguan->status }}</td>
                                         <td>
 
                                             <a href="{{ route('input-jadwal.export', ['user_id' => $mingguan->users->id, 'minggu_ke' => $mingguan->minggu_ke]) }}" class="btn btn-success">Export</a>
+                                            <a href="{{ route('input-jadwal.export', ['user_id' => $mingguan->users->id, 'minggu_ke' => $mingguan->minggu_ke]) }}" class="btn btn-info">Detail</a>
                                         </td>
                                     </tr>
                                     @endforeach
