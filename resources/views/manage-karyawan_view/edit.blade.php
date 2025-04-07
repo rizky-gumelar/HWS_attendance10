@@ -46,7 +46,7 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Shift Default</label>
+                    <label>Divisi</label>
                     <select class="form-control" id="divisi_id" name="divisi_id" required>
                         <option value="" disabled selected>Pilih Divisi</option>
                         @foreach($divisis as $divisi)

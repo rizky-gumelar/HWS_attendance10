@@ -12,8 +12,20 @@ class ManageKaryawanController extends Controller
 {
     public function index()
     {
+        $user = auth()->user();
         // $karyawans = User::where('status', 'aktif')->get();
-        $karyawans = User::all();
+        if ($user->role === 'admin') {
+            $karyawans = User::all(); // atau pakai filter status jika perlu
+        } else if ($user->role === 'spv') {
+            $karyawans = User::role('karyawan')->divisi($user->divisi_id)->get();
+            // $karyawans = User::where('divisi_id', $user->divisi_id)
+            //     ->where('role', 'karyawan')
+            //     ->where('id', '!=', $user->id) // kalau kamu ingin SPV tidak melihat dirinya sendiri
+            //     ->get();
+        } else {
+            // fallback jika bukan admin/spv (misal user biasa)
+            abort(403, 'Unauthorized');
+        }
         // $karyawans = User::orderBy('status', 'asc')->orderBy('id', 'asc')->get();
         return view('manage-karyawan_view.index', compact('karyawans'));
     }

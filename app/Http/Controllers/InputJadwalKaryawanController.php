@@ -20,7 +20,15 @@ class InputJadwalKaryawanController extends Controller
 {
     public function index(Request $request)
     {
+        $user = auth()->user();
+
         $query = JadwalKaryawan::with(['users', 'shift', 'absensi', 'lembur']);
+
+        if ($user->role === 'spv') {
+            $query->whereHas('users', function ($q) use ($user) {
+                $q->where('divisi_id', $user->divisi_id);
+            });
+        }
         // Ambil nilai rentang tanggal dari request
         $startDate = $request->query('start_date');
         $endDate = $request->query('end_date');

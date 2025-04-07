@@ -99,6 +99,14 @@ class User extends Authenticatable
         return $this->hasMany(LaporanMingguan::class, 'id');
     }
 
+    public function scopeRole($query, $role)
+    {
+        return $query->where('role', $role);
+    }
+    public function scopeDivisi($query, $divisiId)
+    {
+        return $query->where('divisi_id', $divisiId);
+    }
     // public function index()
     // {
     //     // Ambil seluruh user beserta nama toko mereka
