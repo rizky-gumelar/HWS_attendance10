@@ -18,6 +18,9 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <p>Download template excel :
+                    <a href="{{ route('export-template') }}">Template Excel</a>
+                </p>
                 <form action="{{ route('input-jadwal.import') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="form-group">
@@ -39,6 +42,7 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
         </div>
     </div>
 </div>
+
 <!-- Main content -->
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -90,7 +94,6 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                                 Import Jadwal
                             </button>
                             <a href="{{ route('generate.jadwal') }}" class="btn btn-danger my-4">Generate Jadwal</a>
-                            <a href="{{ route('export-template') }}" class="btn btn-danger my-4">Export Template</a>
                             <!-- <a href="{{ route('input-jadwal.import') }}" class="btn btn-primary my-4">Import CSV</a> -->
 
                             <table id="example1" class="table table-bordered table-striped">
