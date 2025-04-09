@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('jenis_cuti_id')->constrained('jenis_cuti')->onDelete('cascade');
             $table->date('tanggal');
             $table->text('keterangan')->nullable();
-            $table->integer('status');
+            $table->integer('status')->default(0);
             $table->timestamps();
         });
     }

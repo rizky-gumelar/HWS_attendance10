@@ -15,6 +15,7 @@ use App\Http\Controllers\ManageDivisiController;
 use App\Http\Controllers\ManageLemburController;
 use App\Http\Controllers\InputJadwalKaryawanController;
 use App\Http\Controllers\LaporanMingguanController;
+use App\Http\Controllers\PengajuanCutiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -150,6 +151,14 @@ Route::middleware(['auth', 'role:admin|spv'])->group(function () {
         Route::put('/{input_jadwal}', [InputJadwalKaryawanController::class, 'update'])->name('input-jadwal.update');
         Route::delete('/{input_jadwal}', [InputJadwalKaryawanController::class, 'destroy'])->name('input-jadwal.destroy');
     });
+    // PENGAJUAN CUTI
+    Route::prefix('cuti')->group(function () {
+        Route::get('/', [PengajuanCutiController::class, 'index'])->name('cuti.index');
+        Route::get('/create', [PengajuanCutiController::class, 'create'])->name('cuti.create');
+        Route::post('/store', [PengajuanCutiController::class, 'store'])->name('cuti.store');
+    });
+
+
     // GENERATE JADWAL
     Route::get('/generate-jadwal', [InputJadwalKaryawanController::class, 'generate'])->name('generate.jadwal');
     Route::get('/export-template', [App\Http\Controllers\ExportController::class, 'exportTemplate'])->name('export-template');
