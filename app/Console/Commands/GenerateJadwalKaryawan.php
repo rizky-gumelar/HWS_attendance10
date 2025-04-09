@@ -30,8 +30,8 @@ class GenerateJadwalKaryawan extends Command
 
         foreach ($karyawanList as $karyawan) {
             for ($tanggal = $startOfWeek->copy(); $tanggal <= $endOfWeek; $tanggal->addDay()) {
-                // Jika hari tersebut adalah Minggu, shift_id = 99
-                $shift_id = ($tanggal->dayOfWeek == Carbon::SUNDAY) ? 99 : $karyawan->ShiftID;
+                // Jika hari tersebut adalah Minggu, shift_id = 999
+                $shift_id = ($tanggal->dayOfWeek == Carbon::SUNDAY) ? 9999 : $karyawan->ShiftID;
 
                 JadwalKaryawan::updateOrCreate(
                     [

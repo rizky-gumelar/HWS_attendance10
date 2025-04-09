@@ -32,7 +32,7 @@ class PengajuanCutiController extends Controller
             'jenis_cuti_id' => $request->jenis_cuti_id,
             'tanggal' => $request->tanggal,
             'keterangan' => $request->keterangan,
-            'status' => 0,
+            'status' => 'pending',
         ]);
 
         return redirect()->back()->with('success', 'Pengajuan cuti berhasil dikirim.');

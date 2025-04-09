@@ -23,8 +23,8 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
             @csrf
             <div class="card-body">
                 <div class="form-group">
-                    <label>Text Disabled</label>
-                    <input type="text" class="form-control" placeholder="Enter ..." disabled>
+                    <label>Nama Karyawan</label>
+                    <input type="text" class="form-control" value="{{ auth()->user()->nama_karyawan }}" disabled>
                 </div>
                 <div class="form-group">
                     <label>Jenis Cuti</label>

@@ -22,8 +22,11 @@
                     <input type="text" class="form-control" id="nama_cuti" name="nama_cuti" placeholder="Masukkan nama" required>
                 </div>
                 <div class="form-group">
-                    <label for="status">Status</label>
-                    <input type="number" class="form-control" id="status" name="status" required>
+                    <label>Potong saldo cuti</label>
+                    <select class="form-control" name="status" required>
+                        <option value="1">Potong saldo</option>
+                        <option value="0">Tidak</option>
+                    </select>
                 </div>
             </div>
             <!-- /.card-body -->
