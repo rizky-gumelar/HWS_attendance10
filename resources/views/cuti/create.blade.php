@@ -31,7 +31,7 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                     <select class="form-control" id="jenis_cuti_id" name="jenis_cuti_id" required>
                         <option value="" disabled selected>Pilih Jenis Cuti</option>
                         @foreach($jenisCuti as $jenis)
-                        <option value="{{ $jenis_cuti->id }}">{{ $jenis_cuti->nama_cuti }}</option>
+                        <option value="{{ $jenis->id }}">{{ $jenis->nama_cuti }}</option>
                         @endforeach
                     </select>
                 </div>
