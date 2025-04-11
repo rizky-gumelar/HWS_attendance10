@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('jenis_cuti_id')->constrained('jenis_cuti')->onDelete('cascade');
             $table->date('tanggal');
             $table->text('keterangan')->nullable();
-            $table->enum('status', ['approve', 'reject', 'pending'])->default('pending')->change();
+            $table->enum('status', ['approve', 'reject', 'pending'])->default('pending');
             $table->timestamps();
         });
     }

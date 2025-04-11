@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Cuti;
+use App\Models\PengajuanCuti;
 use App\Models\JenisCuti;
 
 class PengajuanCutiController extends Controller
@@ -27,7 +27,7 @@ class PengajuanCutiController extends Controller
             'keterangan' => 'nullable|string',
         ]);
 
-        Cuti::create([
+        PengajuanCuti::create([
             'user_id' => auth()->id(),
             'jenis_cuti_id' => $request->jenis_cuti_id,
             'tanggal' => $request->tanggal,
@@ -36,5 +36,29 @@ class PengajuanCutiController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Pengajuan cuti berhasil dikirim.');
+    }
+
+    public function approvalIndex()
+    {
+        $pengajuanCuti = PengajuanCuti::with('users', 'jenis_cuti')->orderBy('created_at', 'desc')->get();
+        return view('cuti.approval', compact('pengajuanCuti'));
+    }
+
+    public function approve($id)
+    {
+        $cuti = PengajuanCuti::findOrFail($id);
+        $cuti->status = 'approve';
+        $cuti->save();
+
+        return back()->with('success', 'Cuti telah disetujui.');
+    }
+
+    public function reject($id)
+    {
+        $cuti = PengajuanCuti::findOrFail($id);
+        $cuti->status = 'reject';
+        $cuti->save();
+
+        return back()->with('success', 'Cuti telah ditolak.');
     }
 }

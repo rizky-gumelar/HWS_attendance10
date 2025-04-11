@@ -156,6 +156,9 @@ Route::middleware(['auth', 'role:admin|spv'])->group(function () {
         Route::get('/', [PengajuanCutiController::class, 'index'])->name('cuti.index');
         Route::get('/create', [PengajuanCutiController::class, 'create'])->name('cuti.create');
         Route::post('/store', [PengajuanCutiController::class, 'store'])->name('cuti.store');
+        Route::get('/approval', [PengajuanCutiController::class, 'approvalIndex'])->name('cuti.approval.index');
+        Route::post('/{id}/approve', [PengajuanCutiController::class, 'approve'])->name('cuti.approve');
+        Route::post('/{id}/reject', [PengajuanCutiController::class, 'reject'])->name('cuti.reject');
     });
 
 

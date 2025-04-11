@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class PengajuanCuti extends Model
 {
     use HasFactory;
+    protected $table = 'pengajuan_cuti';
     protected $fillable = [
         'user_id',
         'jenis_cuti_id',
@@ -15,4 +16,14 @@ class PengajuanCuti extends Model
         'keterangan',
         'status',
     ];
+
+    public function users()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function jenis_cuti()
+    {
+        return $this->belongsTo(JenisCuti::class, 'jenis_cuti_id');
+    }
 }

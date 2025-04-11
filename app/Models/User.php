@@ -107,6 +107,12 @@ class User extends Authenticatable
     {
         return $query->where('divisi_id', $divisiId);
     }
+
+    // Relasi ke tabel pengajuan_cuti
+    public function pengajuan_cuti()
+    {
+        return $this->hasMany(PengajuanCuti::class, 'id');
+    }
     // public function index()
     // {
     //     // Ambil seluruh user beserta nama toko mereka
