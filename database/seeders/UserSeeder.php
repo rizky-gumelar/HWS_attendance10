@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Toko;
 use App\Models\Shift;
 use App\Models\Divisi;
+use App\Models\JenisCuti;
 use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
@@ -47,6 +48,18 @@ class UserSeeder extends Seeder
             'nama_shift' => 'Libur',
             'shift_masuk' => '23:59:58',
             'shift_keluar' => '23:59:59',
+        ]);
+        Shift::create([
+            'id' => 9998,
+            'nama_shift' => 'Cuti Free',
+            'shift_masuk' => '23:59:58',
+            'shift_keluar' => '23:59:59',
+        ]);
+        Shift::create([
+            'id' => 9997,
+            'nama_shift' => 'Cuti',
+            'shift_masuk' => '00:00:01',
+            'shift_keluar' => '00:00:01',
         ]);
 
         User::create([
@@ -103,6 +116,36 @@ class UserSeeder extends Seeder
             'role' => 'karyawan',
             'total_cuti' => 0,
             'status' => 'nonaktif',
+        ]);
+        JenisCuti::create([
+            'id' => 1,
+            'nama_cuti' => 'Sakit',
+            'status' => '0',
+        ]);
+        JenisCuti::create([
+            'id' => 2,
+            'nama_cuti' => 'Pernikahan',
+            'status' => '0',
+        ]);
+        JenisCuti::create([
+            'id' => 3,
+            'nama_cuti' => 'Kedukaan',
+            'status' => '0',
+        ]);
+        JenisCuti::create([
+            'id' => 4,
+            'nama_cuti' => 'Melahirkan',
+            'status' => '0',
+        ]);
+        JenisCuti::create([
+            'id' => 5,
+            'nama_cuti' => 'Cuti Bersama',
+            'status' => '1',
+        ]);
+        JenisCuti::create([
+            'id' => 6,
+            'nama_cuti' => 'Cuti Tahunan',
+            'status' => '1',
         ]);
     }
 }

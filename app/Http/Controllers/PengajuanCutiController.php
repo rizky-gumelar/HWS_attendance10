@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\PengajuanCuti;
 use App\Models\JenisCuti;
+use App\Models\JadwalKaryawan;
 
 class PengajuanCutiController extends Controller
 {
@@ -50,7 +51,15 @@ class PengajuanCutiController extends Controller
         $cuti->status = 'approve';
         $cuti->save();
 
-        return back()->with('success', 'Cuti telah disetujui.');
+        // Ganti shift di tabel jadwal
+        $shiftId = $cuti->jenis_cuti->status == 0 ? 9998 : 9997;
+
+        JadwalKaryawan::updateOrCreate(
+            ['user_id' => $cuti->user_id, 'tanggal' => $cuti->tanggal],
+            ['shift_id' => $shiftId]
+        );
+
+        return back()->with('success', 'Cuti telah disetujui dan jadwal shift diperbarui.');
     }
 
     public function reject($id)
