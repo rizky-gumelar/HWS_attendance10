@@ -228,12 +228,16 @@ class InputJadwalKaryawanController extends Controller
             $absensi = Absensi::find($input_jadwal->absen_id);
             $shift = Shift::findOrFail($request->shift_id);
 
-            // Membandingkan jam masuk shift dengan jam masuk absen
-            $shiftJamMasuk = \Carbon\Carbon::parse($shift->shift_masuk);
-            $absenJamMasuk = \Carbon\Carbon::parse($absensi->jam_masuk);
+            if (!$absensi || $absensi->jam_masuk == null) {
+                $terlambat = 2;
+            } else {
+                $shiftJamMasuk = \Carbon\Carbon::parse($shift->shift_masuk);
+                $absenJamMasuk = \Carbon\Carbon::parse($absensi->jam_masuk);
 
-            // Cek apakah karyawan terlambat
-            $terlambat = $absenJamMasuk->greaterThan($shiftJamMasuk);
+                $terlambat = $absenJamMasuk->greaterThan($shiftJamMasuk);
+            }
+
+
 
             // Hitung keterlambatan dalam menit
             // $keterlambatan = $terlambat ? $absenJamMasuk->diffInMinutes($shiftJamMasuk) : 0;
