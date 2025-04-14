@@ -32,8 +32,32 @@
         <!-- Sidebar -->
         @include('layouts.sidebar')
 
-        <!-- Content -->
-        @yield('content')
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- general form elements -->
+            <div class="card card-primary mx-4">
+                @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+                @endif
+
+                @if (session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+                @endif
+
+                @if (session('warning'))
+                <div class="alert alert-warning">
+                    {{ session('warning') }}
+                </div>
+                @endif
+            </div>
+
+            <!-- Content -->
+            @yield('content')
+        </div>
 
         <!-- Footer -->
         @include('layouts.footer')

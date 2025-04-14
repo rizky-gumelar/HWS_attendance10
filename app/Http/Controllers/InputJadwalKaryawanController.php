@@ -330,7 +330,7 @@ class InputJadwalKaryawanController extends Controller
         foreach ($employee as $item) {
             $sheet->setCellValue('B' . $row, \Carbon\Carbon::parse($item->tanggal)->format('d-m-y'));
             $sheet->setCellValue('C' . $row, $item->shift->nama_shift); // Change as per the condition
-            if ($item->shift->id == 99) {
+            if ($item->shift->id == 9999) {
                 $sheet->setCellValue('D' . $row, ''); // Change as per the condition
                 // $sheet->setCellValue('E' . $row, ''); // Change as per the condition
             } else {
@@ -338,7 +338,7 @@ class InputJadwalKaryawanController extends Controller
                 // $sheet->setCellValue('E' . $row, $item->keterlambatan_name); // Change as per the condition
             }
             if ($item->cek_keterlambatan == 0) {
-                if ($item->shift->id != 99) {
+                if ($item->shift->id != 9999) {
                     $mingguan = $mingguan + 15000;
                 }
             } else {
