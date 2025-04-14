@@ -46,10 +46,14 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                 <div class="form-group">
                     <label>Divisi</label>
                     <select class="form-control" id="divisi_id" name="divisi_id" required>
+                        @if(auth()->user()->role === 'admin')
                         <option value="" disabled selected>Pilih Divisi</option>
                         @foreach($divisis as $divisi)
                         <option value="{{ $divisi->id }}">{{ $divisi->nama_divisi }}</option>
                         @endforeach
+                        @else
+                        <option value="{{ auth()->user()->divisi_id }}">{{ auth()->user()->divisi->nama_divisi }}</option>
+                        @endif
                     </select>
                 </div>
                 <div class="form-group">
@@ -66,11 +70,17 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                 </div>
                 <div class="form-group">
                     <label>Role</label>
+                    @if(auth()->user()->role === 'admin')
                     <select class="form-control" name="role" required>
                         <option value="admin">Admin</option>
                         <option value="spv">Supervisor</option>
                         <option value="karyawan">Karyawan</option>
                     </select>
+                    @else
+                    <select class="form-control" name="role" required>
+                        <option value="karyawan">Karyawan</option>
+                    </select>
+                    @endif
                 </div>
                 <div class="form-group">
                     <label>Status</label>

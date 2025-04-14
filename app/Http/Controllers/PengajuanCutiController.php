@@ -36,7 +36,7 @@ class PengajuanCutiController extends Controller
             'status' => 'pending',
         ]);
 
-        return redirect()->back()->with('success', 'Pengajuan cuti berhasil dikirim.');
+        return redirect()->route('cuti.index')->with('success', 'Pengajuan cuti berhasil dikirim.');
     }
 
     public function approvalIndex()

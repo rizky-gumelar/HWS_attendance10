@@ -50,6 +50,7 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @if(auth()->user()->role === 'admin')
                                     @foreach ($shifts as $shift)
                                     <tr>
                                         <td>{{ $shift->id }}</td>
@@ -65,6 +66,26 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                                         </td>
                                     </tr>
                                     @endforeach
+                                    @else
+                                    @foreach ($shifts as $shift)
+                                    @if ($shift->id >= 1 && $shift->id <= 1000)
+                                        <tr>
+                                        <td>{{ $shift->id }}</td>
+                                        <td>{{ $shift->nama_shift }}</td>
+                                        <td>{{ $shift->shift_masuk }}</td>
+                                        <td>{{ $shift->shift_keluar }}</td>
+                                        <td>
+                                            <a href="{{ route('shift.edit', $shift->id) }}" class="btn btn-warning">Edit</a>
+                                            <form action="{{ route('shift.destroy', $shift->id) }}" method="POST" class="d-inline">
+                                                @csrf @method('DELETE')
+                                                <button class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                                            </form>
+                                        </td>
+                                        </tr>
+                                        @endif
+                                        @endforeach
+                                        @endif
+
                                 </tbody>
                             </table>
                         </div>

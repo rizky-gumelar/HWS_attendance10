@@ -84,13 +84,13 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="./index.html" class="nav-link">
+                                    <a href="{{ route('cuti.index') }}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Pengajuan Cuti</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="./index.html" class="nav-link">
+                                    <a href="{{ route('cuti.approval.index') }}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Persetujuan Cuti</p>
                                     </a>

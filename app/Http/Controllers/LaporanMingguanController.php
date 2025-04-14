@@ -10,6 +10,8 @@ use App\Models\Divisi;
 use App\Models\LaporanMingguan;
 use App\Models\JadwalKaryawan;
 use Carbon\Carbon;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class LaporanMingguanController extends Controller
 {
@@ -176,7 +178,7 @@ class LaporanMingguanController extends Controller
                         break;
                 }
                 if ($jadwalKaryawan->cek_keterlambatan == 0) {
-                    if ($jadwalKaryawan->shift->id != 99) {
+                    if ($jadwalKaryawan->shift->id != 9999) {
                         $mingguan = $mingguan + 15000;
                     }
                 } else if ($jadwalKaryawan->cek_keterlambatan == 2) {
