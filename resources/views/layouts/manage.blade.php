@@ -35,10 +35,11 @@
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
             <!-- general form elements -->
-            <div class="card card-primary mx-4">
+            <div class="mx-4 ">
                 @if (session('success'))
-                <div class="alert alert-success">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
                     {{ session('success') }}
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
                 </div>
                 @endif
 
@@ -51,6 +52,17 @@
                 @if (session('warning'))
                 <div class="alert alert-warning">
                     {{ session('warning') }}
+                </div>
+                @endif
+
+                @if ($errors->any())
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <ul class="mb-0">
+                        @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
                 </div>
                 @endif
             </div>

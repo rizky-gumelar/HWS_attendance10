@@ -22,7 +22,10 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
         <div class="card-body">
             <div class="form-group">
                 <label for="nama_karyawan">Nama Karyawan</label>
-                <input type="text" class="form-control" id="nama_karyawan" name="nama_karyawan" placeholder="Masukkan nama" required>
+                <input type="text" class="form-control  @error('nama_karyawan') is-invalid @enderror" id="nama_karyawan" name="nama_karyawan" placeholder="Masukkan nama" required>
+                @error('nama_karyawan')
+                <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
             <div class="form-group">
                 <label>Toko</label>
@@ -59,11 +62,17 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
             </div>
             <div class="form-group">
                 <label for="no_hp">Nomor Handphone</label>
-                <input type="text" class="form-control" id="no_hp" name="no_hp" placeholder="Masukkan Nomor Handphone">
+                <input type="text" class="form-control @error('no_hp') is-invalid @enderror" id="no_hp" name="no_hp" placeholder="Masukkan Nomor Handphone">
+                @error('no_hp')
+                <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
             <div class="form-group">
                 <label for="email">Email</label>
-                <input type="email" class="form-control" id="email" name="email" placeholder="Masukkan Email" required>
+                <input type="email" class="form-control  @error('email') is-invalid @enderror" id="email" name="email" placeholder="Masukkan Email" required>
+                @error('email')
+                <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
             <div class="form-group">
                 <label for="password">Password</label>
