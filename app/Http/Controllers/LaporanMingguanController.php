@@ -21,12 +21,12 @@ class LaporanMingguanController extends Controller
         // $mingguans = LaporanMingguan::all();
         // $karyawans = User::all();
         $mingguKe = $request->query('minggu_ke', Carbon::today()->startOfWeek(Carbon::SATURDAY)->weekOfYear);
-
         // Hitung tanggal awal dan akhir dari minggu_ke
         $tahun = Carbon::now()->year;
         $startDate = Carbon::now()->setISODate($tahun, $mingguKe + 1)->startOfWeek(Carbon::SATURDAY);
         $endDate = $startDate->copy()->addDays(6);
 
+        //------------------------------------------------
         $mingguans = LaporanMingguan::where('minggu_ke', $mingguKe)
             ->with('users') // Pastikan relasi users dipanggil
             ->get();
@@ -156,25 +156,25 @@ class LaporanMingguanController extends Controller
                 // Tentukan hari sesuai dengan dayOfWeek
                 switch ($dayOfWeek) {
                     case 0:
-                        $hari['d2'] = json_encode(['shift' => $jadwalKaryawan->shift->nama_shift, 'jam_masuk' => $jadwalKaryawan->absensi->jam_masuk]);
+                        $hari['d2'] = json_encode(['shift' => $jadwalKaryawan->shift->nama_shift, 'jam_masuk' => $jadwalKaryawan->absensi->jam_masuk ?? '-']);
                         break;
                     case 1:
-                        $hari['d3'] = json_encode(['shift' => $jadwalKaryawan->shift->nama_shift, 'jam_masuk' => $jadwalKaryawan->absensi->jam_masuk]);
+                        $hari['d3'] = json_encode(['shift' => $jadwalKaryawan->shift->nama_shift, 'jam_masuk' => $jadwalKaryawan->absensi->jam_masuk ?? '-']);
                         break;
                     case 2:
-                        $hari['d4'] = json_encode(['shift' => $jadwalKaryawan->shift->nama_shift, 'jam_masuk' => $jadwalKaryawan->absensi->jam_masuk]);
+                        $hari['d4'] = json_encode(['shift' => $jadwalKaryawan->shift->nama_shift, 'jam_masuk' => $jadwalKaryawan->absensi->jam_masuk ?? '-']);
                         break;
                     case 3:
-                        $hari['d5'] = json_encode(['shift' => $jadwalKaryawan->shift->nama_shift, 'jam_masuk' => $jadwalKaryawan->absensi->jam_masuk]);
+                        $hari['d5'] = json_encode(['shift' => $jadwalKaryawan->shift->nama_shift, 'jam_masuk' => $jadwalKaryawan->absensi->jam_masuk ?? '-']);
                         break;
                     case 4:
-                        $hari['d6'] = json_encode(['shift' => $jadwalKaryawan->shift->nama_shift, 'jam_masuk' => $jadwalKaryawan->absensi->jam_masuk]);
+                        $hari['d6'] = json_encode(['shift' => $jadwalKaryawan->shift->nama_shift, 'jam_masuk' => $jadwalKaryawan->absensi->jam_masuk ?? '-']);
                         break;
                     case 5:
-                        $hari['d7'] = json_encode(['shift' => $jadwalKaryawan->shift->nama_shift, 'jam_masuk' => $jadwalKaryawan->absensi->jam_masuk]);
+                        $hari['d7'] = json_encode(['shift' => $jadwalKaryawan->shift->nama_shift, 'jam_masuk' => $jadwalKaryawan->absensi->jam_masuk ?? '-']);
                         break;
                     case 6:
-                        $hari['d1'] = json_encode(['shift' => $jadwalKaryawan->shift->nama_shift, 'jam_masuk' => $jadwalKaryawan->absensi->jam_masuk]);
+                        $hari['d1'] = json_encode(['shift' => $jadwalKaryawan->shift->nama_shift, 'jam_masuk' => $jadwalKaryawan->absensi->jam_masuk ?? '-']);
                         break;
                 }
                 if ($jadwalKaryawan->cek_keterlambatan == 0) {

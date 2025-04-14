@@ -387,6 +387,118 @@ class InputJadwalKaryawanController extends Controller
         );
     }
 
+    public function export_all($minggu_ke)
+    {
+        // $minggu_ke = $request->query('minggu_ke');
+        // $tanggal = Carbon::now()->startOfYear()->addWeeks($minggu_ke - 1)->startOfWeek(Carbon::SATURDAY);
+
+        // Hitung tanggal awal dan akhir dari minggu_ke
+        $tahun = Carbon::now()->year;
+        $startDate = Carbon::now()->setISODate($tahun, $minggu_ke + 1)->startOfWeek(Carbon::SATURDAY);
+        $endDate = $startDate->copy()->addDays(6);
+
+        // Ambil semua user yang memiliki jadwal pada minggu tersebut
+        $karyawanIds = JadwalKaryawan::where('minggu_ke', $minggu_ke)
+            ->pluck('user_id')
+            ->unique();
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+
+        $sheet->setCellValue("A1", 'Periode');
+        $sheet->setCellValue("B1", Carbon::parse($startDate)->translatedFormat('d M Y') . ' - ' . Carbon::parse($endDate)->translatedFormat('d M Y'));
+
+        $colOffset = 0; // Awal kolom
+
+        foreach ($karyawanIds as $userId) {
+            $data = JadwalKaryawan::with(['users', 'shift', 'lembur', 'absensi'])
+                ->where('user_id', $userId)
+                ->where('minggu_ke', $minggu_ke)
+                ->get();
+
+            if ($data->isEmpty()) continue;
+
+            $user = $data->first()->users;
+            $baseCol = chr(65 + $colOffset); // 'A', 'F', dst
+            $nextCol = chr(65 + $colOffset + 1);
+            $nextCol2 = chr(65 + $colOffset + 2);
+            // Loop absensi
+            $row = 3;
+
+            // Header
+            $sheet->setCellValue("{$baseCol}{$row}", 'Nama');
+            $sheet->setCellValue("{$nextCol}{$row}", $user->nama_karyawan);
+            $row++;
+            $sheet->setCellValue("{$nextCol}{$row}", $user->toko->nama_toko);
+            $row++;
+
+            // Header tanggal
+            $row++;
+            $sheet->setCellValue("{$baseCol}{$row}", 'Tanggal');
+            $sheet->setCellValue("{$nextCol}{$row}", 'Shift');
+            $sheet->setCellValue("{$nextCol2}{$row}", 'Jam Masuk');
+            $row++;
+
+            $mingguan = 0;
+            $tottelat = 0;
+            $kedatangan = 0;
+            $totlembur = 0;
+
+            foreach ($data as $item) {
+                $sheet->setCellValue("{$baseCol}{$row}", \Carbon\Carbon::parse($item->tanggal)->format('d-m-y'));
+                $sheet->setCellValue("{$nextCol}{$row}", $item->shift->nama_shift);
+                $jamMasuk = ($item->shift->id != 9999 && $item->absensi) ? $item->absensi->jam_masuk : '';
+                $sheet->setCellValue("{$nextCol2}{$row}", $jamMasuk);
+
+                if ($item->cek_keterlambatan == 0 && $item->shift->id != 9999) {
+                    $mingguan += 15000;
+                } else {
+                    $tottelat++;
+                }
+
+                $totlembur += $item->total_lembur;
+                $row++;
+            }
+
+            $kedatangan = ($tottelat > 0) ? 0 : 40000;
+            $total = $mingguan + $kedatangan + $totlembur;
+
+            $summaryRow = $row + 1;
+            $sheet->setCellValue("{$baseCol}{$summaryRow}", 'Mingguan');
+            $sheet->setCellValue("{$nextCol}{$summaryRow}", $mingguan);
+
+            $sheet->setCellValue("{$baseCol}" . ($summaryRow + 1), 'Kedatangan');
+            $sheet->setCellValue("{$nextCol}" . ($summaryRow + 1), $kedatangan);
+
+            $sheet->setCellValue("{$baseCol}" . ($summaryRow + 2), 'Lembur');
+            $sheet->setCellValue("{$nextCol}" . ($summaryRow + 2), $totlembur);
+
+            $sheet->setCellValue("{$baseCol}" . ($summaryRow + 3), 'Total');
+            $sheet->setCellValue("{$nextCol}" . ($summaryRow + 3), $total);
+
+            $sheet->setCellValue("{$baseCol}" . ($summaryRow + 4), 'Tanda Tangan');
+
+            // Geser 5 kolom ke kanan untuk user berikutnya
+            $colOffset += 4;
+        }
+
+        $writer = new Xlsx($spreadsheet);
+        $filename = 'Rekap_Mingguan_' . now()->format('Y_m_d_H_i_s') . '.xlsx';
+
+        return response()->stream(
+            function () use ($writer) {
+                $writer->save('php://output');
+            },
+            200,
+            [
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'Content-Disposition' => 'attachment;filename="' . $filename . '"',
+                'Cache-Control' => 'max-age=0',
+            ]
+        );
+    }
+
     public function generate()
     {
         // Menjalankan command generate:jadwal

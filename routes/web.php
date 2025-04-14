@@ -104,6 +104,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::prefix('mingguan')->group(function () {
         Route::get('/', [LaporanMingguanController::class, 'index'])->name('mingguan.index');
         Route::get('/export', [InputJadwalKaryawanController::class, 'export'])->name('input-jadwal.export');
+        Route::get('/export_all/{week}', [InputJadwalKaryawanController::class, 'export_all'])->name('input-jadwal.export-all');
         Route::get('/laporan-mingguan/{week}', [LaporanMingguanController::class, 'generateLaporanMingguanForAll'])->name('mingguan.generateLaporanMingguanForAll');
         // Route::get('/create', [LaporanMingguanController::class, 'create'])->name('mingguan.create');
         // Route::post('/', [LaporanMingguanController::class, 'store'])->name('mingguan.store');
