@@ -129,13 +129,13 @@ class LaporanMingguanController extends Controller
         foreach ($jadwalKaryawan as $userId => $jadwals) {
             // Inisialisasi array untuk menyimpan hari-hari dalam minggu
             $hari = [
-                'd1' => null, // Sabtu
-                'd2' => null, // Minggu
-                'd3' => null, // Senin
-                'd4' => null, // Selasa
-                'd5' => null, // Rabu
-                'd6' => null, // Kamis
-                'd7' => null, // Jumat
+                'd1'  => null,
+                'd2' => null,
+                'd3'  => null,
+                'd4' => null,
+                'd5'   => null,
+                'd6'  => null,
+                'd7'  => null,
             ];
 
             $row = 7;
@@ -154,25 +154,25 @@ class LaporanMingguanController extends Controller
                 // Tentukan hari sesuai dengan dayOfWeek
                 switch ($dayOfWeek) {
                     case 0:
-                        $hari['d2'] = $jadwalKaryawan->shift->nama_shift;
+                        $hari['d2'] = json_encode(['shift' => $jadwalKaryawan->shift->nama_shift, 'jam_masuk' => $jadwalKaryawan->absensi->jam_masuk]);
                         break;
                     case 1:
-                        $hari['d3'] = $jadwalKaryawan->shift->nama_shift;
+                        $hari['d3'] = json_encode(['shift' => $jadwalKaryawan->shift->nama_shift, 'jam_masuk' => $jadwalKaryawan->absensi->jam_masuk]);
                         break;
                     case 2:
-                        $hari['d4'] = $jadwalKaryawan->shift->nama_shift;
+                        $hari['d4'] = json_encode(['shift' => $jadwalKaryawan->shift->nama_shift, 'jam_masuk' => $jadwalKaryawan->absensi->jam_masuk]);
                         break;
                     case 3:
-                        $hari['d5'] = $jadwalKaryawan->shift->nama_shift;
+                        $hari['d5'] = json_encode(['shift' => $jadwalKaryawan->shift->nama_shift, 'jam_masuk' => $jadwalKaryawan->absensi->jam_masuk]);
                         break;
                     case 4:
-                        $hari['d6'] = $jadwalKaryawan->shift->nama_shift;
+                        $hari['d6'] = json_encode(['shift' => $jadwalKaryawan->shift->nama_shift, 'jam_masuk' => $jadwalKaryawan->absensi->jam_masuk]);
                         break;
                     case 5:
-                        $hari['d7'] = $jadwalKaryawan->shift->nama_shift;
+                        $hari['d7'] = json_encode(['shift' => $jadwalKaryawan->shift->nama_shift, 'jam_masuk' => $jadwalKaryawan->absensi->jam_masuk]);
                         break;
                     case 6:
-                        $hari['d1'] = $jadwalKaryawan->shift->nama_shift;
+                        $hari['d1'] = json_encode(['shift' => $jadwalKaryawan->shift->nama_shift, 'jam_masuk' => $jadwalKaryawan->absensi->jam_masuk]);
                         break;
                 }
                 if ($jadwalKaryawan->cek_keterlambatan == 0) {

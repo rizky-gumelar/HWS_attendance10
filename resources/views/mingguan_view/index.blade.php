@@ -5,6 +5,8 @@
 @section('page-title', 'Manage Karyawan')
 
 @section('content')
+
+
 <!-- Main content -->
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -55,33 +57,26 @@
                                     <tr>
                                         <!-- <th>ID</th> -->
                                         <th>Nama Karyawan</th>
-                                        <th>Sabtu</th>
-                                        <th>Minggu</th>
-                                        <th>Senin</th>
-                                        <th>Selasa</th>
-                                        <th>Rabu</th>
-                                        <th>Kamis</th>
-                                        <th>Jumat</th>
                                         <th>Mingguan</th>
                                         <th>Kehadiran</th>
                                         <th>Lembur</th>
                                         <th>Total</th>
                                         <th>Status</th>
                                         <th>Aksi</th>
+                                        <!-- <th>Sabtu</th>
+                                        <th>Minggu</th>
+                                        <th>Senin</th>
+                                        <th>Selasa</th>
+                                        <th>Rabu</th>
+                                        <th>Kamis</th>
+                                        <th>Jumat</th> -->
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($mingguans as $mingguan)
-                                    <tr>
+                                    <tr data-widget="expandable-table" aria-expanded="false">
                                         <!-- <td>{{ $mingguan->id }}</td> -->
                                         <td>{{ $mingguan->users->nama_karyawan }}</td>
-                                        <td>{{ $mingguan->d1 }}</td>
-                                        <td>{{ $mingguan->d2 }}</td>
-                                        <td>{{ $mingguan->d3 }}</td>
-                                        <td>{{ $mingguan->d4 }}</td>
-                                        <td>{{ $mingguan->d5 }}</td>
-                                        <td>{{ $mingguan->d6 }}</td>
-                                        <td>{{ $mingguan->d7 }}</td>
                                         <td>{{ $mingguan->uang_mingguan }}</td>
                                         <td>{{ $mingguan->uang_kedatangan }}</td>
                                         <td>{{ $mingguan->uang_lembur_mingguan  }}</td>
@@ -90,8 +85,18 @@
                                         <td>
 
                                             <a href="{{ route('input-jadwal.export', ['user_id' => $mingguan->users->id, 'minggu_ke' => $mingguan->minggu_ke]) }}" class="btn btn-success">Export</a>
-                                            <a href="{{ route('input-jadwal.export', ['user_id' => $mingguan->users->id, 'minggu_ke' => $mingguan->minggu_ke]) }}" class="btn btn-info">Detail</a>
+                                            <!-- <a href="{{ route('input-jadwal.export', ['user_id' => $mingguan->users->id, 'minggu_ke' => $mingguan->minggu_ke]) }}" class="btn btn-info">Detail</a> -->
+                                            <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modalDetail{{ $mingguan->users->id }}">
+                                                Detail
+                                            </button>
                                         </td>
+                                        <!-- <td>{{ $mingguan->d1 }}</td>
+                                        <td>{{ $mingguan->d2 }}</td>
+                                        <td>{{ $mingguan->d3 }}</td>
+                                        <td>{{ $mingguan->d4 }}</td>
+                                        <td>{{ $mingguan->d5 }}</td>
+                                        <td>{{ $mingguan->d6 }}</td>
+                                        <td>{{ $mingguan->d7 }}</td> -->
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -110,4 +115,60 @@
     <!-- /.content -->
 </div>
 <!-- /.content -->
+
+@foreach ($mingguans as $mingguan)
+<!-- Modal Detail (harus ada di dalam foreach) -->
+
+<div class="modal fade" id="modalDetail{{ $mingguan->id }}" tabindex="-1" aria-labelledby="modalDetailLabel{{ $mingguan->id }}" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modalDetailLabel{{ $mingguan->id }}">Detail Kehadiran - {{ $mingguan->users->nama_karyawan }}</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Sabtu</th>
+                            <th>Minggu</th>
+                            <th>Senin</th>
+                            <th>Selasa</th>
+                            <th>Rabu</th>
+                            <th>Kamis</th>
+                            <th>Jumat</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th>Shift</th>
+                            <td>{{ json_decode($mingguan->d1, true)['shift'] ?? 'null' }}</td>
+                            <td>{{ json_decode($mingguan->d2, true)['shift'] ?? 'null' }}</td>
+                            <td>{{ json_decode($mingguan->d3, true)['shift'] ?? 'null' }}</td>
+                            <td>{{ json_decode($mingguan->d4, true)['shift'] ?? 'null' }}</td>
+                            <td>{{ json_decode($mingguan->d5, true)['shift'] ?? 'null' }}</td>
+                            <td>{{ json_decode($mingguan->d6, true)['shift'] ?? 'null' }}</td>
+                            <td>{{ json_decode($mingguan->d7, true)['shift'] ?? 'null' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Jam Masuk</th>
+                            <td>{{ json_decode($mingguan->d1, true)['jam_masuk'] ?? 'null' }}</td>
+                            <td>{{ json_decode($mingguan->d2, true)['jam_masuk'] ?? 'null' }}</td>
+                            <td>{{ json_decode($mingguan->d3, true)['jam_masuk'] ?? 'null' }}</td>
+                            <td>{{ json_decode($mingguan->d4, true)['jam_masuk'] ?? 'null' }}</td>
+                            <td>{{ json_decode($mingguan->d5, true)['jam_masuk'] ?? 'null' }}</td>
+                            <td>{{ json_decode($mingguan->d6, true)['jam_masuk'] ?? 'null' }}</td>
+                            <td>{{ json_decode($mingguan->d7, true)['jam_masuk'] ?? 'null' }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
 @endsection
