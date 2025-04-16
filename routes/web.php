@@ -165,5 +165,6 @@ Route::middleware(['auth', 'role:admin|spv'])->group(function () {
 
     // GENERATE JADWAL
     Route::get('/generate-jadwal', [InputJadwalKaryawanController::class, 'generate'])->name('generate.jadwal');
+    Route::get('/generate-jadwal-bulanan', [InputJadwalKaryawanController::class, 'generateBulanan'])->name('generate.jadwal.bulanan');
     Route::get('/export-template', [App\Http\Controllers\ExportController::class, 'exportTemplate'])->name('export-template');
 });

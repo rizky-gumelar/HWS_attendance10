@@ -540,6 +540,21 @@ class InputJadwalKaryawanController extends Controller
         return redirect()->back()->with('success', 'Jadwal karyawan berhasil digenerate.');
     }
 
+    public function generateBulanan()
+    {
+
+        $bulan = Carbon::now()->month;
+        $divisiId = auth()->user()->divisi_id;
+        // Menjalankan command generate:jadwal
+        Artisan::call('generate:jadwal-bulanan', [
+            'bulan' => $bulan,
+            'divisi_id' => $divisiId,
+        ]);
+
+        // Redirect kembali dengan pesan sukses
+        return redirect()->back()->with('success', 'Jadwal karyawan berhasil digenerate.');
+    }
+
     // public function export()
     // {
     //     // Fetch the data from the database

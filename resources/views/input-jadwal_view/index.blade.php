@@ -92,7 +92,7 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                         <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#importModal">
                             Import Jadwal
                         </button>
-                        <a href="{{ route('generate.jadwal') }}" class="btn btn-danger my-4">Generate Jadwal</a>
+                        <a href="{{ route('generate.jadwal.bulanan') }}" class="btn btn-danger my-4">Generate Jadwal</a>
                         <!-- <a href="{{ route('input-jadwal.import') }}" class="btn btn-primary my-4">Import CSV</a> -->
 
                         <table id="example1" class="table table-bordered table-striped">
