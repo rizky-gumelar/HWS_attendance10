@@ -50,7 +50,12 @@ class GenerateJadwalBulanan extends Command
                     if ($existing) {
                         // Ambil data absen dan shift berdasarkan ID
                         $absensi = Absensi::find($existing->absen_id);
-                        $shift = Shift::findOrFail($shift_id);
+                        // $shift = Shift::findOrFail($shift_id);
+                        $shift = Shift::find($shift_id);
+                        if (!$shift) {
+                            $this->warn("Shift dengan ID $shift_id tidak ditemukan. Lewatkan tanggal: {$tanggal->toDateString()} untuk user ID: {$karyawan->KaryawanID}");
+                            continue;
+                        }
 
                         if (!$absensi || $absensi->jam_masuk == null) {
                             $terlambat = 2;
@@ -58,14 +63,14 @@ class GenerateJadwalBulanan extends Command
                             $shiftJamMasuk = \Carbon\Carbon::parse($shift->shift_masuk);
                             $absenJamMasuk = \Carbon\Carbon::parse($absensi->jam_masuk);
 
-                            $terlambat = $absenJamMasuk->greaterThan($shiftJamMasuk);
+                            $terlambat = $absenJamMasuk->greaterThan($shiftJamMasuk) ? 1 : 0;
                         }
                         $existing->update([
                             'shift_id' => $shift_id,
                             'cek_keterlambatan' => $terlambat,
-                            'lembur_jam' => 0,
-                            'total_lembur' => 0,
-                            'keterangan' => null,
+                            // 'lembur_jam' => 0,
+                            // 'total_lembur' => 0,
+                            // 'keterangan' => null,
                             'minggu_ke' => $tanggal->copy()->startOfWeek(Carbon::SATURDAY)->weekOfYear,
                         ]);
                     } else {
