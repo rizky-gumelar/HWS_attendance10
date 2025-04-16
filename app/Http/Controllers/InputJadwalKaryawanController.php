@@ -241,8 +241,6 @@ class InputJadwalKaryawanController extends Controller
                 $terlambat = $absenJamMasuk->greaterThan($shiftJamMasuk);
             }
 
-
-
             // Hitung keterlambatan dalam menit
             // $keterlambatan = $terlambat ? $absenJamMasuk->diffInMinutes($shiftJamMasuk) : 0;
             if ($request->lembur_id == "No") {

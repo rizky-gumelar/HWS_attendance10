@@ -3,6 +3,8 @@
 namespace App\Console\Commands;
 
 use App\Models\JadwalKaryawan;
+use App\Models\Absensi;
+use App\Models\Shift;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -46,12 +48,24 @@ class GenerateJadwalBulanan extends Command
                 if ($overwrite) {
                     // Overwrite jika sudah ada, atau buat baru
                     if ($existing) {
+                        // Ambil data absen dan shift berdasarkan ID
+                        $absensi = Absensi::find($existing->absen_id);
+                        $shift = Shift::findOrFail($shift_id);
+
+                        if (!$absensi || $absensi->jam_masuk == null) {
+                            $terlambat = 2;
+                        } else {
+                            $shiftJamMasuk = \Carbon\Carbon::parse($shift->shift_masuk);
+                            $absenJamMasuk = \Carbon\Carbon::parse($absensi->jam_masuk);
+
+                            $terlambat = $absenJamMasuk->greaterThan($shiftJamMasuk);
+                        }
                         $existing->update([
                             'shift_id' => $shift_id,
-                            // 'cek_keterlambatan' => 2,
-                            // 'lembur_jam' => 0,
-                            // 'total_lembur' => 0,
-                            // 'keterangan' => null,
+                            'cek_keterlambatan' => $terlambat,
+                            'lembur_jam' => 0,
+                            'total_lembur' => 0,
+                            'keterangan' => null,
                             'minggu_ke' => $tanggal->copy()->startOfWeek(Carbon::SATURDAY)->weekOfYear,
                         ]);
                     } else {
