@@ -15,6 +15,10 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Artisan;
+use PhpOffice\PhpSpreadsheet\Style\Font;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
 
 class InputJadwalKaryawanController extends Controller
 {
@@ -389,15 +393,10 @@ class InputJadwalKaryawanController extends Controller
 
     public function export_all($minggu_ke)
     {
-        // $minggu_ke = $request->query('minggu_ke');
-        // $tanggal = Carbon::now()->startOfYear()->addWeeks($minggu_ke - 1)->startOfWeek(Carbon::SATURDAY);
-
-        // Hitung tanggal awal dan akhir dari minggu_ke
         $tahun = Carbon::now()->year;
         $startDate = Carbon::now()->setISODate($tahun, $minggu_ke + 1)->startOfWeek(Carbon::SATURDAY);
         $endDate = $startDate->copy()->addDays(6);
 
-        // Ambil semua user yang memiliki jadwal pada minggu tersebut
         $karyawanIds = JadwalKaryawan::where('minggu_ke', $minggu_ke)
             ->pluck('user_id')
             ->unique();
@@ -405,14 +404,23 @@ class InputJadwalKaryawanController extends Controller
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
+        $sheet->setCellValue("A1", 'Laporan Absensi Karyawan');
+        $sheet->getStyle('A1')->getFont()
+            ->setBold(true)
+            ->setSize(18);
+        $sheet->setCellValue("A3", 'Periode');
+        $sheet->getStyle('A3')->getFont()
+            ->setBold(true);
+        $sheet->setCellValue("B3", Carbon::parse($startDate)->translatedFormat('d M Y') . ' - ' . Carbon::parse($endDate)->translatedFormat('d M Y'));
 
-        $sheet->setCellValue("A1", 'Periode');
-        $sheet->setCellValue("B1", Carbon::parse($startDate)->translatedFormat('d M Y') . ' - ' . Carbon::parse($endDate)->translatedFormat('d M Y'));
-
-        $colOffset = 0; // Awal kolom
+        $colOffset = 0;
+        $rows = 5;
+        $i = 0;
 
         foreach ($karyawanIds as $userId) {
-            $data = JadwalKaryawan::with(['users', 'shift', 'lembur', 'absensi'])
+            $row = $rows;
+
+            $data = JadwalKaryawan::with(['users.toko', 'shift', 'lembur', 'absensi'])
                 ->where('user_id', $userId)
                 ->where('minggu_ke', $minggu_ke)
                 ->get();
@@ -420,24 +428,29 @@ class InputJadwalKaryawanController extends Controller
             if ($data->isEmpty()) continue;
 
             $user = $data->first()->users;
-            $baseCol = chr(65 + $colOffset); // 'A', 'F', dst
-            $nextCol = chr(65 + $colOffset + 1);
-            $nextCol2 = chr(65 + $colOffset + 2);
-            // Loop absensi
-            $row = 3;
+
+            $baseCol = chr(65 + $colOffset);        // Kolom pertama
+            $nextCol = chr(65 + $colOffset + 1);    // Kolom kedua
+            $nextCol2 = chr(65 + $colOffset + 2);   // Kolom ketiga
 
             // Header
             $sheet->setCellValue("{$baseCol}{$row}", 'Nama');
             $sheet->setCellValue("{$nextCol}{$row}", $user->nama_karyawan);
             $row++;
-            $sheet->setCellValue("{$nextCol}{$row}", $user->toko->nama_toko);
+            $sheet->setCellValue("{$nextCol}{$row}", $user->toko->nama_toko ?? '-');
             $row++;
 
-            // Header tanggal
-            $row++;
+            $sheet->getColumnDimension($baseCol)->setWidth(13);    // Tanggal / Label
+            $sheet->getColumnDimension($nextCol)->setWidth(15);    // Nama shift / nilai
+            $sheet->getColumnDimension($nextCol2)->setWidth(11);   // Jam masuk
+
+            $row++; // Spacer
+            $headerRange = "{$baseCol}{$row}:{$nextCol2}{$row}";
             $sheet->setCellValue("{$baseCol}{$row}", 'Tanggal');
             $sheet->setCellValue("{$nextCol}{$row}", 'Shift');
             $sheet->setCellValue("{$nextCol2}{$row}", 'Jam Masuk');
+            $sheet->getStyle($headerRange)->getBorders()->getTop()->setBorderStyle(Border::BORDER_THIN);
+            $sheet->getStyle($headerRange)->getBorders()->getBottom()->setBorderStyle(Border::BORDER_THIN);
             $row++;
 
             $mingguan = 0;
@@ -446,10 +459,11 @@ class InputJadwalKaryawanController extends Controller
             $totlembur = 0;
 
             foreach ($data as $item) {
-                $sheet->setCellValue("{$baseCol}{$row}", \Carbon\Carbon::parse($item->tanggal)->format('d-m-y'));
-                $sheet->setCellValue("{$nextCol}{$row}", $item->shift->nama_shift);
-                $jamMasuk = ($item->shift->id != 9999 && $item->absensi) ? $item->absensi->jam_masuk : '';
+                $sheet->setCellValue("{$baseCol}{$row}", Carbon::parse($item->tanggal)->format('d M Y'));
+                $sheet->setCellValue("{$nextCol}{$row}", $item->shift->nama_shift ?? '-');
+                $jamMasuk = ($item->shift->id != 9999 && $item->absensi) ? $item->absensi->jam_masuk : '-';
                 $sheet->setCellValue("{$nextCol2}{$row}", $jamMasuk);
+
 
                 if ($item->cek_keterlambatan == 0 && $item->shift->id != 9999) {
                     $mingguan += 15000;
@@ -460,27 +474,44 @@ class InputJadwalKaryawanController extends Controller
                 $totlembur += $item->total_lembur;
                 $row++;
             }
+            $sheet->getStyle("{$baseCol}{$row}:{$nextCol2}{$row}")->getBorders()->getTop()->setBorderStyle(Border::BORDER_THIN);
 
             $kedatangan = ($tottelat > 0) ? 0 : 40000;
             $total = $mingguan + $kedatangan + $totlembur;
 
-            $summaryRow = $row + 1;
-            $sheet->setCellValue("{$baseCol}{$summaryRow}", 'Mingguan');
-            $sheet->setCellValue("{$nextCol}{$summaryRow}", $mingguan);
+            $sheet->setCellValue("{$baseCol}" . ($row + 1), 'Mingguan');
+            $sheet->setCellValue("{$nextCol}" . ($row + 1), $mingguan);
+            $sheet->setCellValue("{$baseCol}" . ($row + 2), 'Kedatangan');
+            $sheet->setCellValue("{$nextCol}" . ($row + 2), $kedatangan);
+            $sheet->setCellValue("{$baseCol}" . ($row + 3), 'Lembur');
+            $sheet->setCellValue("{$nextCol}" . ($row + 3), $totlembur);
+            $sheet->setCellValue("{$baseCol}" . ($row + 4), 'Total');
+            $sheet->setCellValue("{$nextCol}" . ($row + 4), $total);
+            $sheet->getStyle("{$nextCol}" . ($row + 1) . ":{$nextCol}" . ($row + 4))
+                ->getNumberFormat()
+                ->setFormatCode('"Rp" #,##0');
+            $sheet->setCellValue("{$baseCol}" . ($row + 5), 'Tanda Tangan');
 
-            $sheet->setCellValue("{$baseCol}" . ($summaryRow + 1), 'Kedatangan');
-            $sheet->setCellValue("{$nextCol}" . ($summaryRow + 1), $kedatangan);
+            // Tambahkan border luar (outline) ke seluruh blok user
+            $startCell = "{$baseCol}{$rows}";
+            $endCol = chr(65 + $colOffset + 2); // 3 kolom
+            $endCell = "{$endCol}" . ($row + 7);
+            $sheet->getStyle("{$startCell}:{$endCell}")->applyFromArray([
+                'borders' => [
+                    'outline' => [
+                        'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                    ],
+                ],
+            ]);
 
-            $sheet->setCellValue("{$baseCol}" . ($summaryRow + 2), 'Lembur');
-            $sheet->setCellValue("{$nextCol}" . ($summaryRow + 2), $totlembur);
-
-            $sheet->setCellValue("{$baseCol}" . ($summaryRow + 3), 'Total');
-            $sheet->setCellValue("{$nextCol}" . ($summaryRow + 3), $total);
-
-            $sheet->setCellValue("{$baseCol}" . ($summaryRow + 4), 'Tanda Tangan');
-
-            // Geser 5 kolom ke kanan untuk user berikutnya
-            $colOffset += 4;
+            // Geser posisi: 3 ke samping, lalu turun ke bawah setiap 3 kolom
+            $i++;
+            if ($i % 4 == 0) {
+                $rows = $row + 10; // Turun baris baru
+                $colOffset = 0;
+            } else {
+                $colOffset += 4; // Geser ke kanan
+            }
         }
 
         $writer = new Xlsx($spreadsheet);
@@ -498,6 +529,7 @@ class InputJadwalKaryawanController extends Controller
             ]
         );
     }
+
 
     public function generate()
     {
