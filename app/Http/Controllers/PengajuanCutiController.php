@@ -77,6 +77,7 @@ class PengajuanCutiController extends Controller
             [
                 'absen_id' => $absensi->id, // Masukkan absen_id di bagian "values",
                 'shift_id' => $shiftId,
+                'cek_keterlambatan' => 0,
             ]
         );
 
@@ -111,6 +112,7 @@ class PengajuanCutiController extends Controller
             [
                 'shift_id' => $shiftId,
                 'absen_id' => null,
+                'cek_keterlambatan' => 2,
             ]
         );
 
