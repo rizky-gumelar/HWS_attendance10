@@ -77,7 +77,10 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                             <button class="btn btn-sm btn-danger" onclick="return confirm('Tolak cuti ini?')">Reject</button>
                         </form>
                         @elseif($cuti->status == 'batal')
-                        <em>-</em>
+                        <form action="{{ route('cuti.approve', $cuti->id) }}" method="POST" style="display:inline-block;">
+                            @csrf
+                            <button class="btn btn-sm btn-success" onclick="return confirm('Setujui cuti ini?')">Approve</button>
+                        </form>
                         @else
                         <form action="{{ route('cuti.approve', $cuti->id) }}" method="POST" style="display:inline-block;">
                             @csrf

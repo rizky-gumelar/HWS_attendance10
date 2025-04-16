@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\PengajuanCuti;
 use App\Models\JenisCuti;
 use App\Models\JadwalKaryawan;
+use App\Models\Absensi;
 use Carbon\Carbon;
 
 class PengajuanCutiController extends Controller
@@ -61,12 +62,21 @@ class PengajuanCutiController extends Controller
             $shiftId = 9997;
         }
 
+        $absensi = Absensi::create([
+            'user_id' => $cuti->user_id,
+            'tanggal' => $cuti->tanggal,
+            'jam_masuk' => '00:00:00',
+        ]);
+
         JadwalKaryawan::updateOrCreate(
             [
                 'user_id' => $cuti->user_id,
                 'tanggal' => $cuti->tanggal,
-                'shift_id' => $shiftId,
                 'minggu_ke' => Carbon::parse($cuti->tanggal)->startOfWeek(Carbon::SATURDAY)->weekOfYear,
+            ],
+            [
+                'absen_id' => $absensi->id, // Masukkan absen_id di bagian "values",
+                'shift_id' => $shiftId,
             ]
         );
 
@@ -98,7 +108,10 @@ class PengajuanCutiController extends Controller
         // Ganti shift di tabel jadwal
         JadwalKaryawan::updateOrCreate(
             ['user_id' => $cuti->user_id, 'tanggal' => $cuti->tanggal],
-            ['shift_id' => $shiftId]
+            [
+                'shift_id' => $shiftId,
+                'absen_id' => null,
+            ]
         );
 
         return back()->with('success', 'Cuti telah disetujui dan jadwal shift diperbarui.');
