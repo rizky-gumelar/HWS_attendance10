@@ -92,7 +92,24 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                         <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#importModal">
                             Import Jadwal
                         </button>
-                        <a href="{{ route('generate.jadwal.bulanan') }}" class="btn btn-danger my-4">Generate Jadwal</a>
+                        <!-- <a href="{{ route('generate.jadwal.bulanan') }}" class="btn btn-danger my-4">Generate Jadwal</a> -->
+                        <!-- Tombol Generate Tanpa Menimpa -->
+                        <form method="POST" action="{{ route('generate.jadwal.bulanan') }}" id="form-tanpa-timpa">
+                            @csrf
+                            <input type="hidden" name="overwrite" value="0">
+                            <button type="submit" class="btn btn-primary">
+                                Generate Jadwal Bulanan (Tanpa Menimpa)
+                            </button>
+                        </form>
+
+                        <!-- Tombol Generate & Timpa, pakai konfirmasi -->
+                        <form method="POST" action="{{ route('generate.jadwal.bulanan') }}" id="form-timpa-jadwal">
+                            @csrf
+                            <input type="hidden" name="overwrite" value="1">
+                            <button type="button" class="btn btn-warning" onclick="konfirmasiTimpa()">
+                                Generate & Timpa Jadwal Bulanan
+                            </button>
+                        </form>
                         <!-- <a href="{{ route('input-jadwal.import') }}" class="btn btn-primary my-4">Import CSV</a> -->
 
                         <table id="example1" class="table table-bordered table-striped">

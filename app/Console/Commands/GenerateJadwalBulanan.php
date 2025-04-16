@@ -9,13 +9,14 @@ use Illuminate\Support\Facades\DB;
 
 class GenerateJadwalBulanan extends Command
 {
-    protected $signature = 'generate:jadwal-bulanan {bulan} {divisi_id}';
+    protected $signature = 'generate:jadwal-bulanan {bulan} {divisi_id} {--overwrite}';
     protected $description = 'Generate jadwal karyawan untuk 1 bulan penuh berdasarkan shift dan divisi';
 
     public function handle()
     {
         $bulan = $this->argument('bulan');       // Misal: 4 untuk April
         $divisiId = $this->argument('divisi_id'); // Misal: 2
+        $overwrite = $this->option('overwrite');
 
         $tahun = now()->year; // Atau kamu bisa tambah argument juga kalau perlu tahun spesifik
 
@@ -38,22 +39,51 @@ class GenerateJadwalBulanan extends Command
             for ($tanggal = $startDate->copy(); $tanggal <= $endDate; $tanggal->addDay()) {
                 $shift_id = ($tanggal->isSunday()) ? 9999 : $karyawan->ShiftID;
 
-                JadwalKaryawan::updateOrCreate(
-                    [
-                        'user_id' => $karyawan->KaryawanID,
-                        'tanggal' => $tanggal,
-                    ],
-                    [
-                        'shift_id' => $shift_id,
-                        'cek_keterlambatan' => 2,
-                        'lembur_jam' => 0,
-                        'total_lembur' => 0,
-                        'keterangan' => null,
-                        'minggu_ke' => $tanggal->copy()->startOfWeek(Carbon::SATURDAY)->weekOfYear,
-                    ]
-                );
+                $existing = JadwalKaryawan::where('user_id', $karyawan->KaryawanID)
+                    ->whereDate('tanggal', $tanggal)
+                    ->first();
+
+                if ($overwrite) {
+                    // Overwrite jika sudah ada, atau buat baru
+                    if ($existing) {
+                        $existing->update([
+                            'shift_id' => $shift_id,
+                            // 'cek_keterlambatan' => 2,
+                            // 'lembur_jam' => 0,
+                            // 'total_lembur' => 0,
+                            // 'keterangan' => null,
+                            'minggu_ke' => $tanggal->copy()->startOfWeek(Carbon::SATURDAY)->weekOfYear,
+                        ]);
+                    } else {
+                        JadwalKaryawan::create([
+                            'user_id' => $karyawan->KaryawanID,
+                            'tanggal' => $tanggal,
+                            'shift_id' => $shift_id,
+                            'cek_keterlambatan' => 2,
+                            'lembur_jam' => 0,
+                            'total_lembur' => 0,
+                            'keterangan' => null,
+                            'minggu_ke' => $tanggal->copy()->startOfWeek(Carbon::SATURDAY)->weekOfYear,
+                        ]);
+                    }
+                } else {
+                    // Hanya buat jika belum ada
+                    if (!$existing) {
+                        JadwalKaryawan::create([
+                            'user_id' => $karyawan->KaryawanID,
+                            'tanggal' => $tanggal,
+                            'shift_id' => $shift_id,
+                            'cek_keterlambatan' => 2,
+                            'lembur_jam' => 0,
+                            'total_lembur' => 0,
+                            'keterangan' => null,
+                            'minggu_ke' => $tanggal->copy()->startOfWeek(Carbon::SATURDAY)->weekOfYear,
+                        ]);
+                    }
+                }
             }
         }
+
 
         $this->info("Jadwal bulan $bulan untuk divisi ID $divisiId berhasil digenerate.");
     }

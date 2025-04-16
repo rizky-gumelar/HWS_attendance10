@@ -7,50 +7,49 @@
 @section('content')
 <!-- Main content -->
 <!-- Content Wrapper. Contains page content -->
-<div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <section class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1>Manage Absensi</h1>
-                </div>
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">absensi</li>
-                    </ol>
-                </div>
-            </div>
-        </div><!-- /.container-fluid -->
-    </section>
-
-    <!-- Main content -->
+<!-- Content Header (Page header) -->
+<section class="content-header">
     <div class="container-fluid">
-        <div class="row">
-            <div class="col-12">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Manage Absensi</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active">absensi</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
 
-                <div class="card">
-                    <!-- /.card-header -->
-                    <div class="card-body">
-                        <form action="{{ route('absensi.index') }}" method="GET">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <label for="start_date">Dari Tanggal:</label>
-                                    <input type="date" name="start_date" id="start_date" class="form-control" value="{{ request('start_date') }}">
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="end_date">Sampai Tanggal:</label>
-                                    <input type="date" name="end_date" id="end_date" class="form-control" value="{{ request('end_date') }}">
-                                </div>
-                                <div class="col-md-4 d-flex align-items-end">
-                                    <button type="submit" class="btn btn-primary">Cari</button>
-                                    <a href="{{ route('absensi.index') }}" class="btn btn-secondary ml-2">Reset</a>
-                                </div>
+<!-- Main content -->
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+
+            <div class="card">
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <form action="{{ route('absensi.index') }}" method="GET">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label for="start_date">Dari Tanggal:</label>
+                                <input type="date" name="start_date" id="start_date" class="form-control" value="{{ request('start_date') }}">
                             </div>
-                        </form>
-                        <!-- <a href="{{ route('absensi.create') }}" class="btn btn-success my-4">Tambah Absensi</a> -->
-                        <!-- <div class="card-body">
+                            <div class="col-md-4">
+                                <label for="end_date">Sampai Tanggal:</label>
+                                <input type="date" name="end_date" id="end_date" class="form-control" value="{{ request('end_date') }}">
+                            </div>
+                            <div class="col-md-4 d-flex align-items-end">
+                                <button type="submit" class="btn btn-primary">Cari</button>
+                                <a href="{{ route('absensi.index') }}" class="btn btn-secondary ml-2">Reset</a>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- <a href="{{ route('absensi.create') }}" class="btn btn-success my-4">Tambah Absensi</a> -->
+                    <!-- <div class="card-body">
                             <div id="actions" class="row">
                                 <div class="col-lg-6">
                                     <div class="btn-group">
@@ -104,50 +103,49 @@
                                 </div>
                             </div>
                         </div> -->
-                        <form action="{{ route('absensi.import') }}" method="POST" enctype="multipart/form-data">
-                            @csrf
-                            <input type="file" name="file" required>
-                            <button type="submit">Import</button>
-                        </form>
-                        <table id="example1" class="table table-bordered table-striped">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>ID Karyawan</th>
-                                    <th>Nama Karyawan</th>
-                                    <th>Tanggal</th>
-                                    <th>Jam Masuk</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($absensis as $absensi)
-                                <tr>
-                                    <td>{{ $absensi->id }}</td>
-                                    <td>{{ $absensi->user_id }}</td>
-                                    <td>{{ $absensi->users->nama_karyawan }}</td>
-                                    <td>{{ $absensi->tanggal }}</td>
-                                    <td>{{ $absensi->jam_masuk }}</td>
-                                    <td>
-                                        <a href="{{ route('absensi.edit', $absensi->id) }}" class="btn btn-warning">Edit</a>
-                                        <form action="{{ route('absensi.destroy', $absensi->id) }}" method="POST" class="d-inline">
-                                            @csrf @method('DELETE')
-                                            <button class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                    <!-- /.card-body -->
+                    <form action="{{ route('absensi.import') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <input type="file" name="file" required>
+                        <button type="submit">Import</button>
+                    </form>
+                    <table id="example1" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>ID Karyawan</th>
+                                <th>Nama Karyawan</th>
+                                <th>Tanggal</th>
+                                <th>Jam Masuk</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($absensis as $absensi)
+                            <tr>
+                                <td>{{ $absensi->id }}</td>
+                                <td>{{ $absensi->user_id }}</td>
+                                <td>{{ $absensi->users->nama_karyawan }}</td>
+                                <td>{{ $absensi->tanggal }}</td>
+                                <td>{{ $absensi->jam_masuk }}</td>
+                                <td>
+                                    <a href="{{ route('absensi.edit', $absensi->id) }}" class="btn btn-warning">Edit</a>
+                                    <form action="{{ route('absensi.destroy', $absensi->id) }}" method="POST" class="d-inline">
+                                        @csrf @method('DELETE')
+                                        <button class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
-                <!-- /.card -->
+                <!-- /.card-body -->
             </div>
-            <!-- /.col -->
+            <!-- /.card -->
         </div>
-        <!-- /.row -->
+        <!-- /.col -->
     </div>
+    <!-- /.row -->
 </div>
 
 <!-- /.content -->
