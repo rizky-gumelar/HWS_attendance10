@@ -26,7 +26,7 @@ class UserSeeder extends Seeder
         ]);
 
         Divisi::create([
-            'nama_divisi' => 'Gudang',
+            'nama_divisi' => 'Gudang Online',
         ]);
 
         Divisi::create([
@@ -44,6 +44,12 @@ class UserSeeder extends Seeder
             'shift_keluar' => '21:00:00',
         ]);
         Shift::create([
+            'id' => 999,
+            'nama_shift' => 'Libur Pengganti',
+            'shift_masuk' => '23:59:58',
+            'shift_keluar' => '23:59:59',
+        ]);
+        Shift::create([
             'id' => 9999,
             'nama_shift' => 'Libur',
             'shift_masuk' => '23:59:58',
@@ -58,6 +64,12 @@ class UserSeeder extends Seeder
         Shift::create([
             'id' => 9997,
             'nama_shift' => 'Cuti',
+            'shift_masuk' => '00:00:01',
+            'shift_keluar' => '00:00:01',
+        ]);
+        Shift::create([
+            'id' => 9996,
+            'nama_shift' => 'Cuti Setengah Hari',
             'shift_masuk' => '00:00:01',
             'shift_keluar' => '00:00:01',
         ]);
@@ -146,6 +158,16 @@ class UserSeeder extends Seeder
             'id' => 6,
             'nama_cuti' => 'Cuti Tahunan',
             'status' => '1',
+        ]);
+        JenisCuti::create([
+            'id' => 7,
+            'nama_cuti' => 'Setengah Hari (Pagi)',
+            'status' => '0.5',
+        ]);
+        JenisCuti::create([
+            'id' => 8,
+            'nama_cuti' => 'Setengah Hari (Sore)',
+            'status' => '0.5',
         ]);
     }
 }
