@@ -62,8 +62,12 @@ class PengajuanCutiController extends Controller
         }
 
         JadwalKaryawan::updateOrCreate(
-            ['user_id' => $cuti->user_id, 'tanggal' => $cuti->tanggal],
-            ['shift_id' => $shiftId]
+            [
+                'user_id' => $cuti->user_id,
+                'tanggal' => $cuti->tanggal,
+                'shift_id' => $shiftId,
+                'minggu_ke' => Carbon::parse($cuti->tanggal)->startOfWeek(Carbon::SATURDAY)->weekOfYear,
+            ]
         );
 
         return back()->with('success', 'Cuti telah disetujui dan jadwal shift diperbarui.');
