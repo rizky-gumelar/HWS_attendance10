@@ -81,6 +81,11 @@ class PengajuanCutiController extends Controller
             ]
         );
 
+        // Kurangi total_cuti user
+        $user = $cuti->users;
+        $user->total_cuti = $user->total_cuti - $cuti->jenis_cuti->status;
+        $user->save();
+
         return back()->with('success', 'Cuti telah disetujui dan jadwal shift diperbarui.');
     }
 
@@ -115,6 +120,11 @@ class PengajuanCutiController extends Controller
                 'cek_keterlambatan' => 2,
             ]
         );
+
+        // Kurangi total_cuti user
+        $user = $cuti->users;
+        $user->total_cuti = $user->total_cuti + $cuti->jenis_cuti->status;
+        $user->save();
 
         return back()->with('success', 'Cuti telah disetujui dan jadwal shift diperbarui.');
     }
