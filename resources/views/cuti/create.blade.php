@@ -18,7 +18,7 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
     </div>
     <!-- /.card-header -->
     <!-- form start -->
-    <form action="{{ route('cuti.store') }}" method="POST">
+    <form action="{{ route('cuti.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="card-body">
             <div class="form-group">
@@ -41,6 +41,13 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
             <div class="form-group">
                 <label for="keterangan">Keterangan</label>
                 <input type="text" class="form-control" id="keterangan" name="keterangan" required>
+            </div>
+            <div class="form-group">
+                <label for="imagename">Upload Image</label>
+                <input type="file" name="imagename" id="imagename" class="form-control" accept="image/jpeg,image/png,image/jpg">
+                @error('imagename')
+                <small class="text-danger">{{ $message }}</small>
+                @enderror
             </div>
         </div>
         <!-- /.card-body -->

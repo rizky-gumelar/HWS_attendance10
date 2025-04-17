@@ -15,6 +15,7 @@ class PengajuanCuti extends Model
         'tanggal',
         'keterangan',
         'status',
+        'imagename',
     ];
 
     public function users()

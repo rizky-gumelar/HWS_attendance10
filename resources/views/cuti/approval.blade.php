@@ -22,6 +22,7 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                     <th>Tanggal</th>
                     <th>Keterangan</th>
                     <th>Status</th>
+                    <th>Foto Surat</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
@@ -43,6 +44,13 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                         <span class="badge badge-warning">Dibatalkan</span>
                         @else
                         <span class="badge badge-danger">Ditolak</span>
+                        @endif
+                    </td>
+                    <td>
+                        @if ($cuti->imagename)
+                        <img src="{{ asset('storage/cuti/' . $cuti->imagename) }}" alt="Bukti Cuti" style="max-width: 100px;">
+                        @else
+                        Tidak ada gambar
                         @endif
                     </td>
                     <td>

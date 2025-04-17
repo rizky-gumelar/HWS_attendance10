@@ -18,6 +18,7 @@ return new class extends Migration
             $table->date('tanggal');
             $table->text('keterangan')->nullable();
             $table->enum('status', ['disetujui admin', 'disetujui spv', 'ditolak', 'pending', 'batal'])->default('pending');
+            $table->string('imagename')->nullable();
             $table->timestamps();
         });
     }

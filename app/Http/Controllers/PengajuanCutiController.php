@@ -8,6 +8,7 @@ use App\Models\JenisCuti;
 use App\Models\JadwalKaryawan;
 use App\Models\Absensi;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 class PengajuanCutiController extends Controller
 {
@@ -29,7 +30,14 @@ class PengajuanCutiController extends Controller
             'jenis_cuti_id' => 'required|exists:jenis_cuti,id',
             'tanggal' => 'required|date',
             'keterangan' => 'nullable|string',
+            'imagename' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
+
+        $imageName = null;
+        if ($request->hasFile('imagename')) {
+            $imageName = time() . '.' . $request->imagename->extension();
+            $request->imagename->storeAs('public/cuti', $imageName);
+        }
 
         PengajuanCuti::create([
             'user_id' => auth()->id(),
@@ -37,6 +45,7 @@ class PengajuanCutiController extends Controller
             'tanggal' => $request->tanggal,
             'keterangan' => $request->keterangan,
             'status' => 'pending',
+            'imagename' => $imageName,
         ]);
 
         return redirect()->route('cuti.index')->with('success', 'Pengajuan cuti berhasil dikirim.');
@@ -138,4 +147,21 @@ class PengajuanCutiController extends Controller
 
         return back()->with('success', 'Cuti telah ditolak.');
     }
+
+    public function show($id)
+    {
+        $cuti = PengajuanCuti::with('user', 'jenisCuti')->findOrFail($id);
+        return view('pengajuan_cuti.show', compact('cuti'));
+    }
+
+    // public function destroy($id)
+    // {
+    //     $cuti = PengajuanCuti::findOrFail($id);
+    //     if ($cuti->imagename) {
+    //         Storage::delete('public/cuti/' . $cuti->imagename);
+    //     }
+    //     $cuti->delete();
+
+    //     return redirect()->route('pengajuan_cuti.index')->with('success', 'Pengajuan cuti berhasil dihapus.');
+    // }
 }
