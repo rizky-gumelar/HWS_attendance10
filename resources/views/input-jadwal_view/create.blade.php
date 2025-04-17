@@ -34,8 +34,10 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                 <select class="form-control" id="shift_id" name="shift_id" required>
                     <option value="" disabled selected>Pilih Shift</option>
                     @foreach($shifts as $shift)
-                    <option value="{{ $shift->id }}">{{ $shift->nama_shift }}</option>
-                    @endforeach
+                    @if ($shift->id >= 1 && $shift->id <= 1000)
+                        <option value="{{ $shift->id }}">{{ $shift->nama_shift }}</option>
+                        @endif
+                        @endforeach
                 </select>
             </div>
             <div class="form-group">

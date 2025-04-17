@@ -13,7 +13,8 @@ class PengajuanCutiController extends Controller
 {
     public function index()
     {
-        return view('cuti.index');
+        $user = auth()->user();
+        return view('cuti.index', compact('user'));
     }
 
     public function create()

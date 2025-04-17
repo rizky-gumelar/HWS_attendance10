@@ -36,8 +36,10 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                 <div class="card">
                     <!-- /.card-header -->
                     <div class="card-body">
+                        <div class="alert alert-info" role="alert">
+                            <strong>Sisa cuti:</strong> {{ $user->total_cuti }}
+                        </div>
                         <a href="{{ route('cuti.create') }}" class="btn btn-success my-4">Buat pengajuan</a>
-
                     </div>
                     <!-- /.card-body -->
                 </div>
