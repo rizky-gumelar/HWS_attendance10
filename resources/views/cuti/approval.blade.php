@@ -10,6 +10,26 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
 
 @section('content')
 
+@foreach($pengajuanCuti as $cuti)
+<!-- Modal -->
+<div class="modal fade" id="imageModal{{ $cuti->id }}" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="imageModalLabel">Bukti Cuti - {{ $cuti->users->nama_karyawan }} / {{ $cuti->tanggal }}</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body mx-auto">
+                <img src="{{ asset('storage/cuti/' . $cuti->imagename) }}" alt="Bukti Cuti" style="max-width: 500px;">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
+
 <!-- general form elements -->
 <div class="card card-primary m-4">
 
@@ -48,7 +68,9 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                     </td>
                     <td>
                         @if ($cuti->imagename)
-                        <img src="{{ asset('storage/cuti/' . $cuti->imagename) }}" alt="Bukti Cuti" style="max-width: 100px;">
+                        <a href="" data-bs-toggle="modal" data-bs-target="#imageModal{{ $cuti->id }}">
+                            <img src="{{ asset('storage/cuti/' . $cuti->imagename) }}" alt="Bukti Cuti" style="max-width: 100px;">
+                        </a>
                         @else
                         Tidak ada gambar
                         @endif
