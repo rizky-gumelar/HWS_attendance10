@@ -112,6 +112,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         // Route::put('/{lembur}', [LaporanMingguanController::class, 'update'])->name('mingguan.update');
         // Route::delete('/{lembur}', [LaporanMingguanController::class, 'destroy'])->name('mingguan.destroy');
     });
+
+    Route::post('/generate-jadwal-admin', [InputJadwalKaryawanController::class, 'generateBulananAdmin'])->name('generate.jadwal.admin');
 });
 
 Route::middleware(['auth', 'role:spv'])->group(function () {

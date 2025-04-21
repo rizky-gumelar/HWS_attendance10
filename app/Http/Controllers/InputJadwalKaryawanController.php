@@ -569,6 +569,20 @@ class InputJadwalKaryawanController extends Controller
         return redirect()->back()->with('success', 'Jadwal karyawan berhasil digenerate. Mode: ' . ($overwrite ? 'Menimpa Jadwal Lama' : 'Tidak Menimpa'));
     }
 
+    public function generateBulananAdmin(Request $request)
+    {
+        $bulan = Carbon::now()->month;
+        $overwrite = $request->input('overwrite', false); // default: false
+
+        // Kirim ke artisan command
+        Artisan::call('generate:jadwal-admin', [
+            'bulan' => $bulan,
+            '--overwrite' => $overwrite ? true : false,
+        ]);
+
+        return redirect()->back()->with('success', 'Jadwal karyawan berhasil digenerate. Mode: ' . ($overwrite ? 'Menimpa Jadwal Lama' : 'Tidak Menimpa'));
+    }
+
     // public function export()
     // {
     //     // Fetch the data from the database

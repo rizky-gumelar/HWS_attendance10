@@ -192,7 +192,9 @@ class LaporanMingguanController extends Controller
             if ($tottelat > 0 || $status == 'kurang') {
                 $kedatangan = 0;
             } else {
-                $kedatangan = 40000;
+                if ($jadwalKaryawan->users->divisi->nama_divisi != 'Sales') {
+                    $kedatangan = 40000;
+                }
                 // $status = 'selesai';
             }
 

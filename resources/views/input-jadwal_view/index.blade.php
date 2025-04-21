@@ -94,6 +94,15 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                         </button>
                         <!-- <a href="{{ route('generate.jadwal.bulanan') }}" class="btn btn-danger my-4">Generate Jadwal</a> -->
                         <!-- Tombol Generate Tanpa Menimpa -->
+                        @if(auth()->user()->role === 'admin')
+                        <form method="POST" action="{{ route('generate.jadwal.admin') }}" id="form-tanpa-timpa">
+                            @csrf
+                            <input type="hidden" name="overwrite" value="0">
+                            <button type="submit" class="btn btn-primary">
+                                Generate Jadwal Bulanan (Tanpa Menimpa)
+                            </button>
+                        </form>
+                        @else
                         <form method="POST" action="{{ route('generate.jadwal.bulanan') }}" id="form-tanpa-timpa">
                             @csrf
                             <input type="hidden" name="overwrite" value="0">
@@ -111,6 +120,7 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                             </button>
                         </form>
                         <!-- <a href="{{ route('input-jadwal.import') }}" class="btn btn-primary my-4">Import CSV</a> -->
+                        @endif
 
                         <table id="example1" class="table table-bordered table-striped">
                             <thead>
