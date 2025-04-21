@@ -95,4 +95,47 @@ class ExportController extends Controller
 
         return Response::download($temp_file, $fileName)->deleteFileAfterSend(true);
     }
+
+    public function exportTemplateLibur()
+    {
+        $spreadsheet = new Spreadsheet();
+
+        // Sheet 1: Input Jadwal
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle('Input Libur');
+        $sheet->setCellValue('A1', 'Tanggal');
+        $sheet->setCellValue('B1', 'Keterangan');
+
+        // Kembali ke Sheet Input Jadwal
+        $spreadsheet->setActiveSheetIndexByName('Input Libur');
+
+        // Tambahkan dropdown untuk A2:A100 (Nama Karyawan)
+        for ($row = 2; $row <= 100; $row++) {
+
+            // Format kolom C (tanggal) ke yyyy-mm-dd
+            $sheet->getStyle("A$row")
+                ->getNumberFormat()
+                ->setFormatCode('yyyy-mm-dd');
+
+            // (Opsional) Validasi agar kolom C hanya menerima tanggal
+            $dateValidation = $sheet->getCell("A$row")->getDataValidation();
+            $dateValidation->setType(DataValidation::TYPE_DATE);
+            $dateValidation->setErrorStyle(DataValidation::STYLE_STOP);
+            $dateValidation->setAllowBlank(true);
+            $dateValidation->setShowInputMessage(true);
+            $dateValidation->setShowErrorMessage(true);
+            $dateValidation->setPromptTitle('Masukkan Tanggal');
+            $dateValidation->setPrompt('Format tanggal: YYYY-MM-DD');
+            $dateValidation->setErrorTitle('Format Tidak Valid');
+            $dateValidation->setError('Harap masukkan tanggal dengan format YYYY-MM-DD');
+        }
+
+        // Export file
+        $writer = new Xlsx($spreadsheet);
+        $fileName = 'template_libur.xlsx';
+        $temp_file = tempnam(sys_get_temp_dir(), $fileName);
+        $writer->save($temp_file);
+
+        return Response::download($temp_file, $fileName)->deleteFileAfterSend(true);
+    }
 }

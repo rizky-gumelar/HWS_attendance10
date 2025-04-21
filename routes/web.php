@@ -100,6 +100,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/{libur}/edit', [ManageLiburController::class, 'edit'])->name('libur.edit');
         Route::put('/{libur}', [ManageLiburController::class, 'update'])->name('libur.update');
         Route::delete('/{libur}', [ManageLiburController::class, 'destroy'])->name('libur.destroy');
+        Route::post('/import', [ManageLiburController::class, 'import'])->name('libur.import');
     });
     //LEMBUR
     Route::prefix('lembur')->group(function () {
@@ -179,4 +180,5 @@ Route::middleware(['auth', 'role:admin|spv'])->group(function () {
     Route::get('/generate-jadwal', [InputJadwalKaryawanController::class, 'generate'])->name('generate.jadwal');
     Route::post('/generate-jadwal-bulanan', [InputJadwalKaryawanController::class, 'generateBulanan'])->name('generate.jadwal.bulanan');
     Route::get('/export-template', [App\Http\Controllers\ExportController::class, 'exportTemplate'])->name('export-template');
+    Route::get('/export-template-libur', [App\Http\Controllers\ExportController::class, 'exportTemplateLibur'])->name('export-template-libur');
 });
