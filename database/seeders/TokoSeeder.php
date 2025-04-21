@@ -14,13 +14,28 @@ class TokoSeeder extends Seeder
     public function run(): void
     {
         Toko::create([
-            'nama_toko' => 'HWS',
-            'alamat' => 'Jl. Wr. Supratman No.Kav 37, Gisikdrono, Kec. Semarang Barat, Kota Semarang, Jawa Tengah 50268',
+            'nama_toko' => 'BJ',
+            'alamat' => '-',
         ]);
 
         Toko::create([
-            'nama_toko' => 'Testing',
-            'alamat' => 'Jl. Jalan',
+            'nama_toko' => 'HIJ',
+            'alamat' => '-',
+        ]);
+
+        Toko::create([
+            'nama_toko' => 'HWS',
+            'alamat' => '-',
+        ]);
+
+        Toko::create([
+            'nama_toko' => 'SS',
+            'alamat' => '-',
+        ]);
+
+        Toko::create([
+            'nama_toko' => 'GSN',
+            'alamat' => '-',
         ]);
     }
 }

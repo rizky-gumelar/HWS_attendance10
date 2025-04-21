@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('default_shift_id')->constrained('shift')->onDelete('cascade');
             $table->string('nama_karyawan');
             $table->foreignId('divisi_id')->constrained('divisi')->onDelete('cascade');
-            $table->string('no_hp')->unique();
+            $table->string('no_hp')->unique()->nullable();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

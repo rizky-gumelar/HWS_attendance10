@@ -77,6 +77,12 @@ class ManageAbsensiController extends Controller
                     'tanggal' => $tanggal,
                     'jam_masuk' => $jamMasuk,
                 ]);
+            } else {
+                $absensi->update([
+                    'user_id' => $row[0],
+                    'tanggal' => $tanggal,
+                    'jam_masuk' => $jamMasuk,
+                ]);
             }
         }
         // Setelah data absensi berhasil diimpor, update jadwal karyawan
