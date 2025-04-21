@@ -4,75 +4,12 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\User;
-use App\Models\Toko;
-use App\Models\Shift;
-use App\Models\Divisi;
-use App\Models\JenisCuti;
 use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
 {
     public function run()
     {
-
-        Toko::create([
-            'nama_toko' => 'HWS',
-            'alamat' => 'Jl. Wr. Supratman No.Kav 37, Gisikdrono, Kec. Semarang Barat, Kota Semarang, Jawa Tengah 50268',
-        ]);
-
-        Toko::create([
-            'nama_toko' => 'Testing',
-            'alamat' => 'Jl. Jalan',
-        ]);
-
-        Divisi::create([
-            'nama_divisi' => 'Gudang Online',
-        ]);
-
-        Divisi::create([
-            'nama_divisi' => 'Admin',
-        ]);
-
-        Shift::create([
-            'nama_shift' => 'Shift Pagi (8-17)',
-            'shift_masuk' => '08:00:00',
-            'shift_keluar' => '17:00:00',
-        ]);
-        Shift::create([
-            'nama_shift' => 'Shift Siang (10-21)',
-            'shift_masuk' => '10:00:00',
-            'shift_keluar' => '21:00:00',
-        ]);
-        Shift::create([
-            'id' => 999,
-            'nama_shift' => 'Libur Pengganti',
-            'shift_masuk' => '23:59:58',
-            'shift_keluar' => '23:59:59',
-        ]);
-        Shift::create([
-            'id' => 9999,
-            'nama_shift' => 'Libur',
-            'shift_masuk' => '23:59:58',
-            'shift_keluar' => '23:59:59',
-        ]);
-        Shift::create([
-            'id' => 9998,
-            'nama_shift' => 'Cuti Free',
-            'shift_masuk' => '23:59:58',
-            'shift_keluar' => '23:59:59',
-        ]);
-        Shift::create([
-            'id' => 9997,
-            'nama_shift' => 'Cuti',
-            'shift_masuk' => '00:00:01',
-            'shift_keluar' => '00:00:01',
-        ]);
-        Shift::create([
-            'id' => 9996,
-            'nama_shift' => 'Cuti Setengah Hari',
-            'shift_masuk' => '00:00:01',
-            'shift_keluar' => '00:00:01',
-        ]);
 
         User::create([
             'toko_id' => 1,
@@ -128,46 +65,6 @@ class UserSeeder extends Seeder
             'role' => 'karyawan',
             'total_cuti' => 0,
             'status' => 'nonaktif',
-        ]);
-        JenisCuti::create([
-            'id' => 1,
-            'nama_cuti' => 'Sakit',
-            'status' => '0',
-        ]);
-        JenisCuti::create([
-            'id' => 2,
-            'nama_cuti' => 'Pernikahan',
-            'status' => '0',
-        ]);
-        JenisCuti::create([
-            'id' => 3,
-            'nama_cuti' => 'Kedukaan',
-            'status' => '0',
-        ]);
-        JenisCuti::create([
-            'id' => 4,
-            'nama_cuti' => 'Melahirkan',
-            'status' => '0',
-        ]);
-        JenisCuti::create([
-            'id' => 5,
-            'nama_cuti' => 'Cuti Bersama',
-            'status' => '1',
-        ]);
-        JenisCuti::create([
-            'id' => 6,
-            'nama_cuti' => 'Cuti Tahunan',
-            'status' => '1',
-        ]);
-        JenisCuti::create([
-            'id' => 7,
-            'nama_cuti' => 'Setengah Hari (Pagi)',
-            'status' => '0.5',
-        ]);
-        JenisCuti::create([
-            'id' => 8,
-            'nama_cuti' => 'Setengah Hari (Sore)',
-            'status' => '0.5',
         ]);
     }
 }
