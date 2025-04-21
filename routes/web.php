@@ -12,6 +12,7 @@ use App\Http\Controllers\ManageShiftController;
 use App\Http\Controllers\ManageTokoController;
 use App\Http\Controllers\ManageAbsensiController;
 use App\Http\Controllers\ManageDivisiController;
+use App\Http\Controllers\ManageLiburController;
 use App\Http\Controllers\ManageLemburController;
 use App\Http\Controllers\InputJadwalKaryawanController;
 use App\Http\Controllers\LaporanMingguanController;
@@ -90,6 +91,15 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/{divisi}/edit', [ManageDivisiController::class, 'edit'])->name('divisi.edit');
         Route::put('/{divisi}', [ManageDivisiController::class, 'update'])->name('divisi.update');
         Route::delete('/{divisi}', [ManageDivisiController::class, 'destroy'])->name('divisi.destroy');
+    });
+    //LIBUR
+    Route::prefix('libur')->group(function () {
+        Route::get('/', [ManageLiburController::class, 'index'])->name('libur.index');
+        Route::get('/create', [ManageLiburController::class, 'create'])->name('libur.create');
+        Route::post('/', [ManageLiburController::class, 'store'])->name('libur.store');
+        Route::get('/{libur}/edit', [ManageLiburController::class, 'edit'])->name('libur.edit');
+        Route::put('/{libur}', [ManageLiburController::class, 'update'])->name('libur.update');
+        Route::delete('/{libur}', [ManageLiburController::class, 'destroy'])->name('libur.destroy');
     });
     //LEMBUR
     Route::prefix('lembur')->group(function () {
