@@ -9,6 +9,7 @@ use App\Models\Shift;
 use App\Models\Divisi;
 use App\Models\LaporanMingguan;
 use App\Models\JadwalKaryawan;
+use App\Models\Libur;
 use Carbon\Carbon;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -153,30 +154,43 @@ class LaporanMingguanController extends Controller
                 $tanggal = Carbon::parse($jadwalKaryawan->tanggal);
                 $dayOfWeek = $tanggal->dayOfWeek; // 0 = Minggu, 1 = Senin, ..., 6 = Sabtu
 
+                $shift = $jadwalKaryawan->shift->nama_shift;
+                $jamMasuk = $jadwalKaryawan->absensi->jam_masuk ?? '-';
+                $isLibur = Libur::isLibur($tanggal);
+                $keteranganLibur = $isLibur ? Libur::getLibur($tanggal)->keterangan : null;
+
+                $value = json_encode([
+                    'shift' => $shift,
+                    'jam_masuk' => $jamMasuk,
+                    'libur' => $isLibur,
+                    'keterangan_libur' => $keteranganLibur
+                ]);
+
                 // Tentukan hari sesuai dengan dayOfWeek
                 switch ($dayOfWeek) {
                     case 0:
-                        $hari['d2'] = json_encode(['shift' => $jadwalKaryawan->shift->nama_shift, 'jam_masuk' => $jadwalKaryawan->absensi->jam_masuk ?? '-']);
+                        $hari['d2'] = $value;
                         break;
                     case 1:
-                        $hari['d3'] = json_encode(['shift' => $jadwalKaryawan->shift->nama_shift, 'jam_masuk' => $jadwalKaryawan->absensi->jam_masuk ?? '-']);
+                        $hari['d3'] = $value;
                         break;
                     case 2:
-                        $hari['d4'] = json_encode(['shift' => $jadwalKaryawan->shift->nama_shift, 'jam_masuk' => $jadwalKaryawan->absensi->jam_masuk ?? '-']);
+                        $hari['d4'] = $value;
                         break;
                     case 3:
-                        $hari['d5'] = json_encode(['shift' => $jadwalKaryawan->shift->nama_shift, 'jam_masuk' => $jadwalKaryawan->absensi->jam_masuk ?? '-']);
+                        $hari['d5'] = $value;
                         break;
                     case 4:
-                        $hari['d6'] = json_encode(['shift' => $jadwalKaryawan->shift->nama_shift, 'jam_masuk' => $jadwalKaryawan->absensi->jam_masuk ?? '-']);
+                        $hari['d6'] = $value;
                         break;
                     case 5:
-                        $hari['d7'] = json_encode(['shift' => $jadwalKaryawan->shift->nama_shift, 'jam_masuk' => $jadwalKaryawan->absensi->jam_masuk ?? '-']);
+                        $hari['d7'] = $value;
                         break;
                     case 6:
-                        $hari['d1'] = json_encode(['shift' => $jadwalKaryawan->shift->nama_shift, 'jam_masuk' => $jadwalKaryawan->absensi->jam_masuk ?? '-']);
+                        $hari['d1'] = $value;
                         break;
                 }
+
                 if ($jadwalKaryawan->cek_keterlambatan == 0) {
                     if ($jadwalKaryawan->shift->id != 9999) {
                         $mingguan = $mingguan + 15000;

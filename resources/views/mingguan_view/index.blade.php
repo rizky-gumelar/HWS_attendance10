@@ -143,13 +143,13 @@
                     <tbody>
                         <tr>
                             <th>Shift</th>
-                            <td>{{ json_decode($mingguan->d1, true)['shift'] ?? 'null' }}</td>
-                            <td>{{ json_decode($mingguan->d2, true)['shift'] ?? 'null' }}</td>
-                            <td>{{ json_decode($mingguan->d3, true)['shift'] ?? 'null' }}</td>
-                            <td>{{ json_decode($mingguan->d4, true)['shift'] ?? 'null' }}</td>
-                            <td>{{ json_decode($mingguan->d5, true)['shift'] ?? 'null' }}</td>
-                            <td>{{ json_decode($mingguan->d6, true)['shift'] ?? 'null' }}</td>
-                            <td>{{ json_decode($mingguan->d7, true)['shift'] ?? 'null' }}</td>
+                            <x-shift-cell :data="$mingguan->d1" />
+                            <x-shift-cell :data="$mingguan->d2" />
+                            <x-shift-cell :data="$mingguan->d3" />
+                            <x-shift-cell :data="$mingguan->d4" />
+                            <x-shift-cell :data="$mingguan->d5" />
+                            <x-shift-cell :data="$mingguan->d6" />
+                            <x-shift-cell :data="$mingguan->d7" />
                         </tr>
                         <tr>
                             <th>Jam Masuk</th>
