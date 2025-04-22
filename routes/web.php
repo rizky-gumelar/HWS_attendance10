@@ -104,12 +104,13 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     });
     //LEMBUR
     Route::prefix('lembur')->group(function () {
-        Route::get('/', [ManageLemburController::class, 'index'])->name('lembur.index');
+        Route::get('/manage', [ManageLemburController::class, 'index'])->name('lembur.index');
         Route::get('/create', [ManageLemburController::class, 'create'])->name('lembur.create');
         Route::post('/', [ManageLemburController::class, 'store'])->name('lembur.store');
         Route::get('/{lembur}/edit', [ManageLemburController::class, 'edit'])->name('lembur.edit');
         Route::put('/{lembur}', [ManageLemburController::class, 'update'])->name('lembur.update');
         Route::delete('/{lembur}', [ManageLemburController::class, 'destroy'])->name('lembur.destroy');
+        Route::get('/', [ManageLemburController::class, 'import'])->name('lembur.import');
     });
     //MINGGUAN
     Route::prefix('mingguan')->group(function () {
@@ -180,5 +181,6 @@ Route::middleware(['auth', 'role:admin|spv'])->group(function () {
     Route::get('/generate-jadwal', [InputJadwalKaryawanController::class, 'generate'])->name('generate.jadwal');
     Route::post('/generate-jadwal-bulanan', [InputJadwalKaryawanController::class, 'generateBulanan'])->name('generate.jadwal.bulanan');
     Route::get('/export-template', [App\Http\Controllers\ExportController::class, 'exportTemplate'])->name('export-template');
+    Route::get('/export-template-lembur', [App\Http\Controllers\ExportController::class, 'exportTemplateLembur'])->name('export-template-lembur');
     Route::get('/export-template-libur', [App\Http\Controllers\ExportController::class, 'exportTemplateLibur'])->name('export-template-libur');
 });

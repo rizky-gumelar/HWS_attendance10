@@ -126,12 +126,28 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('lembur.index') }}" class="nav-link">
-                                <i class="nav-icon fas fa-file-alt"></i>
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-calendar-check"></i>
                                 <p>
                                     Lembur
                                 </p>
                             </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="{{ route('lembur.index') }}" class="nav-link">
+                                        <i class="nav-icon fas fa-file-alt"></i>
+                                        <p>
+                                            Tipe Lembur
+                                        </p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('lembur.import') }}" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Upload Lembur</p>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('divisi.index') }}" class="nav-link">

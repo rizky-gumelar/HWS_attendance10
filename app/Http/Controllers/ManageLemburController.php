@@ -48,12 +48,10 @@ class ManageLemburController extends Controller
                 'tipe_lembur'  => 'required|string|max:255',
                 'biaya' => 'required|numeric',
             ]);
-
             $lembur->update([
                 'tipe_lembur' => $request->tipe_lembur,
                 'biaya' => $request->biaya,
             ]);
-
             // Redirect ke halaman shift dan beri pesan sukses
             return redirect()->route('lembur.index')->with('success', 'lembur berhasil diperbarui!');
         } catch (\Exception $e) {
@@ -67,5 +65,11 @@ class ManageLemburController extends Controller
     {
         $lembur->delete();
         return redirect()->route('lembur.index')->with('success', 'lembur deleted successfully.');
+    }
+
+    public function import()
+    {
+        $lemburs = Lembur::all();
+        return view('lembur_view.import', compact('lemburs'));
     }
 }

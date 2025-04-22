@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Shift;
 use App\Models\User;
+use App\Models\Lembur;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Cell\DataValidation;
@@ -133,6 +134,100 @@ class ExportController extends Controller
         // Export file
         $writer = new Xlsx($spreadsheet);
         $fileName = 'template_libur.xlsx';
+        $temp_file = tempnam(sys_get_temp_dir(), $fileName);
+        $writer->save($temp_file);
+
+        return Response::download($temp_file, $fileName)->deleteFileAfterSend(true);
+    }
+
+    public function exportTemplateLembur()
+    {
+        $spreadsheet = new Spreadsheet();
+
+        // Sheet 1: Input Jadwal
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle('Input Jadwal Lembur');
+        $sheet->setCellValue('A1', 'Tanggal');
+        $sheet->setCellValue('B1', 'Nama Karyawan');
+        $sheet->setCellValue('C1', 'Tipe Lembur');
+        $sheet->setCellValue('D1', 'Biaya');
+        $sheet->setCellValue('E1', 'Durasi (jam)');
+        $sheet->setCellValue('F1', 'Total');
+
+        // Sheet 2: Karyawan List
+        $karyawanSheet = new Worksheet($spreadsheet, 'KaryawanList');
+        $spreadsheet->addSheet($karyawanSheet);
+
+        $karyawans = User::pluck('nama_karyawan');
+        foreach ($karyawans as $index => $nama) {
+            $karyawanSheet->setCellValue('A' . ($index + 1), $nama);
+        }
+
+        // Sheet 3: lembur List
+        $lemburSheet = new Worksheet($spreadsheet, 'LemburList');
+        $spreadsheet->addSheet($lemburSheet);
+
+        // Header
+        $lemburSheet->setCellValue('A1', 'Tipe Lembur');
+        $lemburSheet->setCellValue('B1', 'Biaya');
+
+        // Data
+        $lemburs = Lembur::select('tipe_lembur', 'biaya')->get();
+        if ($lemburs->isNotEmpty()) {
+            foreach ($lemburs as $index => $item) {
+                $lemburSheet->setCellValue('A' . ($index + 2), $item->tipe_lembur);
+                $lemburSheet->setCellValue('B' . ($index + 2), $item->biaya);
+            }
+            $lemburCount = $lemburs->count();
+        } else {
+            $lemburSheet->setCellValue('A2', 'Data Belum Ada');
+            $lemburSheet->setCellValue('B2', 0);
+            $lemburCount = 1;
+        }
+
+        // Kembali ke Sheet Input Jadwal
+        $spreadsheet->setActiveSheetIndexByName('Input Jadwal Lembur');
+
+        // Tambahkan dropdown untuk A2:A100 (Nama Karyawan)
+        for ($row = 2; $row <= 100; $row++) {
+            // A: Tanggal (validasi + format)
+            $sheet->getStyle("A$row")->getNumberFormat()->setFormatCode('yyyy-mm-dd');
+            $dateValidation = $sheet->getCell("A$row")->getDataValidation();
+            $dateValidation->setType(DataValidation::TYPE_DATE);
+            $dateValidation->setErrorStyle(DataValidation::STYLE_STOP);
+            $dateValidation->setAllowBlank(true);
+            $dateValidation->setShowInputMessage(true);
+            $dateValidation->setPrompt('Format tanggal: YYYY-MM-DD');
+            $dateValidation->setError('Harap masukkan tanggal dengan format YYYY-MM-DD');
+
+            // B: Nama Karyawan
+            $validationB = $sheet->getCell("B$row")->getDataValidation();
+            $validationB->setType(DataValidation::TYPE_LIST);
+            $validationB->setFormula1("'KaryawanList'!A2:A100"); // Sesuaikan jika jumlah lebih
+            $validationB->setShowDropDown(true);
+
+            // C: Tipe Lembur (Dropdown)
+            $validationC = $sheet->getCell("C$row")->getDataValidation();
+            $validationC->setType(DataValidation::TYPE_LIST);
+            $validationC->setFormula1("'LemburList'!A2:A" . ($lemburCount + 1));
+            $validationC->setShowDropDown(true);
+
+            // D: Biaya (pakai VLOOKUP dari sheet LemburList)
+            $sheet->setCellValue("D$row", "=IFERROR(VLOOKUP(C$row, LemburList!A:B, 2, FALSE), 0)");
+
+            // E: Durasi, user input manual
+
+            // F: Total = Biaya x Durasi
+            $sheet->setCellValue("F$row", "=D$row*E$row");
+        }
+
+        // Sembunyikan sheet daftar
+        $spreadsheet->getSheetByName('KaryawanList')->setSheetState(Worksheet::SHEETSTATE_HIDDEN);
+        $spreadsheet->getSheetByName('LemburList')->setSheetState(Worksheet::SHEETSTATE_HIDDEN);
+
+        // Export file
+        $writer = new Xlsx($spreadsheet);
+        $fileName = 'template_jadwal_lembur.xlsx';
         $temp_file = tempnam(sys_get_temp_dir(), $fileName);
         $writer->save($temp_file);
 

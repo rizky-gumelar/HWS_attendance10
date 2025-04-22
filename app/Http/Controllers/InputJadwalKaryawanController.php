@@ -538,20 +538,6 @@ class InputJadwalKaryawanController extends Controller
         return redirect()->back()->with('success', 'Jadwal karyawan berhasil digenerate.');
     }
 
-    // public function generateBulanan()
-    // {
-
-    //     $bulan = Carbon::now()->month;
-    //     $divisiId = auth()->user()->divisi_id;
-    //     // Menjalankan command generate:jadwal
-    //     Artisan::call('generate:jadwal-bulanan', [
-    //         'bulan' => $bulan,
-    //         'divisi_id' => $divisiId,
-    //     ]);
-
-    //     // Redirect kembali dengan pesan sukses
-    //     return redirect()->back()->with('success', 'Jadwal karyawan berhasil digenerate.');
-    // }
 
     public function generateBulanan(Request $request)
     {
@@ -582,60 +568,4 @@ class InputJadwalKaryawanController extends Controller
 
         return redirect()->back()->with('success', 'Jadwal karyawan berhasil digenerate. Mode: ' . ($overwrite ? 'Menimpa Jadwal Lama' : 'Tidak Menimpa'));
     }
-
-    // public function export()
-    // {
-    //     // Fetch the data from the database
-    //     $jadwalKaryawan = JadwalKaryawan::with(['users', 'shift', 'lembur', 'absensi'])
-    //         ->get();
-
-    //     // Create a new Spreadsheet object
-    //     $spreadsheet = new Spreadsheet();
-    //     $sheet = $spreadsheet->getActiveSheet();
-
-    //     // Set the headers for the Excel sheet
-    //     $sheet->setCellValue('A1', 'Nama Karyawan');
-    //     $sheet->setCellValue('B1', 'Shift ID');
-    //     $sheet->setCellValue('C1', 'Lembur ID');
-    //     $sheet->setCellValue('D1', 'Absen ID');
-    //     $sheet->setCellValue('E1', 'Tanggal');
-    //     $sheet->setCellValue('F1', 'Cek Keterlambatan');
-    //     $sheet->setCellValue('G1', 'Lembur Jam');
-    //     $sheet->setCellValue('H1', 'Total Lembur');
-    //     $sheet->setCellValue('I1', 'Keterangan');
-    //     $sheet->setCellValue('J1', 'Minggu ke');
-
-    //     // Fill the data into the Excel sheet
-    //     $row = 2; // Start from the second row for the data
-    //     foreach ($jadwalKaryawan as $item) {
-    //         $sheet->setCellValue('A' . $row, $item->users->nama_karyawan); // Name of the employee
-    //         $sheet->setCellValue('B' . $row, $item->shift->nama_shift); // Shift Name
-    //         $sheet->setCellValue('C' . $row, $item->lembur ? $item->lembur->tipe_lembur : 'No Lembur');
-    //         $sheet->setCellValue('D' . $row, $item->absensi->id ? $item->absensi->id : 'No Absen');
-    //         $sheet->setCellValue('E' . $row, $item->tanggal);
-    //         $sheet->setCellValue('F' . $row, $item->cek_keterlambatan ? 'Yes' : 'No');
-    //         $sheet->setCellValue('G' . $row, $item->lembur_jam);
-    //         $sheet->setCellValue('H' . $row, $item->total_lembur);
-    //         $sheet->setCellValue('I' . $row, $item->keterangan);
-    //         $sheet->setCellValue('J' . $row, $item->minggu_ke);
-    //         $row++;
-    //     }
-
-    //     // Create a Writer instance
-    //     $writer = new Xlsx($spreadsheet);
-
-    //     // Set the response headers for downloading the Excel file
-    //     $filename = 'jadwal_karyawan_' . now()->format('Y_m_d_H_i_s') . '.xlsx';
-    //     return response()->stream(
-    //         function () use ($writer) {
-    //             $writer->save('php://output');
-    //         },
-    //         200,
-    //         [
-    //             'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    //             'Content-Disposition' => 'attachment;filename="' . $filename . '"',
-    //             'Cache-Control' => 'max-age=0',
-    //         ]
-    //     );
-    // }
 }
