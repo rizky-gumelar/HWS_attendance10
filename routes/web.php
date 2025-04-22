@@ -17,6 +17,7 @@ use App\Http\Controllers\ManageLemburController;
 use App\Http\Controllers\InputJadwalKaryawanController;
 use App\Http\Controllers\LaporanMingguanController;
 use App\Http\Controllers\PengajuanCutiController;
+use Illuminate\Support\Facades\Artisan;
 
 /*
 |--------------------------------------------------------------------------
@@ -185,4 +186,19 @@ Route::middleware(['auth', 'role:admin|spv'])->group(function () {
     Route::get('/export-template', [App\Http\Controllers\ExportController::class, 'exportTemplate'])->name('export-template');
     Route::get('/export-template-lembur', [App\Http\Controllers\ExportController::class, 'exportTemplateLembur'])->name('export-template-lembur');
     Route::get('/export-template-libur', [App\Http\Controllers\ExportController::class, 'exportTemplateLibur'])->name('export-template-libur');
+});
+
+Route::get('/run-migrate-1234', function () {
+    Artisan::call('migrate');
+    return 'Migration dijalankan!';
+});
+
+Route::get('/run-seed-1234', function () {
+    Artisan::call('db:seed');
+    return 'Seeder dijalankan!';
+});
+
+Route::get('/link-storage-1234', function () {
+    Artisan::call('storage:link');
+    return 'Storage link berhasil dibuat!';
 });
