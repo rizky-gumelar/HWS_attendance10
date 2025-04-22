@@ -66,7 +66,7 @@
             <div class="card">
                 <!-- /.card-header -->
                 <div class="card-body">
-                    <form action="{{ route('lembur.index') }}" method="GET">
+                    <!-- <form action="{{ route('lembur.index') }}" method="GET">
                         <div class="row">
                             <div class="col-md-4">
                                 <label for="start_date">Dari Tanggal:</label>
@@ -81,7 +81,7 @@
                                 <a href="{{ route('lembur.index') }}" class="btn btn-secondary ml-2">Reset</a>
                             </div>
                         </div>
-                    </form>
+                    </form> -->
 
 
                     <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#importModal">

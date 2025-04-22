@@ -25,6 +25,7 @@
                 <select class="form-control" name="status" required>
                     <option value="1">Potong saldo</option>
                     <option value="0">Tidak</option>
+                    <option value="0.5">Potong setengah</option>
                 </select>
             </div>
         </div>

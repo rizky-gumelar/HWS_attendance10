@@ -19,20 +19,22 @@
 
         <div class="card-body">
             <div class="form-group">
-                <label for="nama_cuti">Nama Jenis Cuti</label>
-                <input type="text" class="form-control" id="nama_cuti" name="nama_cuti"
-                    value="{{ old('nama_cuti', $jeniscuti->nama_cuti) }}"
-                    placeholder="Masukkan nama" required>
+                <label for="nama_cuti">Nama Cuti</label>
+                <input type="text" class="form-control" id="nama_cuti" name="nama_cuti" placeholder="Masukkan nama" required>
             </div>
             <div class="form-group">
-                <label for="status">Status</label>
-                <input type="text" class="form-control" id="status" name="status" value="{{ old('status', $jeniscuti->status) }}" required>
+                <label>Potong saldo cuti</label>
+                <select class="form-control" name="status" required>
+                    <option value="1" {{ $jeniscuti->status == 1 ? 'selected' : '' }}>Potong saldo</option>
+                    <option value="0" {{ $jeniscuti->status == 0 ? 'selected' : '' }}>Tidak</option>
+                    <option value="0.5" {{ $jeniscuti->status == 0.5 ? 'selected' : '' }}>Potong setengah</option>
+                </select>
             </div>
         </div>
         <!-- /.card-body -->
 
         <div class="card-footer">
-            <button type="submit" class="btn btn-primary">Update</button>
+            <button type="submit" class="btn btn-primary">Submit</button>
             <!-- Tombol Batal -->
             <a href="{{ url()->previous() }}" class="btn btn-danger">Batal</a>
         </div>
