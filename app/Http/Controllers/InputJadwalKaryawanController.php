@@ -203,6 +203,113 @@ class InputJadwalKaryawanController extends Controller
         return redirect()->route('input-jadwal.index')->with('success', 'Jadwal berhasil diimpor.');
     }
 
+    public function importlembur(Request $request)
+    {
+        // Validasi file CSV yang di-upload
+        $request->validate([
+            'csv_file' => 'required|mimes:csv,txt|max:10240', // Maksimal 10MB
+        ]);
+
+        // Ambil file CSV yang di-upload
+        $file = $request->file('csv_file');
+        $filePath = $file->getRealPath();
+
+        // Baca file CSV menggunakan PhpSpreadsheet
+        $spreadsheet = IOFactory::load($filePath);
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Ambil data dari sheet (dimulai dari baris kedua untuk mengabaikan header)
+        $csvData = $sheet->toArray(null, true, true, true); // toArray mengubah ke array
+
+        // Skip header jika ada
+        $header = array_shift($csvData);
+
+        // Validasi dan import data dari CSV
+        foreach ($csvData as $row) {
+            // Misalnya format CSV: nama_user, nama_shift, tanggal
+            $tanggal = $row['A']; // Kolom C untuk tanggal
+            $userName = $row['B']; // Kolom A untuk nama_user
+            $lemburName = $row['C']; // Kolom B untuk nama_shift
+            $durasi = $row['E']; // Kolom B untuk nama_shift
+
+            // Cek apakah user dan shift ada di database
+            $user = User::where('nama_karyawan', $userName)->first();
+            $lembur = Lembur::where('tipe_lembur', $lemburName)->first();
+
+            // Debug: Cek apakah user dan shift ditemukan
+            if (!$user) {
+                dd("User tidak ditemukan: $userName");
+            }
+
+            if (!$lembur) {
+                dd("tipe lembur tidak ditemukan: $lemburName");
+            }
+
+            // Validasi tanggal
+            $validator = Validator::make(['tanggal' => $tanggal], [
+                'tanggal' => 'required|date',
+            ]);
+
+            if ($validator->fails()) {
+                dd("Tanggal tidak valid: $tanggal");
+            }
+
+            if ($user && $lembur) {
+                // Validasi tanggal
+                $validator = Validator::make(['tanggal' => $tanggal], [
+                    'tanggal' => 'required',
+                ]);
+
+                if ($validator->fails()) {
+                    continue; // Skip jika ada tanggal yang tidak valid
+                }
+
+                // Cek apakah jadwal sudah ada untuk user_id, lembur_id, dan tanggal
+                $existingSchedule = JadwalKaryawan::where('user_id', $user->id)
+                    // ->where('shift_id', $shift->id)
+                    ->whereDate('tanggal', $tanggal)
+                    ->first();
+
+                // 1. JIKA JADWAL SUDAH ADA MAKA UPDATE
+                if ($existingSchedule) {
+                    // Jika jadwal sudah ada, update jadwal yang ada
+                    $existingSchedule->update([
+                        'lembur_id' => $lembur->id,
+                        'tanggal' => Carbon::parse($tanggal),
+                        'lembur_jam' => $durasi,
+                        'total_lembur' => $durasi * $lembur->biaya,
+                    ]);
+                } else {
+                    // Jika jadwal belum ada, buat jadwal baru
+                    JadwalKaryawan::create([
+                        'user_id' => $user->id,
+                        'shift_id' => $user->default_shift_id,
+                        'lembur_id' => $lembur->id,
+                        'lembur_jam' => $durasi,
+                        'total_lembur' => $durasi * $lembur->biaya,
+                        'tanggal' => Carbon::parse($tanggal),
+                        'minggu_ke' => Carbon::parse($tanggal)->startOfWeek(Carbon::SATURDAY)->weekOfYear,
+                    ]);
+                }
+
+                // // 2. JIKA JADWAL SUDAH ADA MAKA GAGAL
+                // if ($existingSchedule) {
+                //     // Jika jadwal sudah ada, lanjutkan dengan pesan kesalahan
+                //     return redirect()->back()->with('error', "Jadwal sudah ada untuk $userName pada tanggal $tanggal.");
+                // }
+                // // Buat JadwalKaryawan
+                // JadwalKaryawan::create([
+                //     'user_id' => $user->id,
+                //     'shift_id' => $shift->id,
+                //     'tanggal' => Carbon::parse($tanggal),
+                //     'minggu_ke' => Carbon::parse($tanggal)->startOfWeek(Carbon::SATURDAY)->weekOfYear,
+                // ]);
+            }
+        }
+
+        return redirect()->route('lembur.index')->with('success', 'Jadwal berhasil diimpor.');
+    }
+
     public function edit(JadwalKaryawan $input_jadwal)
     {
         $users = User::all();

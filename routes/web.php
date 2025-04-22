@@ -111,6 +111,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::put('/{lembur}', [ManageLemburController::class, 'update'])->name('lembur.update');
         Route::delete('/{lembur}', [ManageLemburController::class, 'destroy'])->name('lembur.destroy');
         Route::get('/', [ManageLemburController::class, 'import'])->name('lembur.import');
+        Route::post('/import', [InputJadwalKaryawanController::class, 'importLembur'])->name('lembur.import-lembur');
     });
     //MINGGUAN
     Route::prefix('mingguan')->group(function () {

@@ -17,14 +17,14 @@
                 <p>Download template excel :
                     <a href="{{ route('export-template-lembur') }}">Template Excel</a>
                 </p>
-                <form action="{{ route('input-jadwal.import') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('lembur.import-lembur') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="form-group">
                         <label for="exampleInputFile">File input</label>
                         <div class="input-group">
                             <div class="custom-file">
                                 <input type="file" name="csv_file" accept=".csv" required>
-                                <button type="submit" class="input-group-text">Impor Jadwal</button>
+                                <button type="submit" class="input-group-text">Impor Lembur</button>
                             </div>
                             <div class="input-group-append">
                             </div>
