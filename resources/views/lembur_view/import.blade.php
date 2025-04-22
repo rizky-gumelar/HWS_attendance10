@@ -90,24 +90,24 @@
                     <table id="example1" class="table table-bordered table-striped">
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>ID Karyawan</th>
-                                <th>Nama Karyawan</th>
                                 <th>Tanggal</th>
-                                <th>Jam Masuk</th>
+                                <th>Tipe Lembur</th>
+                                <th>Total biaya</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($lemburs as $lembur)
+                            @foreach ($grouplembur as $group)
                             <tr>
-
+                                <td>{{ $group->tanggal }}</td>
+                                <td>{{ $group->lembur->tipe_lembur  ?? 'Tidak Ada Lembur'  }}</td>
+                                <td>{{ $group->total  }}</td>
                                 <td>
-                                    <a href="{{ route('lembur.edit', $lembur->id) }}" class="btn btn-warning">Edit</a>
-                                    <form action="{{ route('lembur.destroy', $lembur->id) }}" method="POST" class="d-inline">
-                                        @csrf @method('DELETE')
-                                        <button class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
-                                    </form>
+                                    <button class="btn btn-primary btn-detail"
+                                        data-tanggal="{{ $group->tanggal }}"
+                                        data-lembur="{{ $group->lembur_id }}">
+                                        Detail
+                                    </button>
                                 </td>
                             </tr>
                             @endforeach
@@ -123,5 +123,66 @@
     <!-- /.row -->
 </div>
 
-<!-- /.content -->
+<!-- Modal -->
+<div class="modal fade" id="jadwalModal" tabindex="-1" role="dialog" aria-labelledby="jadwalModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Detail <!-- ur --></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered" id="jadwalDetailTable">
+                    <thead>
+                        <tr>
+                            <th>Nama</th>
+                            <th>Tipe Lembur</th>
+                            <th>Durasi</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const buttons = document.querySelectorAll('.btn-detail');
+        buttons.forEach(button => {
+            button.addEventListener('click', function() {
+                const tanggal = this.getAttribute('data-tanggal');
+                const lembur_id = this.getAttribute('data-lembur');
+
+                fetch(`/lembur/detail?tanggal=${tanggal}&lembur_id=${lembur_id}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const tbody = document.querySelector('#jadwalDetailTable tbody');
+                        tbody.innerHTML = '';
+
+                        if (data.jadwal.length === 0) {
+                            tbody.innerHTML = '<tr><td colspan="4">Tidak ada data</td></tr>';
+                        } else {
+                            data.jadwal.forEach(item => {
+                                tbody.innerHTML += `
+                                    <tr>
+                                        <td>${item.users?.nama_karyawan || 'User Tidak Ditemukan'}</td>
+                                        <td>${item.lembur?.tipe_lembur || 'Lembur Tidak Ditemukan'}</td>
+                                        <td>${item.lembur_jam || '-'}</td>
+                                        <td>${item.total_lembur || '-'}</td>
+                                    </tr>`;
+                            });
+                        }
+
+                        // SHOW MODAL - BOOTSTRAP 4 WAY (jQuery required)
+                        $('#jadwalModal').modal('show');
+                    });
+            });
+        });
+    });
+</script>
+
 @endsection

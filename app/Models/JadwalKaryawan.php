@@ -44,7 +44,7 @@ class JadwalKaryawan extends Model
 
     public function lembur()
     {
-        return $this->belongsTo(Absensi::class, 'lembur_id');
+        return $this->belongsTo(Lembur::class, 'lembur_id');
     }
 
     public function getKeterlambatanNameAttribute()

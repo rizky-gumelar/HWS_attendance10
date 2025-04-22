@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
-
+use Illuminate\Support\Facades\DB;
 use App\Models\Lembur;
+use App\Models\JadwalKaryawan;
 
 class ManageLemburController extends Controller
 {
@@ -69,7 +70,35 @@ class ManageLemburController extends Controller
 
     public function import()
     {
-        $lemburs = Lembur::all();
-        return view('lembur_view.import', compact('lemburs'));
+        // $lemburs = Lembur::all();
+        // Ambil data dan kelompokkan berdasarkan tanggal dan lembur_id
+        $grouplembur = JadwalKaryawan::with('lembur')
+            ->select('tanggal', 'lembur_id', DB::raw('SUM(total_lembur) as total'))
+            ->whereNotNull('lembur_id')
+            ->groupBy('tanggal', 'lembur_id')
+            ->orderBy('tanggal', 'desc')
+            ->get();
+        return view('lembur_view.import', compact('grouplembur'));
+
+        // debug
+        // return response()->json([
+        //     'grouplembur' => $grouplembur
+        // ]);
+    }
+
+
+    public function getDetail(Request $request)
+    {
+        $tanggal = $request->input('tanggal');
+        $lembur_id = $request->input('lembur_id');
+
+        $jadwalList = JadwalKaryawan::with(['users', 'lembur']) // asumsikan ada relasi
+            ->where('tanggal', $tanggal)
+            ->where('lembur_id', $lembur_id)
+            ->get();
+
+        return response()->json([
+            'jadwal' => $jadwalList
+        ]);
     }
 }

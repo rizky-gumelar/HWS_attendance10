@@ -144,7 +144,14 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                                     <td>{{ \Carbon\Carbon::parse($input_jadwal->tanggal)->locale('id')->isoFormat('dddd, D MMMM YYYY') }}</td>
                                     <td>{{ $input_jadwal->shift->nama_shift }}</td>
                                     <td>{{ $input_jadwal->absensi->jam_masuk ?? '-' }}</td>
-                                    <td>{{ $input_jadwal->lembur->tipe_lembur ?? '-' }}</td>
+                                    <td>
+                                        @if($input_jadwal->lembur && $input_jadwal->lembur_jam)
+                                        {{ $input_jadwal->lembur->tipe_lembur . ' - ' . $input_jadwal->lembur_jam . ' jam' }}
+                                        @else
+                                        -
+                                        @endif
+                                    </td>
+
                                     <td>{{ $input_jadwal->keterlambatan_name }}</td>
                                     <td>Minggu ke-{{ $input_jadwal->minggu_ke }}</td>
                                     <td>

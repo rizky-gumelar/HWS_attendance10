@@ -112,6 +112,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::delete('/{lembur}', [ManageLemburController::class, 'destroy'])->name('lembur.destroy');
         Route::get('/', [ManageLemburController::class, 'import'])->name('lembur.import');
         Route::post('/import', [InputJadwalKaryawanController::class, 'importLembur'])->name('lembur.import-lembur');
+        Route::get('/detail', [ManageLemburController::class, 'getDetail'])->name('jadwal.detail.ajax');
     });
     //MINGGUAN
     Route::prefix('mingguan')->group(function () {
