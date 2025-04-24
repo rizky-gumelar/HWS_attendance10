@@ -31,7 +31,7 @@ class InputJadwalKaryawanController extends Controller
 
         if ($user->role === 'spv') {
             $query->whereHas('users', function ($q) use ($user) {
-                $q->where('divisi_id', $user->divisi_id);
+                $q->where('divisi_id', $user->divisi_id)->where('role', '!=', 'admin');
             });
         }
         // Ambil nilai rentang tanggal dari request

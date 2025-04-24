@@ -53,7 +53,16 @@ class PengajuanCutiController extends Controller
 
     public function approvalIndex()
     {
-        $pengajuanCuti = PengajuanCuti::with('users', 'jenis_cuti')->orderBy('created_at', 'desc')->get();
+        $user = auth()->user();
+        $query = PengajuanCuti::with('users', 'jenis_cuti')->orderBy('created_at', 'desc');
+
+        if ($user->role === 'spv') {
+            $query->whereHas('users', function ($q) use ($user) {
+                $q->where('divisi_id', $user->divisi_id)->where('role', '!=', 'admin');
+            });
+        }
+        // Ambil data yang sudah difilter
+        $pengajuanCuti = $query->get();
         return view('cuti.approval', compact('pengajuanCuti'));
     }
 
