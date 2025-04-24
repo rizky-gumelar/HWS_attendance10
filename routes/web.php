@@ -103,18 +103,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::delete('/{libur}', [ManageLiburController::class, 'destroy'])->name('libur.destroy');
         Route::post('/import', [ManageLiburController::class, 'import'])->name('libur.import');
     });
-    //LEMBUR
-    Route::prefix('lembur')->group(function () {
-        Route::get('/manage', [ManageLemburController::class, 'index'])->name('lembur.index');
-        Route::get('/create', [ManageLemburController::class, 'create'])->name('lembur.create');
-        Route::post('/', [ManageLemburController::class, 'store'])->name('lembur.store');
-        Route::get('/{lembur}/edit', [ManageLemburController::class, 'edit'])->name('lembur.edit');
-        Route::put('/{lembur}', [ManageLemburController::class, 'update'])->name('lembur.update');
-        Route::delete('/{lembur}', [ManageLemburController::class, 'destroy'])->name('lembur.destroy');
-        Route::get('/', [ManageLemburController::class, 'import'])->name('lembur.import');
-        Route::post('/import', [InputJadwalKaryawanController::class, 'importLembur'])->name('lembur.import-lembur');
-        Route::get('/detail', [ManageLemburController::class, 'getDetail'])->name('jadwal.detail.ajax');
-    });
+
     //MINGGUAN
     Route::prefix('mingguan')->group(function () {
         Route::get('/', [LaporanMingguanController::class, 'index'])->name('mingguan.index');
@@ -179,7 +168,18 @@ Route::middleware(['auth', 'role:admin|spv'])->group(function () {
         Route::post('/{id}/reject', [PengajuanCutiController::class, 'reject'])->name('cuti.reject');
         Route::post('/{id}/cancel', [PengajuanCutiController::class, 'cancel'])->name('cuti.cancel');
     });
-
+    //LEMBUR
+    Route::prefix('lembur')->group(function () {
+        Route::get('/manage', [ManageLemburController::class, 'index'])->name('lembur.index');
+        Route::get('/create', [ManageLemburController::class, 'create'])->name('lembur.create');
+        Route::post('/', [ManageLemburController::class, 'store'])->name('lembur.store');
+        Route::get('/{lembur}/edit', [ManageLemburController::class, 'edit'])->name('lembur.edit');
+        Route::put('/{lembur}', [ManageLemburController::class, 'update'])->name('lembur.update');
+        Route::delete('/{lembur}', [ManageLemburController::class, 'destroy'])->name('lembur.destroy');
+        Route::get('/', [ManageLemburController::class, 'import'])->name('lembur.import');
+        Route::post('/import', [InputJadwalKaryawanController::class, 'importLembur'])->name('lembur.import-lembur');
+        Route::get('/detail', [ManageLemburController::class, 'getDetail'])->name('jadwal.detail.ajax');
+    });
     // GENERATE JADWAL
     Route::get('/generate-jadwal', [InputJadwalKaryawanController::class, 'generate'])->name('generate.jadwal');
     Route::post('/generate-jadwal-bulanan', [InputJadwalKaryawanController::class, 'generateBulanan'])->name('generate.jadwal.bulanan');
