@@ -165,6 +165,7 @@ Route::middleware(['auth', 'role:admin|spv'])->group(function () {
         Route::post('/store', [PengajuanCutiController::class, 'store'])->name('cuti.store');
         Route::get('/approval', [PengajuanCutiController::class, 'approvalIndex'])->name('cuti.approval.index');
         Route::post('/{id}/approve', [PengajuanCutiController::class, 'approve'])->name('cuti.approve');
+        Route::post('/{id}/spv_approve', [PengajuanCutiController::class, 'spvapprove'])->name('cuti.spv_approve');
         Route::post('/{id}/reject', [PengajuanCutiController::class, 'reject'])->name('cuti.reject');
         Route::post('/{id}/cancel', [PengajuanCutiController::class, 'cancel'])->name('cuti.cancel');
     });

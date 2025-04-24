@@ -60,6 +60,7 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                         <span class="badge badge-success">Disetujui Admin</span>
                         @elseif($cuti->status == 'disetujui spv')
                         <span class="badge badge-success">Disetujui SPV</span>
+                        <span class="badge badge-warning">Menunggu persetujuan Admin</span>
                         @elseif($cuti->status == 'batal')
                         <span class="badge badge-warning">Dibatalkan</span>
                         @else
@@ -69,7 +70,7 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                     <td>
                         @if ($cuti->imagename)
                         <a href="" data-bs-toggle="modal" data-bs-target="#imageModal{{ $cuti->id }}">
-                            <img src="{{ asset('storage/cuti/' . $cuti->imagename) }}" alt="Bukti Cuti" style="max-width: 100px;">
+                            <img src="{{ asset('storage/cuti/' . $cuti->imagename) }}" alt="Bukti Cuti" style="max-width: 100px; max-height: 100px;">
                         </a>
                         @else
                         Tidak ada gambar
@@ -77,6 +78,7 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                     </td>
                     <td>
                         @if($cuti->status == 'pending')
+                        @if(auth()->user()->role === 'admin')
                         <form action="{{ route('cuti.approve', $cuti->id) }}" method="POST" style="display:inline-block;">
                             @csrf
                             <button class="btn btn-sm btn-success" onclick="return confirm('Setujui cuti ini?')">Approve</button>
@@ -89,16 +91,49 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                             @csrf
                             <button class="btn btn-sm btn-warning" onclick="return confirm('Batalkan cuti ini?')">Batalkan</button>
                         </form>
+                        @elseif(auth()->user()->role === 'spv')
+                        <form action="{{ route('cuti.spv_approve', $cuti->id) }}" method="POST" style="display:inline-block;">
+                            @csrf
+                            <button class="btn btn-sm btn-success" onclick="return confirm('Setujui cuti ini?')">Approve</button>
+                        </form>
+                        <form action="{{ route('cuti.reject', $cuti->id) }}" method="POST" style="display:inline-block;">
+                            @csrf
+                            <button class="btn btn-sm btn-danger" onclick="return confirm('Tolak cuti ini?')">Reject</button>
+                        </form>
+                        <form action="{{ route('cuti.cancel', $cuti->id) }}" method="POST" style="display:inline-block;">
+                            @csrf
+                            <button class="btn btn-sm btn-warning" onclick="return confirm('Batalkan cuti ini?')">Batalkan</button>
+                        </form>
+                        @endif
                         @elseif($cuti->status == 'disetujui spv')
+                        @if(auth()->user()->role === 'admin')
+                        <form action="{{ route('cuti.approve', $cuti->id) }}" method="POST" style="display:inline-block;">
+                            @csrf
+                            <button class="btn btn-sm btn-success" onclick="return confirm('Setujui cuti ini?')">Approve</button>
+                        </form>
+                        <form action="{{ route('cuti.reject', $cuti->id) }}" method="POST" style="display:inline-block;">
+                            @csrf
+                            <button class="btn btn-sm btn-danger" onclick="return confirm('Tolak cuti ini?')">Reject</button>
+                        </form>
                         <form action="{{ route('cuti.cancel', $cuti->id) }}" method="POST" style="display:inline-block;">
                             @csrf
                             <button class="btn btn-sm btn-warning" onclick="return confirm('Batalkan cuti ini?')">Batalkan</button>
                         </form>
+                        @elseif(auth()->user()->role === 'spv')
+                        <form action="{{ route('cuti.cancel', $cuti->id) }}" method="POST" style="display:inline-block;">
+                            @csrf
+                            <button class="btn btn-sm btn-warning" onclick="return confirm('Batalkan cuti ini?')">Batalkan</button>
+                        </form>
+                        @endif
                         @elseif($cuti->status == 'disetujui admin')
+                        @if(auth()->user()->role === 'admin')
                         <form action="{{ route('cuti.cancel', $cuti->id) }}" method="POST" style="display:inline-block;">
                             @csrf
                             <button class="btn btn-sm btn-warning" onclick="return confirm('Batalkan cuti ini?')">Batalkan</button>
                         </form>
+                        @elseif(auth()->user()->role === 'spv')
+                        <em>-</em>
+                        @endif
                         @else
                         <em>-</em>
                         @endif

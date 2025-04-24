@@ -210,14 +210,22 @@ class ExportController extends Controller
             // B: Nama Karyawan
             $validationB = $sheet->getCell("B$row")->getDataValidation();
             $validationB->setType(DataValidation::TYPE_LIST);
+            $validationB->setErrorStyle(DataValidation::STYLE_STOP);
             $validationB->setFormula1("'KaryawanList'!A2:A100"); // Sesuaikan jika jumlah lebih
             $validationB->setShowDropDown(true);
+            $validationB->setAllowBlank(true);
+            $validationB->setShowInputMessage(true);
+            $validationB->setShowErrorMessage(true);
 
             // C: Tipe Lembur (Dropdown)
             $validationC = $sheet->getCell("C$row")->getDataValidation();
             $validationC->setType(DataValidation::TYPE_LIST);
+            $validationC->setErrorStyle(DataValidation::STYLE_STOP);
             $validationC->setFormula1("'LemburList'!A2:A" . ($lemburCount + 1));
             $validationC->setShowDropDown(true);
+            $validationC->setAllowBlank(true);
+            $validationC->setShowInputMessage(true);
+            $validationC->setShowErrorMessage(true);
 
             // D: Biaya (pakai VLOOKUP dari sheet LemburList)
             $sheet->setCellValue("D$row", "=IFERROR(VLOOKUP(C$row, LemburList!A:B, 2, FALSE), 0)");
