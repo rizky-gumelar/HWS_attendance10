@@ -15,6 +15,7 @@ class ExportController extends Controller
 {
     public function exportTemplate()
     {
+        $user = auth()->user();
         $spreadsheet = new Spreadsheet();
 
         // Sheet 1: Input Jadwal
@@ -28,7 +29,13 @@ class ExportController extends Controller
         $karyawanSheet = new Worksheet($spreadsheet, 'KaryawanList');
         $spreadsheet->addSheet($karyawanSheet);
 
-        $karyawans = User::where('role', 'karyawan')->pluck('nama_karyawan');
+        $query = User::with(['shift']);
+
+        if ($user->role === 'spv') {
+            $query->where('divisi_id', $user->divisi_id)->where('role', '!=', 'admin');;
+        }
+
+        $karyawans = $query->pluck('nama_karyawan');
         foreach ($karyawans as $index => $nama) {
             $karyawanSheet->setCellValue('A' . ($index + 1), $nama);
         }
