@@ -21,7 +21,7 @@ class UserSeeder extends Seeder
             'email_verified_at' => now(),
             'password' => Hash::make('password'),
             'role' => 'admin',
-            'total_cuti' => 0,
+            'total_cuti' => 24,
             'status' => 'aktif',
         ]);
 

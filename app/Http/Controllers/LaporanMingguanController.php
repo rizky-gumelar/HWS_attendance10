@@ -192,7 +192,11 @@ class LaporanMingguanController extends Controller
                 }
 
                 if ($jadwalKaryawan->cek_keterlambatan == 0) {
-                    if ($jadwalKaryawan->shift->id != 9999) {
+                    if (
+                        stripos($jadwalKaryawan->shift->nama_shift, 'Libur') === false &&
+                        (stripos($jadwalKaryawan->shift->nama_shift, 'Cuti') === false || $jadwalKaryawan->users->total_cuti > 0)
+                        // stripos($jadwalKaryawan->shift->nama_shift, 'Cuti') === false
+                    ) {
                         $mingguan = $mingguan + 15000;
                     }
                 } else if ($jadwalKaryawan->cek_keterlambatan == 2) {
@@ -207,6 +211,7 @@ class LaporanMingguanController extends Controller
                 $kedatangan = 0;
             } else {
                 if ($jadwalKaryawan->users->divisi->nama_divisi != 'Sales') {
+                    // if ($jadwalKaryawan->users->total_cuti > 0) 
                     $kedatangan = 40000;
                 }
                 // $status = 'selesai';

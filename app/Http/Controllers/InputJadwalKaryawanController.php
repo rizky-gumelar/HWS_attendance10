@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Shift;
 use App\Models\Absensi;
 use App\Models\Lembur;
+use App\Models\Libur;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -552,7 +553,9 @@ class InputJadwalKaryawanController extends Controller
 
             foreach ($data as $item) {
                 $sheet->setCellValue("{$baseCol}{$row}", Carbon::parse($item->tanggal)->format('d M Y'));
-                $sheet->setCellValue("{$nextCol}{$row}", $item->shift->nama_shift ?? '-');
+                $isLibur = Libur::isLibur($item->tanggal);
+                $keteranganLibur = $isLibur ? Libur::getLibur($item->tanggal)->keterangan : null;
+                $sheet->setCellValue("{$nextCol}{$row}", $keteranganLibur ?? $item->shift->nama_shift ?? '-');
                 $jamMasuk = ($item->shift->id != 9999 && $item->absensi) ? $item->absensi->jam_masuk : '-';
                 $sheet->setCellValue("{$nextCol2}{$row}", $jamMasuk);
 

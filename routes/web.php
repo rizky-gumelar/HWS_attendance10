@@ -189,7 +189,7 @@ Route::middleware(['auth', 'role:admin|spv'])->group(function () {
 });
 
 Route::get('/run-migrate-1234', function () {
-    Artisan::call('migrate');
+    Artisan::call('migrate:fresh');
     return 'Migration dijalankan!';
 });
 
