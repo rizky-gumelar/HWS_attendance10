@@ -5,7 +5,12 @@
 @section('page-title', 'Dashboard')
 
 @section('content')
-
+<style>
+    #calendar .fc-event-title {
+        color: black !important;
+        font-weight: normal !important;
+    }
+</style>
 
 <!-- Content Header (Page header) -->
 <div class="content-header">
@@ -28,73 +33,76 @@
 <!-- Main content -->
 <section class="content">
     <div class="container-fluid">
-        <!-- Small boxes (Stat box) -->
         <div class="row">
-            <div class="col-lg-3 col-6">
-                <!-- small box -->
-                <div class="small-box bg-info">
-                    <div class="inner">
-                        <h3>150</h3>
+            <div class="col-12">
 
-                        <p>New Orders</p>
-                    </div>
-                    <div class="icon">
-                        <i class="ion ion-bag"></i>
-                    </div>
-                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                <div class="card p-5">
+                    <select id="filterDivisi" class="form-select" style="width: 200px; margin-bottom: 10px;">
+                        <option value="">Semua Divisi</option>
+                        @foreach ($divisiList as $divisi)
+                        <option value="{{ $divisi->id }}">{{ $divisi->nama_divisi }}</option>
+                        @endforeach
+                    </select>
+                    <!-- Small boxes (Stat box) -->
+                    <div id="calendar" class="fc-event-title" style="color: black; font-weight: normal;"></div>
+                    <!-- /.row -->
                 </div>
             </div>
-            <!-- ./col -->
-            <div class="col-lg-3 col-6">
-                <!-- small box -->
-                <div class="small-box bg-success">
-                    <div class="inner">
-                        <h3>53<sup style="font-size: 20px">%</sup></h3>
-
-                        <p>Bounce Rate</p>
-                    </div>
-                    <div class="icon">
-                        <i class="ion ion-stats-bars"></i>
-                    </div>
-                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                </div>
-            </div>
-            <!-- ./col -->
-            <div class="col-lg-3 col-6">
-                <!-- small box -->
-                <div class="small-box bg-warning">
-                    <div class="inner">
-                        <h3>44</h3>
-
-                        <p>User Registrations</p>
-                    </div>
-                    <div class="icon">
-                        <i class="ion ion-person-add"></i>
-                    </div>
-                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                </div>
-            </div>
-            <!-- ./col -->
-            <div class="col-lg-3 col-6">
-                <!-- small box -->
-                <div class="small-box bg-danger">
-                    <div class="inner">
-                        <h3>65</h3>
-
-                        <p>Unique Visitors</p>
-                    </div>
-                    <div class="icon">
-                        <i class="ion ion-pie-graph"></i>
-                    </div>
-                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                </div>
-            </div>
-            <!-- ./col -->
         </div>
-        <!-- /.row -->
-
     </div><!-- /.container-fluid -->
 </section>
+
+
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.4/index.global.min.js"></script>
+<!-- <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            events: '/calendar', // ganti sesuai route kamu
+            timeZone: 'local', // Pastikan sesuai kebutuhanmu
+            eventTimeFormat: {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+            }
+        });
+
+        calendar.render();
+    });
+</script> -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        var divisiFilter = document.getElementById('filterDivisi');
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            timeZone: 'local',
+            eventTimeFormat: {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+            },
+            displayEventTime: false,
+            events: function(fetchInfo, successCallback, failureCallback) {
+                fetch(`/calendar?divisi_id=${divisiFilter.value}`)
+                    .then(response => response.json())
+                    .then(data => successCallback(data))
+                    .catch(error => failureCallback(error));
+            }
+        });
+
+        calendar.render();
+
+        // Update event saat filter berubah
+        divisiFilter.addEventListener('change', function() {
+            calendar.refetchEvents();
+        });
+    });
+</script>
+
 <!-- /.content -->
 
 <!-- /.content-wrapper -->

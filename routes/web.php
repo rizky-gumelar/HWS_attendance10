@@ -128,6 +128,7 @@ Route::middleware(['auth', 'role:karyawan'])->group(function () {
 });
 
 Route::middleware(['auth', 'role:admin|spv'])->group(function () {
+    Route::get('/calendar', [InputJadwalKaryawanController::class, 'calendar'])->name('calendar');
     // CRUD KARYAWAN
     Route::prefix('manage-karyawan')->group(function () {
         Route::get('/', [ManageKaryawanController::class, 'index'])->name('manage-karyawan.index');

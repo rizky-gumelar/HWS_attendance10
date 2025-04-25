@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="{{ asset('adminlte/plugins/dropzone/min/dropzone.min.css')}}">
 </head>
 
-<body class="hold-transition sidebar-mini layout-fixed">
+<body class="hold-transition sidebar-mini layout-fixed d-flex flex-column">
     <div class="wrapper">
 
         <!-- Preloader -->
@@ -33,7 +33,7 @@
         @include('layouts.spv_sidebar')
 
         <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper">
+        <div class="content-wrapper min-vh-100">
             <!-- general form elements -->
             <div class="card card-primary mx-4">
                 @if (session('success'))
@@ -166,6 +166,25 @@
         }
         // DropzoneJS Demo Code End
     </script>
+    <!-- FullCalendar CSS -->
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css' rel='stylesheet' />
+
+    <!-- FullCalendar JS -->
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.js'></script>
+
+    <!-- Inisialisasi kalender -->
+    <!-- <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                events: '/calendar' // ganti sesuai route kamu
+            });
+
+            calendar.render();
+        });
+    </script> -->
 </body>
 
 </html>

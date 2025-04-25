@@ -21,6 +21,8 @@ use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 
+
+
 class InputJadwalKaryawanController extends Controller
 {
     public function index(Request $request)
@@ -696,5 +698,64 @@ class InputJadwalKaryawanController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Jadwal karyawan berhasil digenerate. Mode: ' . ($overwrite ? 'Menimpa Jadwal Lama' : 'Tidak Menimpa'));
+    }
+
+    public function calendar(Request $request)
+    {
+        $divisiId = $request->input('divisi_id');
+        $user = auth()->user();
+
+        $query = JadwalKaryawan::with(['users', 'shift'])
+            ->where('shift_id', '<', 100);
+
+        if ($user->role === 'admin') {
+            if ($divisiId) {
+                $query->whereHas('users', function ($q) use ($divisiId) {
+                    $q->where('divisi_id', $divisiId);
+                });
+            }
+        } else if ($user->role === 'spv') {
+            $query->whereHas('users', function ($q) use ($user) {
+                $q->where('divisi_id', $user->divisi_id)->where('role', '!=', 'admin');
+            });
+        }
+
+        // Ambil data yang sudah difilter
+        $jadwal = $query->get();
+
+        $events = $jadwal->map(function ($item) {
+            $divisiColors = [
+                '1' => '#007bff',       // Biru
+                '2' => '#6610f2',        // Ungu
+                '3' => '#fd7e14',   // Oranye
+                '4' => '#20c997',       // Teal
+                '5' => '#e83e8c',           // Pink
+                '6' => '#28a745',               // Hijau
+                '7' => '#ffc107',  // Kuning
+                '8' => '#17a2b8',              // Biru muda
+                '9' => '#6c757d' // Abu-abu
+            ];
+            $startDateTime = $item->tanggal . ' ' . $item->shift->shift_masuk;
+            $endDateTime = $item->tanggal . ' ' . $item->shift->shift_keluar;
+
+            // Handle shift malam (keluar di hari berikutnya)
+            if (strtotime($endDateTime) < strtotime($startDateTime)) {
+                $endDateTime = date('Y-m-d H:i:s', strtotime($endDateTime . ' +1 day'));
+            }
+
+            $divisi = $item->users->divisi_id;
+            $color = $divisiColors[$divisi]; // Default warna jika divisi tidak cocok
+
+
+            return [
+                'title' => '(' . substr($item->shift->shift_masuk, 0, 2) . ' - ' .
+                    substr($item->shift->shift_keluar, 0, 2) . ') ' . $item->users->nama_karyawan,
+                'start' => $startDateTime,
+                'end' => $endDateTime,
+                'color' => $color
+            ];
+        });
+
+        return response()->json($events);
     }
 }
