@@ -86,6 +86,26 @@
     <script src="{{ asset('adminlte/plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
     <!-- AdminLTE App -->
     <script src="{{ asset('adminlte/dist/js/adminlte.min.js') }}"></script>
+    <!-- Sweetalert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function konfirmasiTimpa() {
+            Swal.fire({
+                title: 'Yakin ingin menimpa jadwal?',
+                text: "Data jadwal yang sudah ada akan diganti!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, timpa saja!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('form-timpa-jadwal').submit();
+                }
+            });
+        }
+    </script>
     <!-- AdminLTE for demo purposes -->
     <!-- <script src="{{ asset('adminlte/dist/js/demo.js') }}"></script> -->
     <!-- Page specific script -->
