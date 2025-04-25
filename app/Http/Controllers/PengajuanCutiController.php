@@ -15,7 +15,12 @@ class PengajuanCutiController extends Controller
     public function index()
     {
         $user = auth()->user();
-        return view('cuti.index', compact('user'));
+
+        $query = PengajuanCuti::with('users', 'jenis_cuti')->orderBy('created_at', 'desc')->where('user_id', $user->id);
+
+        // Ambil data yang sudah difilter
+        $pengajuanCuti = $query->get();
+        return view('cuti.index', compact('user', 'pengajuanCuti'));
     }
 
     public function create()
