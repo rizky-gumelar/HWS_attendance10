@@ -38,7 +38,7 @@
 
                 <div class="card p-5">
                     <select id="filterDivisi" class="form-select" style="width: 200px; margin-bottom: 10px;">
-                        <option value="">Semua Divisi</option>
+                        <!-- <option value="">Semua Divisi</option> -->
                         @foreach ($divisiList as $divisi)
                         <option value="{{ $divisi->id }}">{{ $divisi->nama_divisi }}</option>
                         @endforeach
@@ -91,7 +91,12 @@
                     .then(response => response.json())
                     .then(data => successCallback(data))
                     .catch(error => failureCallback(error));
-            }
+            },
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
         });
 
         calendar.render();

@@ -43,7 +43,7 @@
 
                 <div class="card p-5">
                     <!-- Small boxes (Stat box) -->
-                    <div id="calendar" class="fc-event-title" style="color: black; font-weight: normal;"></div>
+                    <div id="calendar" class="fc-event-title " style="color: black; font-weight: normal;"></div>
                     <!-- /.row -->
                 </div>
             </div>
@@ -65,6 +65,11 @@
                 hour: '2-digit',
                 minute: '2-digit',
                 hour12: false
+            },
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
             },
             displayEventTime: false,
 

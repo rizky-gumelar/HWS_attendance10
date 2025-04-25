@@ -725,16 +725,17 @@ class InputJadwalKaryawanController extends Controller
 
         $events = $jadwal->map(function ($item) {
             $divisiColors = [
-                '1' => '#007bff',       // Biru
-                '2' => '#6610f2',        // Ungu
-                '3' => '#fd7e14',   // Oranye
-                '4' => '#20c997',       // Teal
-                '5' => '#e83e8c',           // Pink
-                '6' => '#28a745',               // Hijau
-                '7' => '#ffc107',  // Kuning
-                '8' => '#17a2b8',              // Biru muda
-                '9' => '#6c757d' // Abu-abu
+                '1' => '#b3d4fc', // Soft biru
+                '2' => '#c9b3f7', // Soft ungu
+                '3' => '#ffc89a', // Soft oranye
+                '4' => '#9fe7d3', // Soft teal
+                '5' => '#f7a7c4', // Soft pink
+                '6' => '#a9e5bc', // Soft hijau
+                '7' => '#ffe9a6', // Soft kuning
+                '8' => '#9ed9e7', // Soft biru muda
+                '9' => '#d1d3d4'  // Soft abu-abu
             ];
+
             $startDateTime = $item->tanggal . ' ' . $item->shift->shift_masuk;
             $endDateTime = $item->tanggal . ' ' . $item->shift->shift_keluar;
 
@@ -752,7 +753,8 @@ class InputJadwalKaryawanController extends Controller
                     substr($item->shift->shift_keluar, 0, 2) . ') ' . $item->users->nama_karyawan,
                 'start' => $startDateTime,
                 'end' => $endDateTime,
-                'color' => $color
+                'backgroundColor' => $color,
+                'textColor' => '#fff'
             ];
         });
 
