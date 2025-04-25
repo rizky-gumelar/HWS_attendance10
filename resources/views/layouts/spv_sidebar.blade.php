@@ -92,6 +92,14 @@ $nama_user = auth()->user()->nama_karyawan;
                         </p>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ route('manage-karyawan.edit-password') }}" class="nav-link">
+                        <i class="nav-icon fas fa-calendar-times"></i>
+                        <p>
+                            Ubah Password
+                        </p>
+                    </a>
+                </li>
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

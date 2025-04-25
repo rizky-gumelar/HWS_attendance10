@@ -115,4 +115,24 @@ class ManageKaryawanController extends Controller
         $karyawan->delete();
         return redirect()->route('manage-karyawan.index')->with('success', 'Employee deleted successfully.');
     }
+
+    public function editPassword()
+    {
+        $user = auth()->user();
+        return view('manage-karyawan_view.ubah_password', compact('user'));
+    }
+
+    public function updatePassword(Request $request, User $karyawan)
+    {
+        $request->validate([
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        $karyawan->update([
+            'password' => bcrypt($request->password),
+        ]);
+
+        $user = auth()->user()->role;
+        return redirect()->route('dashboard.' . $user)->with('success', 'Password berhasil diperbarui.');
+    }
 }
