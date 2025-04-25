@@ -88,7 +88,7 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                     </form> -->
 
 
-                    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#importModal">
+                    <button type="button" class="btn btn-info  mb-4" data-bs-toggle="modal" data-bs-target="#importModal">
                         Upload Lembur
                     </button>
                     <table id="example1" class="table table-bordered table-striped">
