@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
         $this->call(TokoSeeder::class);
         $this->call(DivisiSeeder::class);
         $this->call(ShiftSeeder::class);
-        $this->call(UserSeeder::class);
+        //user seeder here
         $this->call(JenisCutiSeeder::class);
         $this->call(LemburSeeder::class);
     }

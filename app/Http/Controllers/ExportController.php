@@ -46,7 +46,7 @@ class ExportController extends Controller
         $shiftSheet = new Worksheet($spreadsheet, 'ShiftList');
         $spreadsheet->addSheet($shiftSheet);
 
-        $shifts = Shift::pluck('nama_shift');
+        $shifts = Shift::where('id', '<', 100)->pluck('nama_shift');
         foreach ($shifts as $index => $nama) {
             $shiftSheet->setCellValue('A' . ($index + 1), $nama);
         }
@@ -230,12 +230,12 @@ class ExportController extends Controller
             $validationC->setShowErrorMessage(true);
 
             // D: Biaya (pakai VLOOKUP dari sheet LemburList)
-            $sheet->setCellValue("D$row", "=IFERROR(VLOOKUP(C$row, LemburList!A:B, 2, FALSE), 0)");
+            $sheet->setCellValue("D$row", "=IFERROR(VLOOKUP(C$row, LemburList!A:B, 2, FALSE), \"\")");
 
             // E: Durasi, user input manual
 
             // F: Total = Biaya x Durasi
-            $sheet->setCellValue("F$row", "=D$row*E$row");
+            $sheet->setCellValue("F$row", "=IFERROR(D$row*E$row, \"\")");
         }
 
         // Sembunyikan sheet daftar
@@ -296,6 +296,15 @@ class ExportController extends Controller
             $divisiSheet->setCellValue('A' . ($index + 1), $nama);
         }
 
+        // Sheet 5: Role List
+        $roleSheet = new Worksheet($spreadsheet, 'RoleList');
+        $spreadsheet->addSheet($roleSheet);
+
+        $roles = ['admin', 'spv', 'karyawan'];
+        foreach ($roles as $index => $role) {
+            $roleSheet->setCellValue('A' . ($index + 1), $role);
+        }
+
         // Kembali ke Sheet Input Jadwal
         $spreadsheet->setActiveSheetIndexByName('Input Jadwal Karyawan');
 
@@ -331,6 +340,16 @@ class ExportController extends Controller
             $validationB->setShowErrorMessage(true);
             $validationB->setShowDropDown(true);
             $validationB->setFormula1("'DivisiList'!A$1:A$" . count($divisis));
+
+            // (Role)
+            $validationB = $sheet->getCell("I$row")->getDataValidation();
+            $validationB->setType(DataValidation::TYPE_LIST);
+            $validationB->setErrorStyle(DataValidation::STYLE_INFORMATION);
+            $validationB->setAllowBlank(true);
+            $validationB->setShowInputMessage(true);
+            $validationB->setShowErrorMessage(true);
+            $validationB->setShowDropDown(true);
+            $validationB->setFormula1("'RoleList'!A$1:A$" . count($roles));
         }
 
         // Sembunyikan sheet daftar

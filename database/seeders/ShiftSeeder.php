@@ -5,6 +5,8 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Shift;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class ShiftSeeder extends Seeder
 {
@@ -52,6 +54,20 @@ class ShiftSeeder extends Seeder
             'nama_shift' => 'Cuti Setengah Hari',
             'shift_masuk' => '00:00:01',
             'shift_keluar' => '00:00:01',
+        ]);
+
+        User::create([
+            'toko_id' => 1,
+            'nama_karyawan' => 'Admin User',
+            'default_shift_id' => 1,
+            'divisi_id' => 2,
+            'no_hp' => '081234567890',
+            'email' => 'admin@example.com',
+            'email_verified_at' => now(),
+            'password' => Hash::make('password'),
+            'role' => 'admin',
+            'total_cuti' => 24,
+            'status' => 'aktif',
         ]);
     }
 }

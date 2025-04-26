@@ -147,11 +147,11 @@ class ManageKaryawanController extends Controller
     public function import(Request $request)
     {
         $request->validate([
-            'file' => 'required|file|mimes:csv,xlsx', // Validasi file
+            'csv_file' => 'required|mimes:csv,txt,xlsx|max:10240' // Validasi file
         ]);
 
-        if ($request->hasFile('file')) {
-            $file = $request->file('file');
+        if ($request->hasFile('csv_file')) {
+            $file = $request->file('csv_file');
             $spreadsheet = IOFactory::load($file->getRealPath());
             $sheet = $spreadsheet->getActiveSheet();
             $rows = $sheet->toArray();
@@ -192,15 +192,16 @@ class ManageKaryawanController extends Controller
 
                         // Kolom yang di-update atau diisi
                         [
+                            'id' => $row[0] ?? null,
                             'nama_karyawan' => $row[1] ?? null,
-                            'password' => isset($row[3]) ? bcrypt($row[3]) : null,
+                            'password' => isset($row[3]) ? bcrypt($row[4]) : null,
                             'toko_id' => $toko->id ?? null,
                             'default_shift_id' => $defaultShift->id ?? null,
                             'divisi_id' => $divisi->id ?? null,
                             'no_hp' => $row[7] ?? null,
                             'role' => $row[8] ?? 'karyawan',
                             'total_cuti' => $row[9] ?? 24,
-                            'status' => $row[10] ?? 'aktif',
+                            'status' => 'aktif',
                         ]
                     );
                 }
