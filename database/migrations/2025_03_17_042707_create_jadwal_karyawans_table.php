@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('jadwal_karyawan', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('pub_id')->on('users')->onDelete('cascade');
+            // $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('shift_id')->constrained('shift')->onDelete('cascade');
             $table->foreignId('lembur_id')->nullable()->constrained('lembur')->onDelete('set null');
             $table->foreignId('absen_id')->nullable()->constrained('absensi_harian')->onDelete('set null');

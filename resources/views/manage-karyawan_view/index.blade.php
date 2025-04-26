@@ -81,7 +81,8 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                         <table id="example1" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
+                                    <!-- <th>ID</th> -->
+                                    <th>ID Absen</th>
                                     <th>Nama Karyawan</th>
                                     <th>Store</th>
                                     <th>Shift</th>
@@ -96,7 +97,7 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                             <tbody>
                                 @foreach ($karyawans as $karyawan)
                                 <tr>
-                                    <td @if($karyawan->status == 'nonaktif') style="color: red;" @endif>{{ $karyawan->id }}</td>
+                                    <td @if($karyawan->status == 'nonaktif') style="color: red;" @endif>{{ $karyawan->pub_id }}</td>
                                     <td @if($karyawan->status == 'nonaktif') style="color: red;" @endif>{{ $karyawan->nama_karyawan }}</td>
                                     <td @if($karyawan->status == 'nonaktif') style="color: red;" @endif>{{ $karyawan->toko->nama_toko ?? 'Toko Tidak Ditemukan' }}</td>
                                     <td @if($karyawan->status == 'nonaktif') style="color: red;" @endif>{{ $karyawan->shift->nama_shift ?? 'Shift Tidak Ditemukan' }}</td>

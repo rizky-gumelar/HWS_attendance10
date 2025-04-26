@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('pengajuan_cuti', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('pub_id')->on('users')->onDelete('cascade');
+            // $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('jenis_cuti_id')->constrained('jenis_cuti')->onDelete('cascade');
             $table->date('tanggal');
             $table->text('keterangan')->nullable();

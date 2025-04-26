@@ -34,7 +34,7 @@ class ManageAbsensiController extends Controller
     {
         // Validasi file yang diunggah
         $request->validate([
-            'file' => 'required|mimes:dat,csv,txt',
+            'file' => 'required|mimes:dat,csv,txt,xlsx',
         ]);
 
         // Mendapatkan minggu yang akan diimpor, misalnya menggunakan tanggal sekarang

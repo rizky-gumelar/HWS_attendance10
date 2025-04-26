@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('pub_id')->nullable()->unique();
             $table->foreignId('toko_id')->constrained('toko')->onDelete('cascade');
             $table->foreignId('default_shift_id')->constrained('shift')->onDelete('cascade');
             $table->string('nama_karyawan');

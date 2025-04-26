@@ -21,6 +21,13 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
         @csrf
         <div class="card-body">
             <div class="form-group">
+                <label for="pub_id">ID absen</label>
+                <input type="number" class="form-control  @error('pub_id') is-invalid @enderror" id="pub_id" name="pub_id" placeholder="Masukkan ID Absen" required>
+                @error('pub_id')
+                <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+            <div class="form-group">
                 <label for="nama_karyawan">Nama Karyawan</label>
                 <input type="text" class="form-control  @error('nama_karyawan') is-invalid @enderror" id="nama_karyawan" name="nama_karyawan" placeholder="Masukkan nama" required>
                 @error('nama_karyawan')

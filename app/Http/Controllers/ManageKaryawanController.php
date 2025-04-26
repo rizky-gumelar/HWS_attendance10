@@ -50,6 +50,7 @@ class ManageKaryawanController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'pub_id'  => 'required|unique:users',
             'nama_karyawan'  => 'required',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:8', // Perbaikan validasi password
@@ -62,6 +63,7 @@ class ManageKaryawanController extends Controller
         ]);
 
         User::create([
+            'pub_id' =>  $request->pub_id,
             'nama_karyawan' => $request->nama_karyawan,
             'email' => $request->email,
             'password' => bcrypt($request->password), // Simpan password dengan hashing
@@ -88,6 +90,7 @@ class ManageKaryawanController extends Controller
     public function update(Request $request, User $karyawan)
     {
         $request->validate([
+            'pub_id'  => 'required|unique:users',
             'toko_id' => 'exists:toko,id',
             'default_shift_id' => 'exists:shift,id',
             'nama_karyawan' => 'required|string|max:255',
@@ -101,6 +104,7 @@ class ManageKaryawanController extends Controller
 
         // Update data karyawan
         $karyawan->update([
+            'pub_id' =>  $request->pub_id,
             'toko_id' => $request->toko_id,
             'default_shift_id' => $request->default_shift_id,
             'nama_karyawan' => $request->nama_karyawan,

@@ -57,6 +57,7 @@ class ShiftSeeder extends Seeder
         ]);
 
         User::create([
+            'pub_id' => 1,
             'toko_id' => 1,
             'nama_karyawan' => 'Admin User',
             'default_shift_id' => 1,

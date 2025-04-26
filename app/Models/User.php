@@ -19,6 +19,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+        'pub_id',
         'toko_id',
         'default_shift_id',
         'nama_karyawan',
@@ -84,19 +85,19 @@ class User extends Authenticatable
     // Relasi ke tabel jadwal_karyawan
     public function jadwal_karyawan()
     {
-        return $this->hasMany(JadwalKaryawan::class, 'id');
+        return $this->hasMany(JadwalKaryawan::class, 'user_id', 'pub_id');
     }
 
     // Relasi ke tabel jadwal_karyawan
     public function absensi_harian()
     {
-        return $this->hasMany(Absensi::class, 'id');
+        return $this->hasMany(Absensi::class, 'user_id', 'pub_id');
     }
 
     // Relasi ke tabel jadwal_karyawan
     public function laporan_mingguan()
     {
-        return $this->hasMany(LaporanMingguan::class, 'id');
+        return $this->hasMany(LaporanMingguan::class, 'user_id', 'pub_id');
     }
 
     public function scopeRole($query, $role)
@@ -111,7 +112,7 @@ class User extends Authenticatable
     // Relasi ke tabel pengajuan_cuti
     public function pengajuan_cuti()
     {
-        return $this->hasMany(PengajuanCuti::class, 'id');
+        return $this->hasMany(PengajuanCuti::class, 'user_id', 'pub_id');
     }
     // public function index()
     // {
