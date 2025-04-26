@@ -138,7 +138,7 @@ $nama_user = auth()->user()->nama_karyawan;
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('lembur.index') }}" class="nav-link">
-                                <i class="nav-icon fas fa-file-alt"></i>
+                                <i class="far fa-circle nav-icon"></i>
                                 <p>
                                     Tipe Lembur
                                 </p>

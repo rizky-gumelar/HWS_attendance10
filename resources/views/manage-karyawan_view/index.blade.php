@@ -9,6 +9,40 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
 @section('page-title', 'Manage Karyawan')
 
 @section('content')
+<!-- Modal -->
+<div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="importModalLabel">Upload File CSV</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Download template excel :
+                    <a href="{{ route('export-template-karyawan') }}">Template Excel</a>
+                </p>
+                <form action="{{ route('manage-karyawan.import') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="form-group">
+                        <label for="exampleInputFile">File input</label>
+                        <div class="input-group">
+                            <div class="custom-file">
+                                <input type="file" name="csv_file" accept=".csv" required>
+                                <button type="submit" class="input-group-text">Impor Karyawan</button>
+                            </div>
+                            <div class="input-group-append">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Main content -->
 
 <!-- Content Header (Page header) -->
@@ -37,7 +71,13 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                 <div class="card">
                     <!-- /.card-header -->
                     <div class="card-body">
+                        @if(auth()->user()->role === 'admin')
                         <a href="{{ route('manage-karyawan.create') }}" class="btn btn-success my-4">Tambah Karyawan</a>
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#importModal">
+                            Import Karyawan
+                        </button>
+                        @endif
                         <table id="example1" class="table table-bordered table-striped">
                             <thead>
                                 <tr>

@@ -137,6 +137,7 @@ Route::middleware(['auth', 'role:admin|spv'])->group(function () {
         Route::get('/{karyawan}/edit', [ManageKaryawanController::class, 'edit'])->name('manage-karyawan.edit');
         Route::put('/{karyawan}', [ManageKaryawanController::class, 'update'])->name('manage-karyawan.update');
         Route::delete('/{karyawan}', [ManageKaryawanController::class, 'destroy'])->name('manage-karyawan.destroy');
+        Route::post('/import', [ManageKaryawanController::class, 'import'])->name('manage-karyawan.import');
     });
     // CRUD SHIFT
     Route::prefix('shift')->group(function () {
@@ -188,6 +189,7 @@ Route::middleware(['auth', 'role:admin|spv'])->group(function () {
     Route::get('/export-template', [App\Http\Controllers\ExportController::class, 'exportTemplate'])->name('export-template');
     Route::get('/export-template-lembur', [App\Http\Controllers\ExportController::class, 'exportTemplateLembur'])->name('export-template-lembur');
     Route::get('/export-template-libur', [App\Http\Controllers\ExportController::class, 'exportTemplateLibur'])->name('export-template-libur');
+    Route::get('/export-template-karyawan', [App\Http\Controllers\ExportController::class, 'exportTemplateKaryawan'])->name('export-template-karyawan');
 });
 
 Route::middleware(['auth', 'role:admin|spv|karyawan'])->group(function () {

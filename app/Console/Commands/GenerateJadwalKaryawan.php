@@ -40,10 +40,10 @@ class GenerateJadwalKaryawan extends Command
                     ],
                     [
                         'shift_id' => $shift_id,
-                        'cek_keterlambatan' => 2,
-                        'lembur_jam' => 0,
-                        'total_lembur' => 0,
-                        'keterangan' => null,
+                        // 'cek_keterlambatan' => 2,
+                        // 'lembur_jam' => 0,
+                        // 'total_lembur' => 0,
+                        // 'keterangan' => null,
                         'minggu_ke' => $mingguKe,
                     ]
                 );

@@ -7,6 +7,15 @@ use Illuminate\Http\Request;
 use App\Models\Toko;
 use App\Models\Shift;
 use App\Models\Divisi;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Artisan;
+use PhpOffice\PhpSpreadsheet\Style\Font;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
 
 class ManageKaryawanController extends Controller
 {
@@ -61,7 +70,7 @@ class ManageKaryawanController extends Controller
             'divisi_id' => $request->divisi_id,
             'no_hp' => $request->no_hp,
             'role' => $request->role,
-            'total_cuti' => 0, // Set default ke 0
+            'total_cuti' => 24, // Set default ke 0
             'status' => 'aktif',
         ]);
 
@@ -118,21 +127,88 @@ class ManageKaryawanController extends Controller
 
     public function editPassword()
     {
-        $user = auth()->user();
-        return view('manage-karyawan_view.ubah_password', compact('user'));
+        return view('manage-karyawan_view.ubah_password');
     }
 
-    public function updatePassword(Request $request, User $karyawan)
+    public function updatePassword(Request $request)
     {
+        $user = auth()->user();
         $request->validate([
             'password' => 'required|string|min:8|confirmed',
         ]);
 
-        $karyawan->update([
-            'password' => bcrypt($request->password),
+        $user->password = bcrypt($request->password);
+        $user->save();
+
+        $user_route = auth()->user()->role;
+        return redirect()->route('dashboard.' . $user_route)->with('success', 'Password berhasil diperbarui.');
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:csv,xlsx', // Validasi file
         ]);
 
-        $user = auth()->user()->role;
-        return redirect()->route('dashboard.' . $user)->with('success', 'Password berhasil diperbarui.');
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $spreadsheet = IOFactory::load($file->getRealPath());
+            $sheet = $spreadsheet->getActiveSheet();
+            $rows = $sheet->toArray();
+
+            foreach ($rows as $key => $row) {
+                if ($key === 0) continue; // Lewati header
+
+                // Pastikan data minimal ada email
+                if (empty($row[2])) continue;
+
+                $tokoName = $row[4];
+                $defaultShiftName = $row[5];
+                $divisiName = $row[6];
+
+
+                // Cek apakah user dan shift ada di database
+                $toko = Toko::where('nama_toko', $tokoName)->first();
+                $defaultShift = Shift::where('nama_shift', $defaultShiftName)->first();
+                $divisi = Divisi::where('nama_divisi', $divisiName)->first();
+
+                // Debug: Cek apakah user dan shift ditemukan
+                if (!$toko) {
+                    dd("Toko tidak ditemukan: $tokoName");
+                }
+
+                if (!$defaultShift) {
+                    dd("Shift tidak ditemukan: $defaultShiftName");
+                }
+
+                if (!$divisi) {
+                    dd("Divisi tidak ditemukan: $divisiName");
+                }
+
+                if ($toko && $defaultShift && $divisi) {
+                    // Update jika email sudah ada, jika tidak maka buat baru
+                    User::updateOrCreate(
+                        ['email' => $row[2]], // Cek berdasarkan email
+
+                        // Kolom yang di-update atau diisi
+                        [
+                            'nama_karyawan' => $row[1] ?? null,
+                            'password' => isset($row[3]) ? bcrypt($row[3]) : null,
+                            'toko_id' => $toko->id ?? null,
+                            'default_shift_id' => $defaultShift->id ?? null,
+                            'divisi_id' => $divisi->id ?? null,
+                            'no_hp' => $row[7] ?? null,
+                            'role' => $row[8] ?? 'karyawan',
+                            'total_cuti' => $row[9] ?? 24,
+                            'status' => $row[10] ?? 'aktif',
+                        ]
+                    );
+                }
+            }
+
+            return redirect()->route('manage-karyawan.index')->with('success', 'Data karyawan berhasil diimpor.');
+        }
+
+        return back()->with('error', 'File tidak valid!');
     }
 }

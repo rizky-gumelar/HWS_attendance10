@@ -25,7 +25,7 @@ $layout = 'layouts.karyawan_manage'; // fallback jika peran tidak cocok
     </div>
     <!-- /.card-header -->
     <!-- form start -->
-    <form action="{{ route('manage-karyawan.update-password', $user->id) }}" method="POST">
+    <form action="{{ route('manage-karyawan.update-password') }}" method="POST">
         @csrf
         @method('PUT') <!-- Laravel membutuhkan method PUT untuk update -->
         <div class="card-body">

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Shift;
 use App\Models\User;
 use App\Models\Lembur;
+use App\Models\Divisi;
+use App\Models\Toko;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Cell\DataValidation;
@@ -243,6 +245,102 @@ class ExportController extends Controller
         // Export file
         $writer = new Xlsx($spreadsheet);
         $fileName = 'template_jadwal_lembur.xlsx';
+        $temp_file = tempnam(sys_get_temp_dir(), $fileName);
+        $writer->save($temp_file);
+
+        return Response::download($temp_file, $fileName)->deleteFileAfterSend(true);
+    }
+
+    public function exportTemplateKaryawan()
+    {
+        $spreadsheet = new Spreadsheet();
+
+        // Sheet 1: Input Karyawan
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle('Input Jadwal Karyawan');
+        $sheet->setCellValue('A1', 'ID (bisa diabaikan)');
+        $sheet->setCellValue('B1', 'Nama Karyawan');
+        $sheet->setCellValue('C1', 'Email');
+        $sheet->setCellValue('D1', 'Password');
+        $sheet->setCellValue('E1', 'Toko');
+        $sheet->setCellValue('F1', 'Default Shift');
+        $sheet->setCellValue('G1', 'Divisi');
+        $sheet->setCellValue('H1', 'No HP');
+        $sheet->setCellValue('I1', 'Role');
+        $sheet->setCellValue('J1', 'Total Cuti');
+
+        // Sheet 2: Toko List
+        $tokoSheet = new Worksheet($spreadsheet, 'TokoList');
+        $spreadsheet->addSheet($tokoSheet);
+
+        $tokos = Toko::pluck('nama_toko');
+        foreach ($tokos as $index => $nama) {
+            $tokoSheet->setCellValue('A' . ($index + 1), $nama);
+        }
+
+        // Sheet 3: Default Shift List
+        $defaultShiftSheet = new Worksheet($spreadsheet, 'DefaultShiftList');
+        $spreadsheet->addSheet($defaultShiftSheet);
+
+        $defaultShifts = Shift::where('id', '<', 100)->pluck('nama_shift');
+        foreach ($defaultShifts as $index => $nama) {
+            $defaultShiftSheet->setCellValue('A' . ($index + 1), $nama);
+        }
+
+        // Sheet 4: Divisi List
+        $divisiSheet = new Worksheet($spreadsheet, 'DivisiList');
+        $spreadsheet->addSheet($divisiSheet);
+
+        $divisis = Divisi::pluck('nama_divisi');
+        foreach ($divisis as $index => $nama) {
+            $divisiSheet->setCellValue('A' . ($index + 1), $nama);
+        }
+
+        // Kembali ke Sheet Input Jadwal
+        $spreadsheet->setActiveSheetIndexByName('Input Jadwal Karyawan');
+
+        // Tambahkan dropdown untuk A2:A100 (Nama Karyawan)
+        for ($row = 2; $row <= 100; $row++) {
+
+            // (Toko)
+            $validationB = $sheet->getCell("E$row")->getDataValidation();
+            $validationB->setType(DataValidation::TYPE_LIST);
+            $validationB->setErrorStyle(DataValidation::STYLE_INFORMATION);
+            $validationB->setAllowBlank(true);
+            $validationB->setShowInputMessage(true);
+            $validationB->setShowErrorMessage(true);
+            $validationB->setShowDropDown(true);
+            $validationB->setFormula1("'TokoList'!A$1:A$" . count($tokos));
+
+            // (Shift)
+            $validationB = $sheet->getCell("F$row")->getDataValidation();
+            $validationB->setType(DataValidation::TYPE_LIST);
+            $validationB->setErrorStyle(DataValidation::STYLE_INFORMATION);
+            $validationB->setAllowBlank(true);
+            $validationB->setShowInputMessage(true);
+            $validationB->setShowErrorMessage(true);
+            $validationB->setShowDropDown(true);
+            $validationB->setFormula1("'DefaultShiftList'!A$1:A$" . count($defaultShifts));
+
+            // (Divisi)
+            $validationB = $sheet->getCell("G$row")->getDataValidation();
+            $validationB->setType(DataValidation::TYPE_LIST);
+            $validationB->setErrorStyle(DataValidation::STYLE_INFORMATION);
+            $validationB->setAllowBlank(true);
+            $validationB->setShowInputMessage(true);
+            $validationB->setShowErrorMessage(true);
+            $validationB->setShowDropDown(true);
+            $validationB->setFormula1("'DivisiList'!A$1:A$" . count($divisis));
+        }
+
+        // Sembunyikan sheet daftar
+        $spreadsheet->getSheetByName('TokoList')->setSheetState(Worksheet::SHEETSTATE_HIDDEN);
+        $spreadsheet->getSheetByName('DefaultShiftList')->setSheetState(Worksheet::SHEETSTATE_HIDDEN);
+        $spreadsheet->getSheetByName('DivisiList')->setSheetState(Worksheet::SHEETSTATE_HIDDEN);
+
+        // Export file
+        $writer = new Xlsx($spreadsheet);
+        $fileName = 'template_import_karyawan.xlsx';
         $temp_file = tempnam(sys_get_temp_dir(), $fileName);
         $writer->save($temp_file);
 
