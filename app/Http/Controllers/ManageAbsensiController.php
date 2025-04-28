@@ -52,11 +52,12 @@ class ManageAbsensiController extends Controller
         }
 
         // Skip header baris pertama jika ada
-        fgetcsv($handle);
+        // fgetcsv($handle);
 
         // Membaca file baris per baris
         while (($row = fgetcsv($handle)) !== false) {
-            $userId = $row[0];
+            // $userId = $row[0];
+            $userId = trim(str_replace("\xEF\xBB\xBF", '', $row[0]));
             // Asumsi kolom: user_id, tanggal_jam_masuk (gabungan)
             // Misalnya data di file: 2025-03-01 08:00:00
             $tanggalJamMasuk = $row[1]; // Mengambil nilai kolom tanggal_jam_masuk

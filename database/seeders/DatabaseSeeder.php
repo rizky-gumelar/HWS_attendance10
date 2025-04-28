@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
         $this->call(DivisiSeeder::class);
         $this->call(ShiftSeeder::class);
         //user seeder here
+        $this->call(UserSeeder::class);
         $this->call(JenisCutiSeeder::class);
         $this->call(LemburSeeder::class);
     }

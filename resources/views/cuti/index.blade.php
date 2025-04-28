@@ -71,7 +71,7 @@ $layout = 'layouts.karyawan_manage'; // fallback jika peran tidak cocok
                     </div>
                     <div class="card-body">
                         <h3>Riwayat Cuti</h3>
-                        <table class="table table-bordered table-striped">
+                        <table id="example1" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
                                     <th>Nama</th>

@@ -56,18 +56,18 @@ class ShiftSeeder extends Seeder
             'shift_keluar' => '00:00:01',
         ]);
 
-        User::create([
-            'toko_id' => 1,
-            'nama_karyawan' => 'Admin User',
-            'default_shift_id' => 1,
-            'divisi_id' => 2,
-            'no_hp' => '081234567890',
-            'email' => 'admin@example.com',
-            'email_verified_at' => now(),
-            'password' => Hash::make('password'),
-            'role' => 'admin',
-            'total_cuti' => 24,
-            'status' => 'aktif',
-        ]);
+        // User::create([
+        //     'toko_id' => 1,
+        //     'nama_karyawan' => 'Admin User',
+        //     'default_shift_id' => 1,
+        //     'divisi_id' => 2,
+        //     'no_hp' => '081234567890',
+        //     'email' => 'admin@example.com',
+        //     'email_verified_at' => now(),
+        //     'password' => Hash::make('password'),
+        //     'role' => 'admin',
+        //     'total_cuti' => 24,
+        //     'status' => 'aktif',
+        // ]);
     }
 }

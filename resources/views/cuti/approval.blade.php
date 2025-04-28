@@ -51,7 +51,7 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
 <div class="card card-primary">
 
     <div class="card-body">
-        <table class="table table-bordered table-striped">
+        <table id="example1" class="table table-bordered table-striped">
             <thead>
                 <tr>
                     <th>Nama</th>
