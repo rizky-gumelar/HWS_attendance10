@@ -207,7 +207,7 @@ class LaporanMingguanController extends Controller
                 $totlembur = $totlembur + $jadwalKaryawan->total_lembur;
             }
 
-            if ($tottelat > 0 || $status == 'kurang') {
+            if ($status == 'kurang') {
                 $kedatangan = 0;
             } else {
                 if ($jadwalKaryawan->users->divisi->nama_divisi != 'Sales') {

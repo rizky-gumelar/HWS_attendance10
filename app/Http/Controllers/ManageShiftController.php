@@ -27,7 +27,18 @@ class ManageShiftController extends Controller
             'shift_keluar' => 'required|after:shift_masuk',
         ]);
 
+        $id = $request->id;
+
+        // Jika tidak ada ID dari request, cari ID terbesar di bawah 9000 lalu tambah 1
+        if (!$id) {
+            $id = Shift::where('id', '<', 900)->max('id') + 1;
+            if (!$id) {
+                $id = 1; // fallback jika tabel masih kosong
+            }
+        }
+
         Shift::create([
+            'id' => $id,
             'nama_shift' => $request->nama_shift,
             'shift_masuk' => $request->shift_masuk,
             'shift_keluar' => $request->shift_keluar,

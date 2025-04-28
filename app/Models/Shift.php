@@ -9,7 +9,7 @@ class Shift extends Model
 {
     protected $table = 'shift';
     use HasFactory;
-    protected $fillable = ['nama_shift', 'shift_masuk', 'shift_keluar'];
+    protected $fillable = ['id', 'nama_shift', 'shift_masuk', 'shift_keluar'];
 
     // Relasi ke tabel jadwal_karyawan
     public function jadwal_karyawan()

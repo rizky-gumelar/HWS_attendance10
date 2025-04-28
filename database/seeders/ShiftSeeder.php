@@ -16,11 +16,13 @@ class ShiftSeeder extends Seeder
     public function run(): void
     {
         Shift::create([
+            'id' => 1,
             'nama_shift' => 'Shift Pagi (8-17)',
             'shift_masuk' => '08:00:00',
             'shift_keluar' => '17:00:00',
         ]);
         Shift::create([
+            'id' => 2,
             'nama_shift' => 'Shift Siang (10-21)',
             'shift_masuk' => '10:00:00',
             'shift_keluar' => '21:00:00',
