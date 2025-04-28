@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('laporan_mingguan', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')
+                ->onUpdate('cascade')->onDelete('cascade');
             $table->integer('minggu_ke');
             $table->string('d1')->nullable();
             $table->string('d2')->nullable();

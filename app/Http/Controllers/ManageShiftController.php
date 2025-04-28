@@ -22,6 +22,7 @@ class ManageShiftController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'id' => 'nullable|numeric',
             'nama_shift'  => 'required|string|max:255',
             'shift_masuk' => 'required',
             'shift_keluar' => 'required|after:shift_masuk',
@@ -56,12 +57,14 @@ class ManageShiftController extends Controller
     {
         try {
             $request->validate([
+                'id' => 'nullable|numeric',
                 'nama_shift' => 'required|string|max:255',
                 'shift_masuk' => 'required',
                 'shift_keluar' => 'required|after:shift_masuk',
             ]);
 
             $shift->update([
+                'id' => $request->id,
                 'nama_shift' => $request->nama_shift,
                 'shift_masuk' => $request->shift_masuk,
                 'shift_keluar' => $request->shift_keluar,

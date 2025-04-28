@@ -50,6 +50,7 @@ class ManageKaryawanController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'id' => 'nullable|numeric',
             'nama_karyawan'  => 'required',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:8', // Perbaikan validasi password
@@ -58,10 +59,22 @@ class ManageKaryawanController extends Controller
             'divisi_id' => 'required|exists:divisi,id',
             'no_hp' => 'nullable|numeric', // Boleh kosong, tetapi harus angka jika diisi
             'role' => 'required|in:admin,spv,karyawan',
+            'total_cuti' => 'nullable|numeric',
             'status' => 'required|in:aktif,nonaktif',
         ]);
 
+        $id = $request->id;
+
+        // Jika tidak ada ID dari request, cari ID terbesar di bawah 9000 lalu tambah 1
+        if (!$id) {
+            $id = Shift::where('id', '<', 900)->max('id') + 1;
+            if (!$id) {
+                $id = 1; // fallback jika tabel masih kosong
+            }
+        }
+
         User::create([
+            'id' => $id,
             'nama_karyawan' => $request->nama_karyawan,
             'email' => $request->email,
             'password' => bcrypt($request->password), // Simpan password dengan hashing
@@ -70,7 +83,7 @@ class ManageKaryawanController extends Controller
             'divisi_id' => $request->divisi_id,
             'no_hp' => $request->no_hp,
             'role' => $request->role,
-            'total_cuti' => 24, // Set default ke 0
+            'total_cuti' => $request->total_cuti, // Set default ke 0
             'status' => 'aktif',
         ]);
 
@@ -88,6 +101,7 @@ class ManageKaryawanController extends Controller
     public function update(Request $request, User $karyawan)
     {
         $request->validate([
+            'id' => 'nullable|numeric',
             'toko_id' => 'exists:toko,id',
             'default_shift_id' => 'exists:shift,id',
             'nama_karyawan' => 'required|string|max:255',
@@ -96,11 +110,13 @@ class ManageKaryawanController extends Controller
             'email' => 'required|email|unique:users,email,' . $karyawan->id,
             'password' => 'nullable|min:8', // Opsional, hanya diupdate jika diisi
             'role' => 'required|in:admin,spv,karyawan',
+            'total_cuti' => 'nullable|numeric',
             'status' => 'required|in:aktif,nonaktif',
         ]);
 
         // Update data karyawan
         $karyawan->update([
+            'id' => $request->id,
             'toko_id' => $request->toko_id,
             'default_shift_id' => $request->default_shift_id,
             'nama_karyawan' => $request->nama_karyawan,
@@ -108,6 +124,7 @@ class ManageKaryawanController extends Controller
             'no_hp' => $request->no_hp,
             'email' => $request->email,
             'role' => $request->role,
+            'total_cuti' => $request->total_cuti,
             'status' => $request->status,
         ]);
 
@@ -200,7 +217,7 @@ class ManageKaryawanController extends Controller
                             'divisi_id' => $divisi->id ?? null,
                             'no_hp' => $row[7] ?? null,
                             'role' => $row[8] ?? 'karyawan',
-                            'total_cuti' => $row[9] ?? 24,
+                            'total_cuti' => $row[9] ?? 0,
                             'status' => 'aktif',
                         ]
                     );

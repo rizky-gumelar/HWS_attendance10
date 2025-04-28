@@ -22,6 +22,17 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
         @method('PUT') <!-- Laravel membutuhkan method PUT untuk update -->
 
         <div class="card-body">
+            @if(auth()->user()->role === 'admin')
+            <div class="form-group">
+                <label for="id">ID Karyawan</label>
+                <input type="number" class="form-control  @error('id') is-invalid @enderror" id="id" name="id"
+                    value="{{ old('id', $karyawan->id) }}"
+                    placeholder="Masukkan id" required>
+                @error('id')
+                <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+            @endif
             <div class="form-group">
                 <label for="nama_karyawan">Nama Karyawan</label>
                 <input type="text" class="form-control  @error('nama_karyawan') is-invalid @enderror" id="nama_karyawan" name="nama_karyawan"
@@ -96,6 +107,16 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                     <option value="karyawan" {{ $karyawan->role == 'karyawan' ? 'selected' : '' }}>Karyawan</option>
                 </select>
             </div>
+            @if(auth()->user()->role === 'admin')
+            <div class="form-group">
+                <label for="total_cuti">Total Cuti</label>
+                <input type="text" class="form-control  @error('total_cuti') is-invalid @enderror" id="total_cuti" name="total_cuti" placeholder="Masukkan total cuti"
+                    value="{{ old('total_cuti', $karyawan->total_cuti) }}" required>
+                @error('total_cuti')
+                <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+            @endif
             <div class="form-group">
                 <label>Status</label>
                 <select class="form-control" name="status" required>

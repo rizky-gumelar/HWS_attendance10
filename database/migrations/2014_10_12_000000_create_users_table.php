@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
+            $table->unsignedBigInteger('id')->primary();
             $table->foreignId('toko_id')->constrained('toko')->onDelete('cascade');
             $table->foreignId('default_shift_id')->constrained('shift')->onDelete('cascade');
             $table->string('nama_karyawan');
@@ -22,7 +22,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->enum('role', ['admin', 'spv', 'karyawan']);
-            $table->integer('total_cuti')->default(24);
+            $table->integer('total_cuti')->default(0);
             $table->rememberToken();
             $table->timestamps();
             $table->enum('status', ['aktif', 'nonaktif'])->default('aktif');
