@@ -191,7 +191,7 @@ class LaporanMingguanController extends Controller
                         break;
                 }
 
-                if ($jadwalKaryawan->cek_keterlambatan == 0) {
+                if ($jadwalKaryawan->cek_keterlambatan == 0 || $isLibur) {
                     if (
                         stripos($jadwalKaryawan->shift->nama_shift, 'Libur') === false &&
                         (stripos($jadwalKaryawan->shift->nama_shift, 'Cuti') === false || $jadwalKaryawan->users->total_cuti > 0)

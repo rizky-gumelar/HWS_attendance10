@@ -103,20 +103,22 @@ $layout = 'layouts.karyawan_manage';
                         <!-- <a href="{{ route('generate.jadwal.bulanan') }}" class="btn btn-danger my-4">Generate Jadwal</a> -->
                         <!-- Tombol Generate Tanpa Menimpa -->
                         @if(auth()->user()->role === 'admin')
-                        <form method="POST" action="{{ route('generate.jadwal.admin') }}" id="form-tanpa-timpa">
-                            @csrf
-                            <input type="hidden" name="overwrite" value="0">
-                            <button type="submit" class="btn btn-primary">
-                                Generate Jadwal Bulanan
-                            </button>
-                        </form>
+                        <div class="d-flex gap-2">
+                            <form method="POST" action="{{ route('generate.jadwal.admin') }}" id="form-tanpa-timpa">
+                                @csrf
+                                <input type="hidden" name="overwrite" value="0">
+                                <button type="submit" class="btn btn-primary">
+                                    Generate Jadwal Bulanan
+                                </button>
+                            </form>
 
-                        <form method="POST" action="{{ route('generate.jadwal') }}">
-                            @csrf
-                            <button type="submit" class="btn btn-primary">
-                                Generate Jadwal Mingguan
-                            </button>
-                        </form>
+                            <form method="POST" action="{{ route('generate.jadwal') }}">
+                                @csrf
+                                <button type="submit" class="btn btn-warning">
+                                    Generate Jadwal Mingguan
+                                </button>
+                            </form>
+                        </div>
                         @else
                         <form method="POST" action="{{ route('generate.jadwal.bulanan') }}" id="form-tanpa-timpa">
                             @csrf
