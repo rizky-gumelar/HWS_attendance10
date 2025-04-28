@@ -109,76 +109,77 @@ $layout = 'layouts.karyawan_manage';
                             <button type="submit" class="btn btn-primary">
                                 Generate Jadwal Bulanan
                             </button>
-                            <form method="POST" action="{{ route('generate.jadwal') }}" id="form-tanpa-timpa">
-                                @csrf
-                                <input type="hidden" name="overwrite" value="0">
-                                <button type="submit" class="btn btn-primary">
-                                    Generate Jadwal Mingguan
-                                </button>
-                            </form>
-                            @else
-                            <form method="POST" action="{{ route('generate.jadwal.bulanan') }}" id="form-tanpa-timpa">
-                                @csrf
-                                <input type="hidden" name="overwrite" value="0">
-                                <button type="submit" class="btn btn-primary">
-                                    Generate Jadwal Bulanan
-                                </button>
-                            </form>
+                        </form>
 
-                            <!-- Tombol Generate & Timpa, pakai konfirmasi -->
-                            <form method="POST" action="{{ route('generate.jadwal.bulanan') }}" id="form-timpa-jadwal">
-                                @csrf
-                                <input type="hidden" name="overwrite" value="1">
-                                <button type="button" class="btn btn-warning" onclick="konfirmasiTimpa()">
-                                    Generate & Overwite Jadwal Bulanan
-                                </button>
-                            </form>
-                            <!-- <a href="{{ route('input-jadwal.import') }}" class="btn btn-primary my-4">Import CSV</a> -->
-                            @endif
+                        <form method="POST" action="{{ route('generate.jadwal') }}">
+                            @csrf
+                            <button type="submit" class="btn btn-primary">
+                                Generate Jadwal Mingguan
+                            </button>
+                        </form>
+                        @else
+                        <form method="POST" action="{{ route('generate.jadwal.bulanan') }}" id="form-tanpa-timpa">
+                            @csrf
+                            <input type="hidden" name="overwrite" value="0">
+                            <button type="submit" class="btn btn-primary">
+                                Generate Jadwal Bulanan
+                            </button>
+                        </form>
 
-                            <table id="example1" class="table table-bordered table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Nama Karyawan</th>
-                                        <th>Tanggal</th>
-                                        <th>Shift</th>
-                                        <th>Jam Masuk</th>
-                                        <th>Lembur</th>
-                                        <th>Keterangan</th>
-                                        <th>Minggu ke</th>
-                                        <th>Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($input_jadwals as $input_jadwal)
-                                    <tr>
-                                        <td>{{ $input_jadwal->id }}</td>
-                                        <td>{{ $input_jadwal->users->nama_karyawan }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($input_jadwal->tanggal)->locale('id')->isoFormat('dddd, D MMMM YYYY') }}</td>
-                                        <td>{{ $input_jadwal->shift->nama_shift }}</td>
-                                        <td>{{ $input_jadwal->absensi->jam_masuk ?? '-' }}</td>
-                                        <td>
-                                            @if($input_jadwal->lembur && $input_jadwal->lembur_jam)
-                                            {{ $input_jadwal->lembur->tipe_lembur . ' - ' . $input_jadwal->lembur_jam . ' jam' }}
-                                            @else
-                                            -
-                                            @endif
-                                        </td>
+                        <!-- Tombol Generate & Timpa, pakai konfirmasi -->
+                        <form method="POST" action="{{ route('generate.jadwal.bulanan') }}" id="form-timpa-jadwal">
+                            @csrf
+                            <input type="hidden" name="overwrite" value="1">
+                            <button type="button" class="btn btn-warning" onclick="konfirmasiTimpa()">
+                                Generate & Overwite Jadwal Bulanan
+                            </button>
+                        </form>
+                        <!-- <a href="{{ route('input-jadwal.import') }}" class="btn btn-primary my-4">Import CSV</a> -->
+                        @endif
 
-                                        <td>{{ $input_jadwal->keterlambatan_name }}</td>
-                                        <td>Minggu ke-{{ $input_jadwal->minggu_ke }}</td>
-                                        <td>
-                                            <a href="{{ route('input-jadwal.edit', $input_jadwal->id) }}" class="btn btn-warning">Edit</a>
-                                            <form action="{{ route('input-jadwal.destroy', $input_jadwal->id) }}" method="POST" class="d-inline">
-                                                @csrf @method('DELETE')
-                                                <button class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                        <table id="example1" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nama Karyawan</th>
+                                    <th>Tanggal</th>
+                                    <th>Shift</th>
+                                    <th>Jam Masuk</th>
+                                    <th>Lembur</th>
+                                    <th>Keterangan</th>
+                                    <th>Minggu ke</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($input_jadwals as $input_jadwal)
+                                <tr>
+                                    <td>{{ $input_jadwal->id }}</td>
+                                    <td>{{ $input_jadwal->users->nama_karyawan }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($input_jadwal->tanggal)->locale('id')->isoFormat('dddd, D MMMM YYYY') }}</td>
+                                    <td>{{ $input_jadwal->shift->nama_shift }}</td>
+                                    <td>{{ $input_jadwal->absensi->jam_masuk ?? '-' }}</td>
+                                    <td>
+                                        @if($input_jadwal->lembur && $input_jadwal->lembur_jam)
+                                        {{ $input_jadwal->lembur->tipe_lembur . ' - ' . $input_jadwal->lembur_jam . ' jam' }}
+                                        @else
+                                        -
+                                        @endif
+                                    </td>
+
+                                    <td>{{ $input_jadwal->keterlambatan_name }}</td>
+                                    <td>Minggu ke-{{ $input_jadwal->minggu_ke }}</td>
+                                    <td>
+                                        <a href="{{ route('input-jadwal.edit', $input_jadwal->id) }}" class="btn btn-warning">Edit</a>
+                                        <form action="{{ route('input-jadwal.destroy', $input_jadwal->id) }}" method="POST" class="d-inline">
+                                            @csrf @method('DELETE')
+                                            <button class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                     <!-- /.card-body -->
                 </div>

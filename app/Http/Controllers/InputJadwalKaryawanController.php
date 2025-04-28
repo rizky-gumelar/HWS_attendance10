@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Artisan;
 use PhpOffice\PhpSpreadsheet\Style\Font;
 use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Color;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 
@@ -525,7 +526,9 @@ class InputJadwalKaryawanController extends Controller
         $endDate = $startDate->copy()->addDays(6);
 
         $karyawanIds = JadwalKaryawan::where('minggu_ke', $minggu_ke)
-            ->pluck('user_id')
+            ->join('users', 'jadwal_karyawan.user_id', '=', 'users.id')
+            ->where('users.role', '!=', 'admin')
+            ->pluck('jadwal_karyawan.user_id')
             ->unique();
 
         $spreadsheet = new Spreadsheet();
@@ -551,6 +554,8 @@ class InputJadwalKaryawanController extends Controller
                 ->where('user_id', $userId)
                 ->where('minggu_ke', $minggu_ke)
                 ->get();
+
+            $jumlahJadwal = $data->count();
 
             if ($data->isEmpty()) continue;
 
@@ -593,7 +598,6 @@ class InputJadwalKaryawanController extends Controller
                 $jamMasuk = ($item->shift->id != 9999 && $item->absensi) ? $item->absensi->jam_masuk : '-';
                 $sheet->setCellValue("{$nextCol2}{$row}", $jamMasuk);
 
-
                 if ($item->cek_keterlambatan == 0 && $item->shift->id != 9999) {
                     $mingguan += 15000;
                 } else {
@@ -619,16 +623,18 @@ class InputJadwalKaryawanController extends Controller
             $sheet->getStyle("{$nextCol}" . ($row + 1) . ":{$nextCol}" . ($row + 4))
                 ->getNumberFormat()
                 ->setFormatCode('"Rp" #,##0');
-            $sheet->setCellValue("{$baseCol}" . ($row + 5), 'Tanda Tangan');
 
             // Tambahkan border luar (outline) ke seluruh blok user
             $startCell = "{$baseCol}{$rows}";
             $endCol = chr(65 + $colOffset + 2); // 3 kolom
             $endCell = "{$endCol}" . ($row + 7);
+
+            $color = ($jumlahJadwal < 7) ? 'FFFF0000' : '00000000';
             $sheet->getStyle("{$startCell}:{$endCell}")->applyFromArray([
                 'borders' => [
                     'outline' => [
                         'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                        'color' => ['argb' => $color],
                     ],
                 ],
             ]);
