@@ -128,6 +128,11 @@ class ManageAbsensiController extends Controller
 
                     // Cek keterlambatan
                     $cekKeterlambatan = $jamMasuk->gt($shiftMasuk); // Perbandingan jika jam_masuk > shift_masuk
+                    // $user = $jadwalKaryawan->users;
+                    // if ($cekKeterlambatan) {
+                    //     $user->poin_tidak_hadir = $user->poin_tidak_hadir - 0.5;
+                    // }
+                    // $user->save();
 
                     // Update jadwal karyawan
                     JadwalKaryawan::where('user_id', $item->user_id)

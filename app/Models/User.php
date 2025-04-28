@@ -30,6 +30,7 @@ class User extends Authenticatable
         'no_hp',
         'role',
         'total_cuti',
+        'poin_tidak_hadir',
         'status',
     ];
 
@@ -52,6 +53,18 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function hitungPoin()
+    {
+        $cutiCount = $this->pengajuan_cuti()->where('status', 'disetujui admin')->count();  // Menghitung jumlah cuti yang disetujui
+        $terlambatCount = $this->jadwal_karyawan()->where('cek_keterlambatan', 1)->count();  // Menghitung keterlambatan
+        // dd($terlambatCount);
+
+        $poinSetelahCuti = 24 - $cutiCount;  // Poin setelah pengurangan cuti
+        $poinAkhir = $poinSetelahCuti - ($terlambatCount * 0.5);  // Poin setelah pengurangan keterlambatan
+
+        return max($poinAkhir, 0);  // Pastikan poin tidak kurang dari 0
+    }
 
     public function getRoleNameAttribute()
     {
@@ -85,7 +98,7 @@ class User extends Authenticatable
     // Relasi ke tabel jadwal_karyawan
     public function jadwal_karyawan()
     {
-        return $this->hasMany(JadwalKaryawan::class, 'id');
+        return $this->hasMany(JadwalKaryawan::class, 'user_id');
     }
 
     // Relasi ke tabel jadwal_karyawan
@@ -112,7 +125,7 @@ class User extends Authenticatable
     // Relasi ke tabel pengajuan_cuti
     public function pengajuan_cuti()
     {
-        return $this->hasMany(PengajuanCuti::class, 'id');
+        return $this->hasMany(PengajuanCuti::class, 'user_id');
     }
     // public function index()
     // {

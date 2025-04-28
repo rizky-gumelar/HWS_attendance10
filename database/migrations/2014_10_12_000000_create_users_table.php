@@ -22,7 +22,8 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->enum('role', ['admin', 'spv', 'karyawan']);
-            $table->integer('total_cuti')->default(0);
+            $table->float('total_cuti', 8, 2)->default(0);
+            $table->float('poin_tidak_hadir', 8, 2)->default(24);
             $table->rememberToken();
             $table->timestamps();
             $table->enum('status', ['aktif', 'nonaktif'])->default('aktif');

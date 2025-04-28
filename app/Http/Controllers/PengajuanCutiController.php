@@ -108,6 +108,11 @@ class PengajuanCutiController extends Controller
         // Kurangi total_cuti user
         $user = $cuti->users;
         $user->total_cuti = $user->total_cuti - $cuti->jenis_cuti->status;
+        if ($cuti->jenis_cuti->status == 0.5) {
+            $user->poin_tidak_hadir = $user->poin_tidak_hadir - 0.5;
+        } else {
+            $user->poin_tidak_hadir = $user->poin_tidak_hadir - 1;
+        }
         $user->save();
 
         return back()->with('success', 'Cuti telah disetujui dan jadwal shift diperbarui.');
@@ -145,10 +150,15 @@ class PengajuanCutiController extends Controller
             ]
         );
 
-        // Kurangi total_cuti user
+        // kembalikan total_cuti user
         $user = $cuti->users;
         $user->total_cuti = $user->total_cuti + $cuti->jenis_cuti->status;
-        $user->save();
+        // if ($cuti->jenis_cuti->status == 0.5) {
+        //     $user->poin_tidak_hadir = $user->poin_tidak_hadir + 0.5;
+        // } else {
+        //     $user->poin_tidak_hadir = $user->poin_tidak_hadir + 1;
+        // }
+        // $user->save();
 
         return back()->with('success', 'Cuti telah disetujui dan jadwal shift diperbarui.');
     }

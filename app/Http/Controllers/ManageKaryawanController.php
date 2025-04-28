@@ -24,13 +24,21 @@ class ManageKaryawanController extends Controller
         $user = auth()->user();
         // $karyawans = User::where('status', 'aktif')->get();
         if ($user->role === 'admin') {
-            $karyawans = User::all(); // atau pakai filter status jika perlu
+            // $karyawans = User::all(); // atau pakai filter status jika perlu
+            $karyawans = User::all()->map(function ($user) {
+                // Tambahkan poin ketidakhadiran setiap karyawan
+                $user->poin_terakhir = $user->hitungPoin();
+                return $user;
+            });
         } else if ($user->role === 'spv') {
             // $karyawans = User::role(['spv', 'karyawan'])->divisi($user->divisi_id)->get();
-            $karyawans = User::where('divisi_id', $user->divisi_id)
-                ->where('role', '!=', 'admin')
-                // ->where('id', '!=', $user->id) // kalau kamu ingin SPV tidak melihat dirinya sendiri
-                ->get();
+            $karyawans = User::where('divisi_id', $user->divisi_id)->where('role', '!=', 'admin')->map(function ($user) {
+                // Tambahkan poin ketidakhadiran setiap karyawan
+                $user->poin_terakhir = $user->hitungPoin();
+                return $user;
+            });
+            // ->where('id', '!=', $user->id) // kalau kamu ingin SPV tidak melihat dirinya sendiri
+            // ->get();
         } else {
             // fallback jika bukan admin/spv (misal user biasa)
             abort(403, 'Unauthorized');
