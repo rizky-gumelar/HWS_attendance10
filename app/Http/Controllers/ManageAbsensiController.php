@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Absensi;
 use App\Models\Shift;
+use App\Models\User;
 use App\Models\JadwalKaryawan;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -34,7 +35,7 @@ class ManageAbsensiController extends Controller
     {
         // Validasi file yang diunggah
         $request->validate([
-            'file' => 'required|mimes:dat,csv,txt',
+            'file' => 'required|mimes:dat,csv,txt,xlsx',
         ]);
 
         // Mendapatkan minggu yang akan diimpor, misalnya menggunakan tanggal sekarang
@@ -65,6 +66,14 @@ class ManageAbsensiController extends Controller
             // Pisahkan tanggal dan jam jika menggunakan spasi sebagai pemisah
             $tanggal = Carbon::parse(explode(' ', $tanggalJamMasuk)[0])->format('Y-m-d');
             $jamMasuk = explode(' ', $tanggalJamMasuk)[1];
+
+            // Cek apakah user_id ada di tabel users
+            $userExists = User::where('id', $userId)->exists();
+
+            if (!$userExists) {
+                // Jika user_id tidak ada, lanjutkan ke baris berikutnya
+                continue;
+            }
 
             // Cek apakah absensi ada untuk tanggal dan user tertentu
             $absensi = Absensi::where('user_id', $userId)
@@ -127,6 +136,25 @@ class ManageAbsensiController extends Controller
                             'absen_id' => $item->id,
                             'cek_keterlambatan' => $cekKeterlambatan,  // Update keterlambatan
                         ]);
+                }
+            } else {
+                $shift = Shift::where('id', $item->users->default_shift_id)->first();
+                if ($shift && $shift->shift_masuk) {
+
+                    $shiftMasuk = Carbon::parse($shift->shift_masuk);
+                    $jamMasuk = Carbon::parse($item->jam_masuk);
+
+                    // Cek keterlambatan
+                    $cekKeterlambatan = $jamMasuk->gt($shiftMasuk); // Perbandingan jika jam_masuk > shift_masuk
+                    // Jika jadwal belum ada, buat jadwal baru
+                    JadwalKaryawan::create([
+                        'user_id' => $item->user_id,
+                        'shift_id' => $item->users->default_shift_id,
+                        'absen_id' => $item->id,
+                        'cek_keterlambatan' => $cekKeterlambatan,
+                        'tanggal' => Carbon::parse($item->tanggal),
+                        'minggu_ke' => Carbon::parse($item->tanggal)->startOfWeek(Carbon::SATURDAY)->weekOfYear,
+                    ]);
                 }
             }
         }

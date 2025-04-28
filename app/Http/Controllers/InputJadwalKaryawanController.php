@@ -142,7 +142,7 @@ class InputJadwalKaryawanController extends Controller
     {
         // Validasi file CSV yang di-upload
         $request->validate([
-            'csv_file' => 'required|mimes:csv,txt|max:10240', // Maksimal 10MB
+            'csv_file' => 'required|mimes:csv,txt,xlsx|max:10240', // Maksimal 10MB
         ]);
 
         // Ambil file CSV yang di-upload
@@ -244,7 +244,7 @@ class InputJadwalKaryawanController extends Controller
     {
         // Validasi file CSV yang di-upload
         $request->validate([
-            'csv_file' => 'required|mimes:csv,txt|max:10240', // Maksimal 10MB
+            'csv_file' => 'required|mimes:,xlsx|max:10240', // Maksimal 10MB
         ]);
 
         // Ambil file CSV yang di-upload
