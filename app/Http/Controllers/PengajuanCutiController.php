@@ -18,6 +18,9 @@ class PengajuanCutiController extends Controller
 
         $query = PengajuanCuti::with('users', 'jenis_cuti')->orderBy('created_at', 'desc')->where('user_id', $user->id);
 
+        $user->poin_terakhir = $user->hitungPoin();
+        $user->sisa_cuti = $user->hitungCuti();
+
         // Ambil data yang sudah difilter
         $pengajuanCuti = $query->get();
         return view('cuti.index', compact('user', 'pengajuanCuti'));

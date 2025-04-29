@@ -1,5 +1,6 @@
 @php
 $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_manage';
+$isSpv = auth()->user()->role === 'spv';
 @endphp
 
 @extends($layout)
@@ -22,30 +23,18 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
         @method('PUT') <!-- Laravel membutuhkan method PUT untuk update -->
 
         <div class="card-body">
-            @if(auth()->user()->role === 'admin')
             <div class="form-group">
                 <label for="id">ID Karyawan</label>
-                <input type="number" class="form-control  @error('id') is-invalid @enderror" id="id" name="id"
+                <input type="number" {{ $isSpv ? 'disabled' : '' }} class="form-control  @error('id') is-invalid @enderror" id="id" name="id"
                     value="{{ old('id', $karyawan->id) }}"
                     placeholder="Masukkan id" required>
                 @error('id')
                 <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
-            @else
-            <div class="form-group">
-                <label for="id">ID Karyawan</label>
-                <input type="number" class="form-control  @error('id') is-invalid @enderror" id="id" name="id" disabled
-                    value="{{ old('id', $karyawan->id) }}"
-                    placeholder="Masukkan id" required>
-                @error('id')
-                <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-            </div>
-            @endif
             <div class="form-group">
                 <label for="nama_karyawan">Nama Karyawan</label>
-                <input type="text" class="form-control  @error('nama_karyawan') is-invalid @enderror" id="nama_karyawan" name="nama_karyawan"
+                <input type="text" {{ $isSpv ? 'disabled' : '' }} class="form-control  @error('nama_karyawan') is-invalid @enderror" id="nama_karyawan" name="nama_karyawan"
                     value="{{ old('nama_karyawan', $karyawan->nama_karyawan) }}"
                     placeholder="Masukkan nama" required>
                 @error('nama_karyawan')
@@ -55,7 +44,7 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
 
             <div class="form-group">
                 <label>Toko</label>
-                <select class="form-control" name="toko_id" required>
+                <select class="form-control" name="toko_id" required {{ $isSpv ? 'disabled' : '' }}>
                     <option value="" disabled selected>Pilih Toko</option>
                     @foreach($tokos as $toko)
                     <option value="{{ $toko->id }}" {{ $karyawan->toko_id == $toko->id ? 'selected' : '' }}>{{ $toko->nama_toko }}</option>
@@ -76,7 +65,7 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
             </div>
             <div class="form-group">
                 <label>Divisi</label>
-                <select class="form-control" id="divisi_id" name="divisi_id" required>
+                <select class="form-control" id="divisi_id" name="divisi_id" required {{ $isSpv ? 'disabled' : '' }}>
                     <option value="" disabled selected>Pilih Divisi</option>
                     @foreach($divisis as $divisi)
                     <option value="{{ $divisi->id }}" {{$karyawan->divisi_id == $divisi->id ? 'selected' : '' }}>{{ $divisi->nama_divisi }}</option>
@@ -111,7 +100,7 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
 
             <div class="form-group">
                 <label>Role</label>
-                <select class="form-control" name="role" required>
+                <select class="form-control" name="role" required {{ $isSpv ? 'disabled' : '' }}>
                     <option value="admin" {{ $karyawan->role == 'admin' ? 'selected' : '' }}>Admin</option>
                     <option value="spv" {{ $karyawan->role == 'spv' ? 'selected' : '' }}>Supervisor</option>
                     <option value="karyawan" {{ $karyawan->role == 'karyawan' ? 'selected' : '' }}>Karyawan</option>
@@ -138,7 +127,7 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
             @endif
             <div class="form-group">
                 <label>Status</label>
-                <select class="form-control" name="status" required>
+                <select class="form-control" name="status" required {{ $isSpv ? 'disabled' : '' }}>
                     <option value="aktif" {{ $karyawan->status == 'aktif' ? 'selected' : '' }}>Aktif</option>
                     <option value="nonaktif" {{ $karyawan->status == 'nonaktif' ? 'selected' : '' }}>Nonaktif</option>
                 </select>

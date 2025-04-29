@@ -10,11 +10,16 @@ $layout = 'layouts.karyawan_manage'; // fallback jika peran tidak cocok
 }
 @endphp
 
+@php
+$percentCuti = $user->sisa_cuti/$user->total_cuti*100;
+$percentPoin = $user->poin_terakhir/$user->poin_tidak_hadir*100;
+@endphp
+
 @extends($layout)
 
-@section('title', 'Manage Karyawan')
+@section('title', 'Cuti')
 
-@section('page-title', 'Manage Karyawan')
+@section('page-title', 'Cuti')
 
 @section('content')
 
@@ -43,12 +48,12 @@ $layout = 'layouts.karyawan_manage'; // fallback jika peran tidak cocok
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1>Manage Karyawan</h1>
+                <h1>Cuti</h1>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="#">Home</a></li>
-                    <li class="breadcrumb-item active">Manage Karyawan</li>
+                    <li class="breadcrumb-item active">Cuti</li>
                 </ol>
             </div>
         </div>
@@ -64,10 +69,39 @@ $layout = 'layouts.karyawan_manage'; // fallback jika peran tidak cocok
                 <div class="card">
                     <!-- /.card-header -->
                     <div class="card-body">
-                        <div class="alert alert-info" role="alert">
-                            <strong>Sisa cuti:</strong> {{ $user->total_cuti }}
+                        <div class="row">
+                            <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                                <div class="info-box bg-info shadow-none">
+                                    <span class="info-box-icon"><i class="fas fa-outdent"></i></span>
+
+                                    <div class="info-box-content">
+                                        <span class="info-box-text">Sisa Saldo Cuti</span>
+                                        <span class="info-box-number">{{ $user->sisa_cuti }} / {{$user->total_cuti}}</span>
+
+                                        <div class="progress">
+                                            <div class="progress-bar" style="width: {{ $percentCuti }}%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                                <div class="info-box bg-success shadow-none">
+                                    <span class="info-box-icon"><i class="fas fa-outdent"></i></span>
+
+                                    <div class="info-box-content">
+                                        <span class="info-box-text">Sisa Poin Ketidakhadiran</span>
+                                        <span class="info-box-number">{{ $user->poin_terakhir }} / {{$user->poin_tidak_hadir}} </span>
+
+                                        <div class="progress">
+                                            <div class="progress-bar" style="width: {{ $percentPoin }}%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <a href="{{ route('cuti.create') }}" class="btn btn-success my-4">Buat pengajuan</a>
+
+                        <a href="{{ route('cuti.create') }}" class="btn btn-success mt-2">Buat pengajuan</a>
                     </div>
                     <div class="card-body">
                         <h3>Riwayat Cuti</h3>
