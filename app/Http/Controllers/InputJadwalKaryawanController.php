@@ -243,9 +243,10 @@ class InputJadwalKaryawanController extends Controller
 
     public function importlembur(Request $request)
     {
+        $errors = [];
         // Validasi file CSV yang di-upload
         $request->validate([
-            'csv_file' => 'required|mimes:,xlsx|max:10240', // Maksimal 10MB
+            'csv_file' => 'required|mimes:csv,xlsx|max:10240', // Maksimal 10MB
         ]);
 
         // Ambil file CSV yang di-upload
@@ -274,13 +275,26 @@ class InputJadwalKaryawanController extends Controller
             $user = User::where('nama_karyawan', $userName)->first();
             $lembur = Lembur::where('tipe_lembur', $lemburName)->first();
 
+            if (empty(trim($row['A'])) && empty(trim($row['B'])) && empty(trim($row['C'])) && empty(trim($row['D'])) && empty(trim($row['E']))) {
+                continue;
+            }
+
+            try {
+                $tanggal = Carbon::parse($row['A'])->format('Y-m-d');
+            } catch (\Exception $e) {
+                $errors[] = "Format tanggal tidak valid: " . $row['A'];
+                continue;
+            }
+
             // Debug: Cek apakah user dan shift ditemukan
             if (!$user) {
-                dd("User tidak ditemukan: $userName");
+                $errors[] = "User tidak ditemukan: $userName";
+                continue;
             }
 
             if (!$lembur) {
-                dd("tipe lembur tidak ditemukan: $lemburName");
+                $errors[] = "Tipe lembur tidak ditemukan: $lemburName";
+                continue;
             }
 
             // Validasi tanggal
@@ -313,12 +327,12 @@ class InputJadwalKaryawanController extends Controller
                     'total_lembur' => $durasi * $lembur->biaya,
                 ]);
             } else {
-                dd([
-                    'tanggal' => $tanggal,
-                    'existing' => JadwalKaryawan::where('user_id', $user->id)
-                        ->whereDate('tanggal', $tanggal)
-                        ->get()
-                ]);
+                // dd([
+                //     'tanggal' => $tanggal,
+                //     'existing' => JadwalKaryawan::where('user_id', $user->id)
+                //         ->whereDate('tanggal', $tanggal)
+                //         ->get()
+                // ]);
                 // Jika jadwal belum ada, buat jadwal baru
                 JadwalKaryawan::create([
                     'user_id' => $user->id,
@@ -330,6 +344,12 @@ class InputJadwalKaryawanController extends Controller
                     'minggu_ke' => Carbon::parse($tanggal)->startOfWeek(Carbon::SATURDAY)->weekOfYear,
                 ]);
             }
+        }
+
+        if (!empty($errors)) {
+            return redirect()->route('lembur.import')
+                ->with('success', 'Jadwal berhasil diimpor sebagian.')
+                ->withErrors($errors);
         }
 
         return redirect()->route('lembur.import')->with('success', 'Jadwal berhasil diimpor.');
