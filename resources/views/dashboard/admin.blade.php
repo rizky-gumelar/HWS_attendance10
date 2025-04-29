@@ -134,7 +134,7 @@
             },
             displayEventTime: false,
             events: function(fetchInfo, successCallback, failureCallback) {
-                fetch(`/calendar?divisi_id=${divisiFilter.value}`)
+                fetch(`/calendar-libur?divisi_id=${divisiFilter.value}`)
                     .then(response => response.json())
                     .then(data => successCallback(data))
                     .catch(error => failureCallback(error));

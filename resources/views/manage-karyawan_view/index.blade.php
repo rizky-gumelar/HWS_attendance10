@@ -90,7 +90,7 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                                     <th>No Telepon</th>
                                     <th>Role</th>
                                     <th>Sisa Cuti</th>
-                                    <th>Poin Ketidakhadiran</th>
+                                    <th>Poin Tidak Hadir</th>
                                     <th>Status</th>
                                     <th>Aksi</th>
                                 </tr>

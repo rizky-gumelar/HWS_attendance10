@@ -37,7 +37,7 @@ class ExportController extends Controller
             $query->where('divisi_id', $user->divisi_id)->where('role', '!=', 'admin');;
         }
 
-        $karyawans = $query->pluck('nama_karyawan');
+        $karyawans = $query->orderBy('nama_karyawan')->pluck('nama_karyawan');
         foreach ($karyawans as $index => $nama) {
             $karyawanSheet->setCellValue('A' . ($index + 1), $nama);
         }
@@ -167,7 +167,7 @@ class ExportController extends Controller
         $karyawanSheet = new Worksheet($spreadsheet, 'KaryawanList');
         $spreadsheet->addSheet($karyawanSheet);
 
-        $karyawans = User::pluck('nama_karyawan');
+        $karyawans = User::orderBy('nama_karyawan')->pluck('nama_karyawan');
         foreach ($karyawans as $index => $nama) {
             $karyawanSheet->setCellValue('A' . ($index + 1), $nama);
         }
@@ -356,6 +356,7 @@ class ExportController extends Controller
         $spreadsheet->getSheetByName('TokoList')->setSheetState(Worksheet::SHEETSTATE_HIDDEN);
         $spreadsheet->getSheetByName('DefaultShiftList')->setSheetState(Worksheet::SHEETSTATE_HIDDEN);
         $spreadsheet->getSheetByName('DivisiList')->setSheetState(Worksheet::SHEETSTATE_HIDDEN);
+        $spreadsheet->getSheetByName('RoleList')->setSheetState(Worksheet::SHEETSTATE_HIDDEN);
 
         // Export file
         $writer = new Xlsx($spreadsheet);

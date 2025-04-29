@@ -158,7 +158,7 @@ $layout = 'layouts.karyawan_manage';
                                 <tr>
                                     <td>{{ $input_jadwal->id }}</td>
                                     <td>{{ $input_jadwal->users->nama_karyawan }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($input_jadwal->tanggal)->locale('id')->isoFormat('dddd, D MMMM YYYY') }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($input_jadwal->tanggal)->locale('id')->isoFormat('YYYY-MM-DD, dddd ') }}</td>
                                     <td>{{ $input_jadwal->shift->nama_shift }}</td>
                                     <td>{{ $input_jadwal->absensi->jam_masuk ?? '-' }}</td>
                                     <td>

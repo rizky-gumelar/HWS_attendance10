@@ -90,7 +90,7 @@ $percentPoin = $user->poin_terakhir/$user->poin_tidak_hadir*100;
                                     <span class="info-box-icon"><i class="fas fa-outdent"></i></span>
 
                                     <div class="info-box-content">
-                                        <span class="info-box-text">Sisa Poin Ketidakhadiran</span>
+                                        <span class="info-box-text">Sisa Poin Tidak Hadir</span>
                                         <span class="info-box-number">{{ $user->poin_terakhir }} / {{$user->poin_tidak_hadir}} </span>
 
                                         <div class="progress">
