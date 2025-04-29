@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class KaryawanController extends Controller
 {
     public function index()
     {
-        return view('dashboard.karyawan');
+        $user = auth()->user();
+        $user->poin_terakhir = $user->hitungPoin();
+        $user->sisa_cuti = $user->hitungCuti();
+
+        return view('dashboard.karyawan', ['karyawan' => $user]);
     }
 }

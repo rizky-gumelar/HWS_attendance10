@@ -36,6 +36,7 @@ class ManageKaryawanController extends Controller
             $karyawans = User::where('divisi_id', $user->divisi_id)->where('role', '!=', 'admin')->map(function ($user) {
                 // Tambahkan poin ketidakhadiran setiap karyawan
                 $user->poin_terakhir = $user->hitungPoin();
+                $user->sisa_cuti = $user->hitungCuti();
                 return $user;
             });
             // ->where('id', '!=', $user->id) // kalau kamu ingin SPV tidak melihat dirinya sendiri

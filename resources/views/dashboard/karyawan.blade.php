@@ -3,9 +3,13 @@
     @csrf
     <button type="submit">Logout</button>
 </form> -->
+
+
+<!-- $saldo = auth()->user()->total_cuti;
+$poin = auth()->user()->poin_tidak_hadir; -->
 @php
-$saldo = auth()->user()->total_cuti;
-$percent = $saldo/24*100;
+$percentCuti = $karyawan->sisa_cuti/$karyawan->total_cuti*100;
+$percentPoin = $karyawan->poin_terakhir/$karyawan->poin_tidak_hadir*100;
 @endphp
 @extends('layouts.karyawan_manage')
 
@@ -16,23 +20,50 @@ $percent = $saldo/24*100;
 @section('content')
 <section class="content">
     <div class="container-fluid">
-        <div class="col-md-3 col-sm-6 col-12">
-            <div class="info-box bg-info">
-                <span class="info-box-icon"><i class="fas fa-outdent"></i></span>
+        <!-- Menambahkan penyesuaian kolom untuk layar besar -->
+        <div class="row">
+            <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                <div class="small-box bg-info">
+                    <div class="info-box bg-info shadow-none">
+                        <span class="info-box-icon"><i class="fas fa-outdent"></i></span>
 
-                <div class="info-box-content">
-                    <span class="info-box-text">Saldo Cuti</span>
-                    <span class="info-box-number">{{ $saldo }}</span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">Sisa Saldo Cuti</span>
+                            <span class="info-box-number">{{ $karyawan->sisa_cuti }} / {{$karyawan->total_cuti}}</span>
 
-                    <div class="progress">
-                        <div class="progress-bar" style="width: {{ $percent }}%"></div>
+                            <div class="progress">
+                                <div class="progress-bar" style="width: {{ $percentCuti }}%"></div>
+                            </div>
+                        </div>
                     </div>
+                    <!-- <a href="#" class="small-box-footer">
+                        More info <i class="fas fa-arrow-circle-right"></i>
+                    </a> -->
                 </div>
-                <!-- /.info-box-content -->
             </div>
-            <!-- /.info-box -->
+
+            <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                <div class="small-box bg-success">
+                    <div class="info-box bg-success shadow-none">
+                        <span class="info-box-icon"><i class="fas fa-outdent"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text">Sisa Poin Ketidakhadiran</span>
+                            <span class="info-box-number">{{ $karyawan->poin_terakhir }} / {{$karyawan->poin_tidak_hadir}} </span>
+
+                            <div class="progress">
+                                <div class="progress-bar" style="width: {{ $percentPoin }}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <a href="#" class="small-box-footer">
+                        More info <i class="fas fa-arrow-circle-right"></i>
+                    </a> -->
+                </div>
+            </div>
         </div>
     </div>
 </section>
+
 
 @endsection
