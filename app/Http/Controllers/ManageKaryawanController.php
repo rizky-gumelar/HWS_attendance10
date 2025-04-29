@@ -33,12 +33,14 @@ class ManageKaryawanController extends Controller
             });
         } else if ($user->role === 'spv') {
             // $karyawans = User::role(['spv', 'karyawan'])->divisi($user->divisi_id)->get();
-            $karyawans = User::where('divisi_id', $user->divisi_id)->where('role', '!=', 'admin')->map(function ($user) {
-                // Tambahkan poin ketidakhadiran setiap karyawan
-                $user->poin_terakhir = $user->hitungPoin();
-                $user->sisa_cuti = $user->hitungCuti();
-                return $user;
-            });
+            $karyawans = User::where('divisi_id', $user->divisi_id)
+                ->where('role', '!=', 'admin')
+                ->get()
+                ->map(function ($user) {
+                    $user->poin_terakhir = $user->hitungPoin();
+                    $user->sisa_cuti = $user->hitungCuti();
+                    return $user;
+                });
             // ->where('id', '!=', $user->id) // kalau kamu ingin SPV tidak melihat dirinya sendiri
             // ->get();
         } else {
@@ -221,7 +223,7 @@ class ManageKaryawanController extends Controller
                         [
                             'id' => $row[0] ?? null,
                             'nama_karyawan' => $row[1] ?? null,
-                            'password' => isset($row[3]) ? bcrypt($row[4]) : null,
+                            'password' => isset($row[3]) ? bcrypt($row[3]) : null,
                             'toko_id' => $toko->id ?? null,
                             'default_shift_id' => $defaultShift->id ?? null,
                             'divisi_id' => $divisi->id ?? null,

@@ -26,35 +26,35 @@ class UserSeeder extends Seeder
             'status' => 'aktif',
         ]);
 
-        User::create([
-            'id' => 2,
-            'toko_id' => 3,
-            'nama_karyawan' => 'DAFFA ARYA SENA HEDEN',
-            'default_shift_id' => 1,
-            'divisi_id' => 1,
-            'no_hp' => '081390040402',
-            'email' => 'daffa.arya@hws.com',
-            'email_verified_at' => now(),
-            'password' => Hash::make('password'),
-            'role' => 'karyawan',
-            'total_cuti' => 24,
-            'status' => 'aktif',
-        ]);
+        // User::create([
+        //     'id' => 2,
+        //     'toko_id' => 3,
+        //     'nama_karyawan' => 'DAFFA ARYA SENA HEDEN',
+        //     'default_shift_id' => 1,
+        //     'divisi_id' => 1,
+        //     'no_hp' => '081390040402',
+        //     'email' => 'daffa.arya@hws.com',
+        //     'email_verified_at' => now(),
+        //     'password' => Hash::make('password'),
+        //     'role' => 'karyawan',
+        //     'total_cuti' => 24,
+        //     'status' => 'aktif',
+        // ]);
 
-        User::create([
-            'id' => 3,
-            'toko_id' => 2,
-            'nama_karyawan' => 'TYAH DIAN OCHTAVIYANA',
-            'default_shift_id' => 1,
-            'divisi_id' => 1,
-            'no_hp' => '08886699074',
-            'email' => 'tyah.dian@hws.com',
-            'email_verified_at' => now(),
-            'password' => Hash::make('password'),
-            'role' => 'spv',
-            'total_cuti' => 24,
-            'status' => 'aktif',
-        ]);
+        // User::create([
+        //     'id' => 3,
+        //     'toko_id' => 2,
+        //     'nama_karyawan' => 'TYAH DIAN OCHTAVIYANA',
+        //     'default_shift_id' => 1,
+        //     'divisi_id' => 1,
+        //     'no_hp' => '08886699074',
+        //     'email' => 'tyah.dian@hws.com',
+        //     'email_verified_at' => now(),
+        //     'password' => Hash::make('password'),
+        //     'role' => 'spv',
+        //     'total_cuti' => 24,
+        //     'status' => 'aktif',
+        // ]);
     }
 
     // User::create([
