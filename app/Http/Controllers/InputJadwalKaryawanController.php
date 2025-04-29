@@ -987,4 +987,65 @@ class InputJadwalKaryawanController extends Controller
 
         return response()->json($events);
     }
+
+    public function calendarLibur(Request $request)
+    {
+        $divisiId = $request->input('divisi_id');
+        $user = auth()->user();
+
+        $query = JadwalKaryawan::with(['users', 'shift'])
+            ->where('shift_id', '>', 100);
+
+        if ($user->role === 'admin') {
+            if ($divisiId) {
+                $query->whereHas('users', function ($q) use ($divisiId) {
+                    $q->where('divisi_id', $divisiId);
+                });
+            }
+        } else if ($user->role === 'spv') {
+            $query->whereHas('users', function ($q) use ($user) {
+                $q->where('divisi_id', $user->divisi_id)->where('role', '!=', 'admin');
+            });
+        }
+
+        // Ambil data yang sudah difilter
+        $jadwal = $query->get();
+
+        $events = $jadwal->map(function ($item) {
+            $divisiColors = [
+                '1' => '#b3d4fc', // Soft biru
+                '2' => '#c9b3f7', // Soft ungu
+                '3' => '#ffc89a', // Soft oranye
+                '4' => '#9fe7d3', // Soft teal
+                '5' => '#f7a7c4', // Soft pink
+                '6' => '#a9e5bc', // Soft hijau
+                '7' => '#ffe9a6', // Soft kuning
+                '8' => '#9ed9e7', // Soft biru muda
+                '9' => '#d1d3d4'  // Soft abu-abu
+            ];
+
+            $startDateTime = $item->tanggal . ' ' . $item->shift->shift_masuk;
+            $endDateTime = $item->tanggal . ' ' . $item->shift->shift_keluar;
+
+            // Handle shift malam (keluar di hari berikutnya)
+            if (strtotime($endDateTime) < strtotime($startDateTime)) {
+                $endDateTime = date('Y-m-d H:i:s', strtotime($endDateTime . ' +1 day'));
+            }
+
+            $divisi = $item->users->divisi_id;
+            $color = $divisiColors[$divisi]; // Default warna jika divisi tidak cocok
+
+
+            return [
+                'title' => '(' . substr($item->shift->shift_masuk, 0, 2) . ' - ' .
+                    substr($item->shift->shift_keluar, 0, 2) . ') ' . $item->users->nama_karyawan,
+                'start' => $startDateTime,
+                'end' => $endDateTime,
+                'backgroundColor' => $color,
+                'textColor' => '#fff'
+            ];
+        });
+
+        return response()->json($events);
+    }
 }

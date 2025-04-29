@@ -42,8 +42,15 @@
             <div class="col-12">
 
                 <div class="card p-5">
+                    <h3>Kalender Kerja</h3>
                     <!-- Small boxes (Stat box) -->
                     <div id="calendar" class="fc-event-title " style="color: black; font-weight: normal;"></div>
+                    <!-- /.row -->
+                </div>
+                <div class="card p-5">
+                    <h3>Kalender Cuti-Libur</h3>
+                    <!-- Small boxes (Stat box) -->
+                    <div id="calendar2" class="fc-event-title " style="color: black; font-weight: normal;"></div>
                     <!-- /.row -->
                 </div>
             </div>
@@ -60,6 +67,29 @@
         var calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'dayGridMonth',
             events: '/calendar', // ganti sesuai route kamu
+            timeZone: 'local', // Pastikan sesuai kebutuhanmu
+            eventTimeFormat: {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+            },
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+            displayEventTime: false,
+
+        });
+
+        calendar.render();
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar2');
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            events: '/calendar-libur', // ganti sesuai route kamu
             timeZone: 'local', // Pastikan sesuai kebutuhanmu
             eventTimeFormat: {
                 hour: '2-digit',
