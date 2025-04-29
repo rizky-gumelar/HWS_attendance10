@@ -28,6 +28,7 @@ class ManageKaryawanController extends Controller
             $karyawans = User::all()->map(function ($user) {
                 // Tambahkan poin ketidakhadiran setiap karyawan
                 $user->poin_terakhir = $user->hitungPoin();
+                $user->sisa_cuti = $user->hitungCuti();
                 return $user;
             });
         } else if ($user->role === 'spv') {

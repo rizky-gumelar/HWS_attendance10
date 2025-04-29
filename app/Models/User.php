@@ -56,14 +56,45 @@ class User extends Authenticatable
 
     public function hitungPoin()
     {
-        $cutiCount = $this->pengajuan_cuti()->where('status', 'disetujui admin')->count();  // Menghitung jumlah cuti yang disetujui
+        $totalBobotCuti = $this->pengajuan_cuti()
+            ->where('status', 'disetujui admin')
+            ->with('jenis_cuti')  // pastikan relasi diload
+            ->get()
+            ->sum(function ($cuti) {
+                $status = $cuti->jenis_cuti->status;
+
+                // Mengubah nilai status sesuai dengan ketentuan
+                if ($status == 0 || $status == 1) {
+                    return 1;
+                } elseif ($status == 0.5) {
+                    return 0.5;
+                }
+
+                // Jika status lain yang tidak diharapkan, kembalikan 0
+                return 0;
+            });
         $terlambatCount = $this->jadwal_karyawan()->where('cek_keterlambatan', 1)->count();  // Menghitung keterlambatan
         // dd($terlambatCount);
 
-        $poinSetelahCuti = 24 - $cutiCount;  // Poin setelah pengurangan cuti
+        $poinSetelahCuti = $this->poin_tidak_hadir - $totalBobotCuti;  // Poin setelah pengurangan cuti
         $poinAkhir = $poinSetelahCuti - ($terlambatCount * 0.5);  // Poin setelah pengurangan keterlambatan
 
-        return max($poinAkhir, 0);  // Pastikan poin tidak kurang dari 0
+        return $poinAkhir;  // Pastikan poin tidak kurang dari 0
+    }
+
+    public function hitungCuti()
+    {
+        $totalBobotCuti = $this->pengajuan_cuti()
+            ->where('status', 'disetujui admin')
+            ->with('jenis_cuti')  // pastikan relasi diload
+            ->get()
+            ->sum(function ($cuti) {
+                return $cuti->jenis_cuti->status;  // asumsi kolom bobot bernama 'status' di jenis_cuti
+            });
+
+        $poinSetelahCuti = $this->total_cuti - $totalBobotCuti;
+
+        return $poinSetelahCuti;  // Pastikan poin tidak kurang dari 0
     }
 
     public function getRoleNameAttribute()

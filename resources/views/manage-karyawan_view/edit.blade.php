@@ -32,6 +32,16 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                 <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
+            @else
+            <div class="form-group">
+                <label for="id">ID Karyawan</label>
+                <input type="number" class="form-control  @error('id') is-invalid @enderror" id="id" name="id" disabled
+                    value="{{ old('id', $karyawan->id) }}"
+                    placeholder="Masukkan id" required>
+                @error('id')
+                <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
             @endif
             <div class="form-group">
                 <label for="nama_karyawan">Nama Karyawan</label>
@@ -112,6 +122,15 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                 <label for="total_cuti">Total Cuti</label>
                 <input type="text" class="form-control  @error('total_cuti') is-invalid @enderror" id="total_cuti" name="total_cuti" placeholder="Masukkan total cuti"
                     value="{{ old('total_cuti', $karyawan->total_cuti) }}" required>
+                @error('total_cuti')
+                <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+            @else
+            <div class="form-group">
+                <label for="total_cuti">Total Cuti</label>
+                <input type="text" class="form-control  @error('total_cuti') is-invalid @enderror" id="total_cuti" name="total_cuti" placeholder="Masukkan total cuti"
+                    value="{{ old('total_cuti', $karyawan->total_cuti) }}" disabled required>
                 @error('total_cuti')
                 <div class="invalid-feedback">{{ $message }}</div>
                 @enderror

@@ -15,12 +15,12 @@ class JenisCutiSeeder extends Seeder
     {
         JenisCuti::create([
             'id' => 1,
-            'nama_cuti' => 'Sakit',
-            'status' => '0',
+            'nama_cuti' => 'Cuti Tahunan',
+            'status' => '1',
         ]);
         JenisCuti::create([
             'id' => 2,
-            'nama_cuti' => 'Pernikahan',
+            'nama_cuti' => 'Sakit',
             'status' => '0',
         ]);
         JenisCuti::create([
@@ -40,8 +40,8 @@ class JenisCutiSeeder extends Seeder
         ]);
         JenisCuti::create([
             'id' => 6,
-            'nama_cuti' => 'Cuti Tahunan',
-            'status' => '1',
+            'nama_cuti' => 'Pernikahan',
+            'status' => '0',
         ]);
         JenisCuti::create([
             'id' => 7,

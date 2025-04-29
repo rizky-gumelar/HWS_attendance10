@@ -89,7 +89,7 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                                     <th>Email</th>
                                     <th>No Telepon</th>
                                     <th>Role</th>
-                                    <th>Total Cuti</th>
+                                    <th>Sisa Cuti</th>
                                     <th>Poin Ketidakhadiran</th>
                                     <th>Status</th>
                                     <th>Aksi</th>
@@ -106,7 +106,7 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                                     <td @if($karyawan->status == 'nonaktif') style="color: red;" @endif>{{ $karyawan->email }}</td>
                                     <td @if($karyawan->status == 'nonaktif') style="color: red;" @endif>{{ $karyawan->no_hp }}</td>
                                     <td @if($karyawan->status == 'nonaktif') style="color: red;" @endif>{{ $karyawan->role_name  }}</td>
-                                    <td @if($karyawan->status == 'nonaktif') style="color: red;" @endif>{{ $karyawan->total_cuti  }}</td>
+                                    <td @if($karyawan->status == 'nonaktif') style="color: red;" @endif>{{ $karyawan->sisa_cuti  }}</td>
                                     <td @if($karyawan->status == 'nonaktif') style="color: red;" @endif>{{ $karyawan->poin_terakhir  }}</td>
                                     <td @if($karyawan->status == 'nonaktif') style="color: red;" @endif>{{ $karyawan->status  }}</td>
                                     <td>
