@@ -17,6 +17,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Artisan;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Style\Font;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Color;
@@ -529,6 +530,8 @@ class InputJadwalKaryawanController extends Controller
         $karyawanIds = JadwalKaryawan::where('minggu_ke', $minggu_ke)
             ->join('users', 'jadwal_karyawan.user_id', '=', 'users.id')
             ->where('users.role', '!=', 'admin')
+            ->orderBy('users.toko_id')
+            ->orderBy('users.nama_karyawan')
             ->pluck('jadwal_karyawan.user_id')
             ->unique();
 
@@ -547,7 +550,9 @@ class InputJadwalKaryawanController extends Controller
         $colOffset = 0;
         $rows = 5;
         $i = 0;
-
+        $blockIndex = 0;
+        $initialRow = 5;
+        $lastRowUsed = $rows;
         foreach ($karyawanIds as $userId) {
             $row = $rows;
 
@@ -649,14 +654,33 @@ class InputJadwalKaryawanController extends Controller
                     ],
                 ],
             ]);
-
+            $lastRowUsed = $row + 10;
             // Geser posisi: 3 ke samping, lalu turun ke bawah setiap 3 kolom
             $i++;
-            if ($i % 4 == 0) {
-                $rows = $row + 10; // Turun baris baru
+
+            // Cek apakah sudah isi 4 kolom dan 4 baris (16 user)
+            if ($i % 16 == 0) {
+                // Tambahkan page break
+                $sheet->setBreak("A{$lastRowUsed}", Worksheet::BREAK_ROW);
+
+                $blockIndex++;
+                $rows = $lastRowUsed + 2; // baris baru setelah blok sebelumnya
+                $colOffset = 0;
+
+                // Tambahkan kembali header
+                $sheet->setCellValue("A{$rows}", 'Laporan Absensi Karyawan');
+                $sheet->getStyle("A{$rows}")->getFont()->setBold(true)->setSize(18);
+
+                $sheet->setCellValue("A" . ($rows + 2), 'Periode');
+                $sheet->getStyle("A" . ($rows + 2))->getFont()->setBold(true);
+                $sheet->setCellValue("B" . ($rows + 2), Carbon::parse($startDate)->translatedFormat('d M Y') . ' - ' . Carbon::parse($endDate)->translatedFormat('d M Y'));
+
+                $rows += 4; // mulai posisi isi di bawah header
+            } elseif ($i % 4 == 0) {
+                $rows = $lastRowUsed; // turun ke bawah blok sebelumnya
                 $colOffset = 0;
             } else {
-                $colOffset += 4; // Geser ke kanan
+                $colOffset += 4; // geser ke kanan
             }
         }
 
