@@ -22,13 +22,14 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
         <div class="card-body">
             <div class="form-group">
                 <label for="user_id">Nama Karyawan</label>
-                <select class="form-control" id="user_id" name="user_id" required>
+                <select class="form-control select2" id="user_id" name="user_id" required>
                     <option value="" disabled selected>Pilih Karyawan</option>
                     @foreach($users as $user)
                     <option value="{{ $user->id }}">{{ $user->nama_karyawan }}</option>
                     @endforeach
                 </select>
             </div>
+
             <div class="form-group">
                 <label>Shift</label>
                 <select class="form-control" id="shift_id" name="shift_id" required>

@@ -89,7 +89,13 @@ class InputJadwalKaryawanController extends Controller
 
     public function create()
     {
-        $users = User::all();
+        $user = auth()->user();
+
+        $query = User::orderBy('nama_karyawan');
+        if ($user->role === 'spv') {
+            $query->where('divisi_id', $user->divisi_id)->where('role', '!=', 'admin');
+        }
+        $users = $query->get();
         $shifts = Shift::all();
         return view('input-jadwal_view.create', compact('users', 'shifts'));
     }
