@@ -136,6 +136,16 @@ class PengajuanCutiController extends Controller
         $cuti->status = 'batal';
         $cuti->save();
 
+        // Cari jadwal karyawan untuk tanggal dan user tersebut
+        $jadwal = JadwalKaryawan::where('user_id', $cuti->user_id)
+            ->where('tanggal', $cuti->tanggal)
+            ->first();
+
+        // Hapus absensi jika ada
+        if ($jadwal && $jadwal->absen_id) {
+            Absensi::where('id', $jadwal->absen_id)->delete();
+        }
+
         //Kondisi shift/libur
         if (Carbon::parse($cuti->tanggal)->isSunday()) {
             $shiftId = 9999;
@@ -153,18 +163,9 @@ class PengajuanCutiController extends Controller
             ]
         );
 
-        // kembalikan total_cuti user
-        // $user = $cuti->users;
-        // $user->total_cuti = $user->total_cuti + $cuti->jenis_cuti->status;
-        // if ($cuti->jenis_cuti->status == 0.5) {
-        //     $user->poin_tidak_hadir = $user->poin_tidak_hadir + 0.5;
-        // } else {
-        //     $user->poin_tidak_hadir = $user->poin_tidak_hadir + 1;
-        // }
-        // $user->save();
-
-        return back()->with('success', 'Cuti telah disetujui dan jadwal shift diperbarui.');
+        return back()->with('success', 'Cuti telah dibatalkan dan jadwal shift dikembalikan.');
     }
+
 
     public function reject($id)
     {

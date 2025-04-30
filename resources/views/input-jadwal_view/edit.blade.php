@@ -24,7 +24,7 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
         <div class="card-body">
             <div class="form-group">
                 <label for="user_id">Nama Karyawan</label>
-                <select class="form-control" id="user_id" name="user_id" required>
+                <select class="form-control" id="user_id" name="user_id" required disabled>
                     <option value="" disabled selected>Pilih Karyawan</option>
                     @foreach($users as $user)
                     <option value="{{ $user->id }}" {{ $user->id == $input_jadwal->user_id ? 'selected' : '' }}>{{ $user->nama_karyawan }}</option>
@@ -42,7 +42,7 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                         @endforeach
                 </select>
             </div>
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <label>Jenis Lembur</label>
                 <select class="form-control" id="lembur_id" name="lembur_id">
                     <option value="No" selected>Pilih Jenis Lembur</option>
@@ -51,15 +51,15 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                     <option value="{{ $lembur->id }}" {{ $lembur->id == $input_jadwal->lembur_id ? 'selected' : '' }}>{{ $lembur->tipe_lembur }}</option>
                     @endforeach
                 </select>
-            </div>
+            </div> -->
             <div class="form-group">
                 <label for="tanggal">Tanggal</label>
                 <input type="date" value="{{ $input_jadwal->tanggal }}" class="form-control" id="tanggal" name="tanggal" required>
             </div>
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <label for="alamat">Jam Lembur</label>
                 <input type="numeric" class="form-control" id="lembur_jam" name="lembur_jam" value="{{ old('lembur_jam', $input_jadwal->lembur_jam) }}" required>
-            </div>
+            </div> -->
         </div>
         <!-- /.card-body -->
 

@@ -143,6 +143,7 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                             <th>Tipe Lembur</th>
                             <th>Durasi</th>
                             <th>Total</th>
+                            <th>Keterangan</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -177,6 +178,7 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                                         <td>${item.lembur?.tipe_lembur || 'Lembur Tidak Ditemukan'}</td>
                                         <td>${item.lembur_jam || '-'}</td>
                                         <td>${item.total_lembur || '-'}</td>
+                                        <td>${item.keterangan || '-'}</td>
                                     </tr>`;
                             });
                         }

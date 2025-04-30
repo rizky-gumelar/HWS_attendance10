@@ -162,6 +162,7 @@ class ExportController extends Controller
         $sheet->setCellValue('D1', 'Biaya');
         $sheet->setCellValue('E1', 'Durasi (jam)');
         $sheet->setCellValue('F1', 'Total');
+        $sheet->setCellValue('G1', 'Keterangan Lembur');
 
         // Sheet 2: Karyawan List
         $karyawanSheet = new Worksheet($spreadsheet, 'KaryawanList');

@@ -290,7 +290,8 @@ class InputJadwalKaryawanController extends Controller
             $tanggal = Carbon::parse($row['A'])->format('Y-m-d'); // Kolom C untuk tanggal
             $userName = $row['B']; // Kolom A untuk nama_user
             $lemburName = $row['C']; // Kolom B untuk nama_shift
-            $durasi = $row['E']; // Kolom B untuk nama_shift
+            $durasi = $row['E'];
+            $keterangan = $row['G']; // Kolom B untuk nama_shift
 
             // Cek apakah user dan shift ada di database
             $user = User::where('nama_karyawan', $userName)->first();
@@ -316,6 +317,10 @@ class InputJadwalKaryawanController extends Controller
             if (!$lembur) {
                 $errors[] = "Tipe lembur tidak ditemukan: $lemburName";
                 continue;
+            }
+
+            if (!$keterangan) {
+                $keterangan = "-";
             }
 
             // Validasi tanggal
@@ -347,6 +352,7 @@ class InputJadwalKaryawanController extends Controller
                     'tanggal' => Carbon::parse($tanggal),
                     'lembur_jam' => $durasi,
                     'total_lembur' => $durasi * $lembur->biaya,
+                    'keterangan' => $keterangan,
                 ]);
             } else {
                 // dd([
@@ -362,6 +368,7 @@ class InputJadwalKaryawanController extends Controller
                     'lembur_id' => $lembur->id,
                     'lembur_jam' => $durasi,
                     'total_lembur' => $durasi * $lembur->biaya,
+                    'keterangan' => $keterangan,
                     'tanggal' => Carbon::parse($tanggal),
                     'minggu_ke' => Carbon::parse($tanggal)->startOfWeek(Carbon::SATURDAY)->weekOfYear,
                 ]);
