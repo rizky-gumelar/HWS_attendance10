@@ -1,6 +1,7 @@
 @php
 $nama_user = auth()->user()->nama_karyawan;
 @endphp
+
 <!-- Main Sidebar Container -->
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
@@ -97,6 +98,9 @@ $nama_user = auth()->user()->nama_karyawan;
                         <i class="nav-icon fas fa-calendar-times"></i>
                         <p>
                             Cuti
+                            @if($jumlahPending > 0)
+                            <span class="badge badge-info right">{{ $jumlahPending }}</span>
+                            @endif
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
@@ -109,7 +113,11 @@ $nama_user = auth()->user()->nama_karyawan;
                         <li class="nav-item">
                             <a href="{{ route('cuti.approval.index') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Persetujuan Cuti</p>
+                                <p>Persetujuan Cuti
+                                    @if($jumlahPending > 0)
+                                    <span class="badge badge-info right">{{ $jumlahPending }}</span>
+                                    @endif
+                                </p>
                             </a>
                         </li>
                         <li class="nav-item">

@@ -38,29 +38,46 @@ class ManageAbsensiController extends Controller
 
         // Validasi file
         $request->validate([
-            'file' => 'required|file|mimes:csv,xlsx,xls,txt|max:10240',
+            'file' => 'required|file|mimes:csv,txt,xlsx,xls,dat|max:10240',
         ]);
 
-        // Ambil file
         $file = $request->file('file');
         $filePath = $file->getRealPath();
+        $extension = $file->getClientOriginalExtension();
 
-        try {
-            $spreadsheet = IOFactory::load($filePath);
-        } catch (\Exception $e) {
-            return back()->with('error', 'File tidak dapat dibaca. Pastikan formatnya benar.');
+        $rows = [];
+
+        if (in_array($extension, ['dat', 'txt'])) {
+            // Baca manual jika file teks tab-delimited
+            $handle = fopen($filePath, 'r');
+            if ($handle) {
+                while (($line = fgets($handle)) !== false) {
+                    $rows[] = explode("\t", trim($line));
+                }
+                fclose($handle);
+            } else {
+                return back()->with('error', 'Gagal membuka file.');
+            }
+        } else {
+            // Gunakan PHPSpreadsheet jika format Excel/CSV
+            try {
+                $spreadsheet = IOFactory::load($filePath);
+                $sheet = $spreadsheet->getActiveSheet();
+                $rows = $sheet->toArray(null, true, true, true);
+                $rows = array_map("array_values", $rows); // buang key huruf (A, B, C)
+            } catch (\Exception $e) {
+                return back()->with('error', 'File tidak dapat dibaca. Pastikan formatnya benar.');
+            }
         }
 
-        $sheet = $spreadsheet->getActiveSheet();
-        $rows = $sheet->toArray(null, true, true, true); // asumsikan baris pertama adalah header
         $header = array_shift($rows);
 
         $mingguKe = Carbon::now()->weekOfYear;
         JadwalKaryawan::where('minggu_ke', $mingguKe)->update(['absen_id' => null]);
 
         foreach ($rows as $row) {
-            $userId = trim(str_replace("\xEF\xBB\xBF", '', $row['A'] ?? ''));
-            $tanggalJamMasuk = $row['B'] ?? '';
+            $userId = trim(str_replace("\xEF\xBB\xBF", '', $row[0] ?? ''));
+            $tanggalJamMasuk = $row[1] ?? '';
 
             if (!$userId || !$tanggalJamMasuk) {
                 continue;
@@ -85,7 +102,6 @@ class ManageAbsensiController extends Controller
                 continue;
             }
 
-            // Simpan atau update absensi
             Absensi::updateOrCreate(
                 ['user_id' => $userId, 'tanggal' => $tanggal],
                 ['jam_masuk' => $jamMasuk]
