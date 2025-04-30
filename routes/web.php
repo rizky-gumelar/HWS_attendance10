@@ -18,6 +18,7 @@ use App\Http\Controllers\InputJadwalKaryawanController;
 use App\Http\Controllers\LaporanMingguanController;
 use App\Http\Controllers\PengajuanCutiController;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,7 +32,14 @@ use Illuminate\Support\Facades\Artisan;
 */
 
 Route::get('/', function () {
-    return redirect('/login');
+    if (!Auth::check()) {
+        return redirect()->route('login'); // Jika belum login
+    }
+
+    $user = Auth::user();
+    $role = $user->role; // pastikan 'role' adalah nama kolom pada tabel users
+
+    return redirect("/{$role}/dashboard");
 });
 
 // Route::get('/{role}/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
