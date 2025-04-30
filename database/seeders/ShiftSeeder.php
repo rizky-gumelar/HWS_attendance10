@@ -23,9 +23,21 @@ class ShiftSeeder extends Seeder
         ]);
         Shift::create([
             'id' => 2,
-            'nama_shift' => 'Shift Siang (10-21)',
+            'nama_shift' => 'Shift Siang (10-19)',
             'shift_masuk' => '10:00:00',
-            'shift_keluar' => '21:00:00',
+            'shift_keluar' => '19:00:00',
+        ]);
+        Shift::create([
+            'id' => 3,
+            'nama_shift' => 'Shift Siang (13-22)',
+            'shift_masuk' => '13:00:00',
+            'shift_keluar' => '22:00:00',
+        ]);
+        Shift::create([
+            'id' => 4,
+            'nama_shift' => 'Shift Pagi (6-15)',
+            'shift_masuk' => '06:00:00',
+            'shift_keluar' => '15:00:00',
         ]);
         Shift::create([
             'id' => 999,

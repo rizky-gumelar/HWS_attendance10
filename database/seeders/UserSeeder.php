@@ -16,7 +16,7 @@ class UserSeeder extends Seeder
             'toko_id' => 1,
             'nama_karyawan' => 'Admin User',
             'default_shift_id' => 1,
-            'divisi_id' => 2,
+            'divisi_id' => 9,
             'no_hp' => '081234567890',
             'email' => 'admin@example.com',
             'email_verified_at' => now(),

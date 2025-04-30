@@ -51,9 +51,10 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
 <div class="card card-primary">
 
     <div class="card-body">
-        <table id="example1" class="table table-bordered table-striped">
+        <table id="example3" class="table table-bordered table-striped">
             <thead>
                 <tr>
+                    <th>No</th>
                     <th>Nama</th>
                     <th>Jenis Cuti</th>
                     <th>Tanggal</th>
@@ -66,6 +67,7 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
             <tbody>
                 @foreach($pengajuanCuti as $cuti)
                 <tr>
+                    <td>{{ $cuti->id }}</td>
                     <td>{{ $cuti->users->nama_karyawan }}</td>
                     <td>{{ $cuti->jenis_cuti->nama_cuti }}</td>
                     <td>{{ $cuti->tanggal }}</td>

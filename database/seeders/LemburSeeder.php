@@ -21,5 +21,13 @@ class LemburSeeder extends Seeder
             'tipe_lembur' => 'Bazar',
             'biaya' => '10000',
         ]);
+        Lembur::create([
+            'tipe_lembur' => 'Online',
+            'biaya' => '20000',
+        ]);
+        Lembur::create([
+            'tipe_lembur' => 'Muat',
+            'biaya' => '20000',
+        ]);
     }
 }

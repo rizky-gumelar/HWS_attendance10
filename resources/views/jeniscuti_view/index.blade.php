@@ -50,11 +50,11 @@
                                     <td>{{ $jeniscuti->nama_cuti }}</td>
                                     <td>{{ $jeniscuti->status }}</td>
                                     <td>
-                                        <!-- <a href="{{ route('jenis-cuti.edit', $jeniscuti->id) }}" class="btn btn-warning">Edit</a> -->
-                                        <form action="{{ route('jenis-cuti.destroy', $jeniscuti->id) }}" method="POST" class="d-inline">
+                                        <a href="{{ route('jenis-cuti.edit', $jeniscuti->id) }}" class="btn btn-warning">Edit</a>
+                                        <!-- <form action="{{ route('jenis-cuti.destroy', $jeniscuti->id) }}" method="POST" class="d-inline">
                                             @csrf @method('DELETE')
                                             <button class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
-                                        </form>
+                                        </form> -->
                                     </td>
                                 </tr>
                                 @endforeach

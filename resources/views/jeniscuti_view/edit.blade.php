@@ -20,7 +20,7 @@
         <div class="card-body">
             <div class="form-group">
                 <label for="nama_cuti">Nama Cuti</label>
-                <input type="text" class="form-control" id="nama_cuti" name="nama_cuti" placeholder="Masukkan nama" required>
+                <input type="text" class="form-control" id="nama_cuti" name="nama_cuti" placeholder="Masukkan nama" value="{{ old('nama_cuti', $jeniscuti->nama_cuti) }}" required>
             </div>
             <div class="form-group">
                 <label>Potong saldo cuti</label>

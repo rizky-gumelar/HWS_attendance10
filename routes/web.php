@@ -80,8 +80,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/', [JenisCutiController::class, 'index'])->name('jenis-cuti.index');
         Route::get('/create', [JenisCutiController::class, 'create'])->name('jenis-cuti.create');
         Route::post('/', [JenisCutiController::class, 'store'])->name('jenis-cuti.store');
-        Route::get('/{jenis-cuti}/edit', [JenisCutiController::class, 'edit'])->name('jenis-cuti.edit');
-        Route::put('/{jenis-cuti}', [JenisCutiController::class, 'update'])->name('jenis-cuti.update');
+        Route::get('/{jeniscuti}/edit', [JenisCutiController::class, 'edit'])->name('jenis-cuti.edit');
+        Route::put('/{jeniscuti}', [JenisCutiController::class, 'update'])->name('jenis-cuti.update');
         Route::delete('/{jenis-cuti}', [JenisCutiController::class, 'destroy'])->name('jenis-cuti.destroy');
     });
     //DIVISI
