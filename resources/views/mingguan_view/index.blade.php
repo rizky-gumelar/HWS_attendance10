@@ -86,9 +86,10 @@
 
                                         <a href="{{ route('input-jadwal.export', ['user_id' => $mingguan->users->id, 'minggu_ke' => $mingguan->minggu_ke]) }}" class="btn btn-success">Export</a>
                                         <!-- <a href="{{ route('input-jadwal.export', ['user_id' => $mingguan->users->id, 'minggu_ke' => $mingguan->minggu_ke]) }}" class="btn btn-info">Detail</a> -->
-                                        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modalDetail{{ $mingguan->users->id }}">
+                                        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modalDetail{{ $mingguan->users->id }}">
                                             Detail
                                         </button>
+
                                     </td>
                                     <!-- <td>{{ $mingguan->d1 }}</td>
                                         <td>{{ $mingguan->d2 }}</td>
@@ -119,12 +120,14 @@
 @foreach ($mingguans as $mingguan)
 <!-- Modal Detail (harus ada di dalam foreach) -->
 
-<div class="modal fade" id="modalDetail{{ $mingguan->id }}" tabindex="-1" aria-labelledby="modalDetailLabel{{ $mingguan->id }}" aria-hidden="true">
+<div class="modal fade" id="modalDetail{{ $mingguan->users->id }}" tabindex="-1" aria-labelledby="modalDetailLabel{{ $mingguan->users->id }}" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="modalDetailLabel{{ $mingguan->id }}">Detail Kehadiran - {{ $mingguan->users->nama_karyawan }}</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h1 class="modal-title fs-5" id="modalDetailLabel{{ $mingguan->users->id }}">Detail Kehadiran - {{ $mingguan->users->nama_karyawan }}</h1>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
                 <table class="table table-bordered table-striped">
@@ -165,7 +168,7 @@
                 </table>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
             </div>
         </div>
     </div>

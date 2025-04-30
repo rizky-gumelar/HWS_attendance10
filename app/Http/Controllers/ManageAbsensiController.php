@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\JadwalKaryawan;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class ManageAbsensiController extends Controller
 {
@@ -33,72 +34,71 @@ class ManageAbsensiController extends Controller
 
     public function import(Request $request)
     {
-        // Validasi file yang diunggah
+        $errors = [];
+
+        // Validasi file
         $request->validate([
-            'file' => 'required|mimes:dat,csv,txt,xlsx',
+            'file' => 'required|file|mimes:csv,xlsx,xls,txt|max:10240',
         ]);
 
-        // Mendapatkan minggu yang akan diimpor, misalnya menggunakan tanggal sekarang
-        $mingguKe = Carbon::now()->weekOfYear;
-
-        // Mengosongkan absen_id untuk minggu yang sama
-        JadwalKaryawan::where('minggu_ke', $mingguKe)->update(['absen_id' => null]);
-
-        // Mendapatkan file yang diunggah
+        // Ambil file
         $file = $request->file('file');
-        $handle = fopen($file, 'r'); // Membuka file untuk dibaca
+        $filePath = $file->getRealPath();
 
-        if ($handle === false) {
-            return back()->with('error', 'File tidak dapat dibuka.');
+        try {
+            $spreadsheet = IOFactory::load($filePath);
+        } catch (\Exception $e) {
+            return back()->with('error', 'File tidak dapat dibaca. Pastikan formatnya benar.');
         }
 
-        // Skip header baris pertama jika ada
-        // fgetcsv($handle);
+        $sheet = $spreadsheet->getActiveSheet();
+        $rows = $sheet->toArray(null, true, true, true); // asumsikan baris pertama adalah header
+        $header = array_shift($rows);
 
-        // Membaca file baris per baris
-        while (($row = fgetcsv($handle)) !== false) {
-            // $userId = $row[0];
-            $userId = trim(str_replace("\xEF\xBB\xBF", '', $row[0]));
-            // Asumsi kolom: user_id, tanggal_jam_masuk (gabungan)
-            // Misalnya data di file: 2025-03-01 08:00:00
-            $tanggalJamMasuk = $row[1]; // Mengambil nilai kolom tanggal_jam_masuk
+        $mingguKe = Carbon::now()->weekOfYear;
+        JadwalKaryawan::where('minggu_ke', $mingguKe)->update(['absen_id' => null]);
 
-            // Pisahkan tanggal dan jam jika menggunakan spasi sebagai pemisah
-            $tanggal = Carbon::parse(explode(' ', $tanggalJamMasuk)[0])->format('Y-m-d');
-            $jamMasuk = explode(' ', $tanggalJamMasuk)[1];
+        foreach ($rows as $row) {
+            $userId = trim(str_replace("\xEF\xBB\xBF", '', $row['A'] ?? ''));
+            $tanggalJamMasuk = $row['B'] ?? '';
 
-            // Cek apakah user_id ada di tabel users
-            $userExists = User::where('id', $userId)->exists();
-
-            if (!$userExists) {
-                // Jika user_id tidak ada, lanjutkan ke baris berikutnya
+            if (!$userId || !$tanggalJamMasuk) {
                 continue;
             }
 
-            // Cek apakah absensi ada untuk tanggal dan user tertentu
-            $absensi = Absensi::where('user_id', $userId)
-                ->where('tanggal', $tanggal)
-                ->first();
-
-            if (!$absensi) {
-                // Simpan ke dalam database jika belum ada
-                Absensi::create([
-                    'user_id' => $row[0],
-                    'tanggal' => $tanggal,
-                    'jam_masuk' => $jamMasuk,
-                ]);
-            } else {
-                $absensi->update([
-                    'user_id' => $row[0],
-                    'tanggal' => $tanggal,
-                    'jam_masuk' => $jamMasuk,
-                ]);
+            try {
+                $tanggal = Carbon::parse(explode(' ', $tanggalJamMasuk)[0])->format('Y-m-d');
+                $jamMasuk = explode(' ', $tanggalJamMasuk)[1] ?? null;
+            } catch (\Exception $e) {
+                $errors[] = "Format tanggal tidak valid: " . $tanggalJamMasuk;
+                continue;
             }
+
+            $userExists = User::where('id', $userId)->exists();
+            if (!$userExists) {
+                $errors[] = "User ID tidak ditemukan: $userId";
+                continue;
+            }
+
+            if (!$jamMasuk) {
+                $errors[] = "Jam masuk kosong atau tidak valid untuk user ID: $userId";
+                continue;
+            }
+
+            // Simpan atau update absensi
+            Absensi::updateOrCreate(
+                ['user_id' => $userId, 'tanggal' => $tanggal],
+                ['jam_masuk' => $jamMasuk]
+            );
         }
-        // Setelah data absensi berhasil diimpor, update jadwal karyawan
+
         $this->updateJadwalKaryawanWithAbsensi();
 
-        fclose($handle); // Menutup file setelah selesai dibaca
+        if (!empty($errors)) {
+            return redirect()->back()
+                ->with('success', 'Data berhasil diimpor sebagian.')
+                ->withErrors($errors);
+        }
 
         return redirect()->back()->with('success', 'Data berhasil diimpor!');
     }

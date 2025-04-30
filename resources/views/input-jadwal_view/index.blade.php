@@ -139,7 +139,7 @@ $layout = 'layouts.karyawan_manage';
                         <!-- <a href="{{ route('input-jadwal.import') }}" class="btn btn-primary my-4">Import CSV</a> -->
                         @endif
 
-                        <table id="example1" class="table table-bordered table-striped">
+                        <table id="example3" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
                                     <!-- <th>ID</th> -->

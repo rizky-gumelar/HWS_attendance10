@@ -111,7 +111,7 @@
                 "autoWidth": false,
                 "pageLength": 15,
                 "order": [
-                    [0, "desc"]
+                    [0, "asc"]
                 ],
                 "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
             }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
@@ -124,6 +124,16 @@
                 "autoWidth": false,
                 "responsive": true,
             });
+            $("#example3").DataTable({
+                "responsive": true,
+                "lengthChange": false,
+                "autoWidth": false,
+                "pageLength": 15,
+                "order": [
+                    [0, "desc"]
+                ],
+                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+            }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
         });
     </script>
     <!-- dropzonejs -->
