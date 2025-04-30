@@ -73,6 +73,7 @@ class ManageLiburController extends Controller
 
     public function import(Request $request)
     {
+        $errors = [];
         // Validasi file CSV yang di-upload
         $request->validate([
             'csv_file' => 'required|mimes:csv,txt,xlsx|max:10240', // Maksimal 10MB
@@ -107,7 +108,8 @@ class ManageLiburController extends Controller
             ]);
 
             if ($validator->fails()) {
-                dd("Tanggal tidak valid: $tanggal");
+                $errors[] = "Tanggal tidak valid: $tanggal";
+                continue;
             }
 
             if (!$tanggallibur) {
@@ -128,6 +130,11 @@ class ManageLiburController extends Controller
                     'keterangan' => $keterangan,
                 ]);
             }
+        }
+        if (!empty($errors)) {
+            return redirect()->route('lembur.import')
+                ->with('success', 'Jadwal berhasil diimpor sebagian.')
+                ->withErrors($errors);
         }
 
         return redirect()->route('libur.index')->with('success', 'Libur berhasil diimpor.');

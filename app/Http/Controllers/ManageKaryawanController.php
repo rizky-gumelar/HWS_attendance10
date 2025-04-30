@@ -175,6 +175,7 @@ class ManageKaryawanController extends Controller
 
     public function import(Request $request)
     {
+        $errors = [];
         $request->validate([
             'csv_file' => 'required|mimes:csv,txt,xlsx|max:10240' // Validasi file
         ]);
@@ -203,15 +204,16 @@ class ManageKaryawanController extends Controller
 
                 // Debug: Cek apakah user dan shift ditemukan
                 if (!$toko) {
-                    dd("Toko tidak ditemukan: $tokoName");
+                    $errors[] = "Toko tidak ditemukan: $tokoName";
+                    continue;
                 }
-
                 if (!$defaultShift) {
-                    dd("Shift tidak ditemukan: $defaultShiftName");
+                    $errors[] = "Shift tidak ditemukan: $defaultShiftName";
+                    continue;
                 }
-
                 if (!$divisi) {
-                    dd("Divisi tidak ditemukan: $divisiName");
+                    $errors[] = "Divisi tidak ditemukan: $divisiName";
+                    continue;
                 }
 
                 if ($toko && $defaultShift && $divisi) {
@@ -234,6 +236,12 @@ class ManageKaryawanController extends Controller
                         ]
                     );
                 }
+            }
+
+            if (!empty($errors)) {
+                return redirect()->route('lembur.import')
+                    ->with('success', 'Jadwal berhasil diimpor sebagian.')
+                    ->withErrors($errors);
             }
 
             return redirect()->route('manage-karyawan.index')->with('success', 'Data karyawan berhasil diimpor.');

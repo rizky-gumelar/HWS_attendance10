@@ -147,6 +147,7 @@ class InputJadwalKaryawanController extends Controller
 
     public function import(Request $request)
     {
+        $errors = [];
         // Validasi file CSV yang di-upload
         $request->validate([
             'csv_file' => 'required|mimes:csv,txt,xlsx|max:10240', // Maksimal 10MB
@@ -177,13 +178,20 @@ class InputJadwalKaryawanController extends Controller
             $user = User::where('nama_karyawan', $userName)->first();
             $shift = Shift::where('nama_shift', $shiftName)->first();
 
+            if (empty(trim($row['A'])) && empty(trim($row['B'])) && empty(trim($row['C'])) && empty(trim($row['D'])) && empty(trim($row['E']))) {
+                continue;
+            }
+
+
             // Debug: Cek apakah user dan shift ditemukan
             if (!$user) {
-                dd("User tidak ditemukan: $userName");
+                $errors[] = "User tidak ditemukan: $userName";
+                continue;
             }
 
             if (!$shift) {
-                dd("Shift tidak ditemukan: $shiftName");
+                $errors[] = "Shift tidak ditemukan: $shiftName";
+                continue;
             }
 
             // Validasi tanggal
@@ -192,7 +200,8 @@ class InputJadwalKaryawanController extends Controller
             ]);
 
             if ($validator->fails()) {
-                dd("Tanggal tidak valid: $tanggal");
+                $errors[] = "Tanggal tidak valid: $tanggal";
+                continue;
             }
 
             if ($user && $shift) {
@@ -242,6 +251,12 @@ class InputJadwalKaryawanController extends Controller
                 //     'minggu_ke' => Carbon::parse($tanggal)->startOfWeek(Carbon::SATURDAY)->weekOfYear,
                 // ]);
             }
+        }
+
+        if (!empty($errors)) {
+            return redirect()->route('lembur.import')
+                ->with('success', 'Jadwal berhasil diimpor sebagian.')
+                ->withErrors($errors);
         }
 
         return redirect()->route('input-jadwal.index')->with('success', 'Jadwal berhasil diimpor.');
@@ -309,7 +324,8 @@ class InputJadwalKaryawanController extends Controller
             ]);
 
             if ($validator->fails()) {
-                dd("Tanggal tidak valid: $tanggal");
+                $errors[] = "Tanggal tidak valid: $tanggal";
+                continue;
             }
 
             if (!is_numeric($durasi) || $durasi < 0) {

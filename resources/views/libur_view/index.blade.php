@@ -24,7 +24,7 @@
                         <label for="exampleInputFile">File input</label>
                         <div class="input-group">
                             <div class="custom-file">
-                                <input type="file" name="csv_file" accept=".csv" required>
+                                <input type="file" name="csv_file" accept=".csv,.xlsx" required>
                                 <button type="submit" class="input-group-text">Impor Libur</button>
                             </div>
                             <div class="input-group-append">
