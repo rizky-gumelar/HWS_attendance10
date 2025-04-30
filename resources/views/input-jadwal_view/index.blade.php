@@ -142,9 +142,9 @@ $layout = 'layouts.karyawan_manage';
                         <table id="example1" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Nama Karyawan</th>
+                                    <!-- <th>ID</th> -->
                                     <th>Tanggal</th>
+                                    <th>Nama Karyawan</th>
                                     <th>Shift</th>
                                     <th>Jam Masuk</th>
                                     <th>Lembur</th>
@@ -156,9 +156,9 @@ $layout = 'layouts.karyawan_manage';
                             <tbody>
                                 @foreach ($input_jadwals as $input_jadwal)
                                 <tr>
-                                    <td>{{ $input_jadwal->id }}</td>
-                                    <td>{{ $input_jadwal->users->nama_karyawan }}</td>
+                                    <!-- <td>{{ $input_jadwal->id }}</td> -->
                                     <td>{{ \Carbon\Carbon::parse($input_jadwal->tanggal)->locale('id')->isoFormat('YYYY-MM-DD, dddd ') }}</td>
+                                    <td>{{ $input_jadwal->users->nama_karyawan }}</td>
                                     <td>{{ $input_jadwal->shift->nama_shift }}</td>
                                     <td>{{ $input_jadwal->absensi->jam_masuk ?? '-' }}</td>
                                     <td>

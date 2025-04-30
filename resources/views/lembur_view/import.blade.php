@@ -155,6 +155,7 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
 
 <!-- Script -->
 <script>
+    const deleteLemburUrl = "{{ url('lembur/delete') }}";
     document.addEventListener('DOMContentLoaded', function() {
         const buttons = document.querySelectorAll('.btn-detail');
         buttons.forEach(button => {
@@ -179,6 +180,13 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                                         <td>${item.lembur_jam || '-'}</td>
                                         <td>${item.total_lembur || '-'}</td>
                                         <td>${item.keterangan || '-'}</td>
+                                        <td>
+            <form action="${deleteLemburUrl}/${item.id}" method="POST" class="d-inline">
+                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                <input type="hidden" name="_method" value="PUT">
+                <button class="btn btn-danger" onclick="return confirm('Yakin ingin menghapus lembur ini?')">Delete</button>
+            </form>
+        </td>
                                     </tr>`;
                             });
                         }

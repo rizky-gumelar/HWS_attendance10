@@ -181,6 +181,7 @@ Route::middleware(['auth', 'role:admin|spv'])->group(function () {
         Route::delete('/{lembur}', [ManageLemburController::class, 'destroy'])->name('lembur.destroy');
         Route::get('/', [ManageLemburController::class, 'import'])->name('lembur.import');
         Route::post('/import', [InputJadwalKaryawanController::class, 'importLembur'])->name('lembur.import-lembur');
+        Route::put('/delete/{input_jadwal}', [InputJadwalKaryawanController::class, 'deleteLembur'])->name('lembur.delete-lembur');
         Route::get('/detail', [ManageLemburController::class, 'getDetail'])->name('jadwal.detail.ajax');
     });
 

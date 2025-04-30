@@ -377,11 +377,22 @@ class InputJadwalKaryawanController extends Controller
 
         if (!empty($errors)) {
             return redirect()->route('lembur.import')
-                ->with('success', 'Jadwal berhasil diimpor sebagian.')
+                ->with('success', 'Lembur berhasil diimpor sebagian.')
                 ->withErrors($errors);
         }
 
-        return redirect()->route('lembur.import')->with('success', 'Jadwal berhasil diimpor.');
+        return redirect()->route('lembur.import')->with('success', 'Lembur berhasil diimpor.');
+    }
+
+    public function deleteLembur(JadwalKaryawan $input_jadwal)
+    {
+        $input_jadwal->update([
+            'lembur_id' => null,
+            'lembur_jam' => 0,
+            'total_lembur' => 0,
+            'keterangan' => null,
+        ]);
+        return redirect()->route('lembur.import')->with('success', 'Jadwal berhasil dihapus.');
     }
 
     public function edit(JadwalKaryawan $input_jadwal)
