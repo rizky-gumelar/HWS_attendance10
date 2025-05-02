@@ -1,8 +1,8 @@
 @extends('layouts.manage')
 
-@section('title', 'Manage Karyawan')
+@section('title', 'Absensi')
 
-@section('page-title', 'Manage Karyawan')
+@section('page-title', 'Absensi')
 
 @section('content')
 <!-- Main content -->

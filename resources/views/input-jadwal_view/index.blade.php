@@ -12,7 +12,7 @@ $layout = 'layouts.karyawan_manage';
 
 @extends($layout)
 
-@section('title', 'Manage')
+@section('title', 'Jadwal Karyawan')
 
 @section('page-title', 'Manage')
 

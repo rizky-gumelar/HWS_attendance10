@@ -10,7 +10,7 @@ class ManageShiftController extends Controller
 {
     public function index()
     {
-        $shifts = Shift::all();
+        $shifts = Shift::where('id', '<', 900)->get();
         return view('shift_view.index', compact('shifts'));
     }
 

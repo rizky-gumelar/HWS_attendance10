@@ -4,9 +4,9 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
 
 @extends($layout)
 
-@section('title', 'Manage Karyawan')
+@section('title', 'Approval Cuti')
 
-@section('page-title', 'Manage Karyawan')
+@section('page-title', 'Approval Cuti')
 
 @section('content')
 
