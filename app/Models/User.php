@@ -23,6 +23,7 @@ class User extends Authenticatable
         'toko_id',
         'default_shift_id',
         'nama_karyawan',
+        'tanggal_masuk',
         'email',
         'email_verified_at',
         'password',

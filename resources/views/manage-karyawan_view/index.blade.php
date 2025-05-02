@@ -83,6 +83,7 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                                 <tr>
                                     <th>ID</th>
                                     <th>Nama Karyawan</th>
+                                    <th>Tanggal Masuk</th>
                                     <th>Store</th>
                                     <th>Shift</th>
                                     <th>Divisi</th>
@@ -100,6 +101,7 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                                 <tr>
                                     <td @if($karyawan->status == 'nonaktif') style="color: red;" @endif>{{ $karyawan->id }}</td>
                                     <td @if($karyawan->status == 'nonaktif') style="color: red;" @endif>{{ $karyawan->nama_karyawan }}</td>
+                                    <td @if($karyawan->status == 'nonaktif') style="color: red;" @endif>{{ $karyawan->tanggal_masuk }}</td>
                                     <td @if($karyawan->status == 'nonaktif') style="color: red;" @endif>{{ $karyawan->toko->nama_toko ?? 'Toko Tidak Ditemukan' }}</td>
                                     <td @if($karyawan->status == 'nonaktif') style="color: red;" @endif>{{ $karyawan->shift->nama_shift ?? 'Shift Tidak Ditemukan' }}</td>
                                     <td @if($karyawan->status == 'nonaktif') style="color: red;" @endif>{{ $karyawan->divisi->nama_divisi }}</td>

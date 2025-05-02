@@ -43,6 +43,14 @@ $isSpv = auth()->user()->role === 'spv';
             </div>
 
             <div class="form-group">
+                <label for="tanggal_masuk">Tanggal Masuk</label>
+                <input type="date" {{ $isSpv ? 'disabled' : '' }} class="form-control  @error('tanggal_masuk') is-invalid @enderror" id="tanggal_masuk" name="tanggal_masuk" value="{{ old('tanggal_masuk', $karyawan->tanggal_masuk) }}" required>
+                @error('tanggal_masuk')
+                <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="form-group">
                 <label>Toko</label>
                 <select class="form-control" name="toko_id" required {{ $isSpv ? 'disabled' : '' }}>
                     <option value="" disabled selected>Pilih Toko</option>

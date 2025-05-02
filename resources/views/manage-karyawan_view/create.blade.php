@@ -37,6 +37,13 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                 @enderror
             </div>
             <div class="form-group">
+                <label for="tanggal_masuk">Tanggal Masuk</label>
+                <input type="date" class="form-control  @error('tanggal_masuk') is-invalid @enderror" id="tanggal_masuk" name="tanggal_masuk" required>
+                @error('tanggal_masuk')
+                <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+            <div class="form-group">
                 <label>Toko</label>
                 <select class="form-control" id="toko_id" name="toko_id" required>
                     <option value="" disabled selected>Pilih Toko</option>

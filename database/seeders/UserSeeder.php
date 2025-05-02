@@ -15,6 +15,7 @@ class UserSeeder extends Seeder
             'id' => 1,
             'toko_id' => 1,
             'nama_karyawan' => 'Admin User',
+            'tanggal_masuk' => '2020-01-20',
             'default_shift_id' => 1,
             'divisi_id' => 9,
             'no_hp' => '081234567890',

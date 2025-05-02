@@ -64,6 +64,7 @@ class ManageKaryawanController extends Controller
         $request->validate([
             'id' => 'nullable|numeric',
             'nama_karyawan'  => 'required',
+            'tanggal_masuk' => 'required|date',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:8', // Perbaikan validasi password
             'toko_id' => 'required|exists:toko,id',
@@ -88,6 +89,7 @@ class ManageKaryawanController extends Controller
         User::create([
             'id' => $id,
             'nama_karyawan' => $request->nama_karyawan,
+            'tanggal_masuk' => $request->tanggal_masuk,
             'email' => $request->email,
             'password' => bcrypt($request->password), // Simpan password dengan hashing
             'toko_id' => $request->toko_id,
@@ -117,6 +119,7 @@ class ManageKaryawanController extends Controller
             'toko_id' => 'exists:toko,id',
             'default_shift_id' => 'exists:shift,id',
             'nama_karyawan' => 'required|string|max:255',
+            'tanggal_masuk' => 'required|date',
             'divisi_id' => 'required|string|max:255',
             'no_hp' => 'required|numeric|unique:users,no_hp,' . $karyawan->id, // Unik kecuali untuk user ini
             'email' => 'required|email|unique:users,email,' . $karyawan->id,
@@ -132,6 +135,7 @@ class ManageKaryawanController extends Controller
             'toko_id' => $request->toko_id,
             'default_shift_id' => $request->default_shift_id,
             'nama_karyawan' => $request->nama_karyawan,
+            'tanggal_masuk' => $request->tanggal_masuk,
             'divisi_id' => $request->divisi_id,
             'no_hp' => $request->no_hp,
             'email' => $request->email,
@@ -232,6 +236,7 @@ class ManageKaryawanController extends Controller
                             'no_hp' => $row[7] ?? null,
                             'role' => $row[8] ?? 'karyawan',
                             'total_cuti' => $row[9] ?? 0,
+                            'tanggal_masuk' => $row[10] ?? 0,
                             'status' => 'aktif',
                         ]
                     );

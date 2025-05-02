@@ -269,6 +269,7 @@ class ExportController extends Controller
         $sheet->setCellValue('H1', 'No HP');
         $sheet->setCellValue('I1', 'Role');
         $sheet->setCellValue('J1', 'Total Cuti');
+        $sheet->setCellValue('K1', 'Tanggal Masuk');
 
         // Sheet 2: Toko List
         $tokoSheet = new Worksheet($spreadsheet, 'TokoList');
@@ -351,6 +352,16 @@ class ExportController extends Controller
             $validationB->setShowErrorMessage(true);
             $validationB->setShowDropDown(true);
             $validationB->setFormula1("'RoleList'!A$1:A$" . count($roles));
+
+            // K: Tanggal (validasi + format)
+            $sheet->getStyle("K$row")->getNumberFormat()->setFormatCode('yyyy-mm-dd');
+            $dateValidation = $sheet->getCell("K$row")->getDataValidation();
+            $dateValidation->setType(DataValidation::TYPE_DATE);
+            $dateValidation->setErrorStyle(DataValidation::STYLE_STOP);
+            $dateValidation->setAllowBlank(true);
+            $dateValidation->setShowInputMessage(true);
+            $dateValidation->setPrompt('Format tanggal: YYYY-MM-DD');
+            $dateValidation->setError('Harap masukkan tanggal dengan format YYYY-MM-DD');
         }
 
         // Sembunyikan sheet daftar

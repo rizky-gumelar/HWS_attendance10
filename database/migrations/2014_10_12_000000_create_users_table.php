@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('no_hp')->unique()->nullable();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
+            $table->date('tanggal_masuk');
             $table->string('password');
             $table->enum('role', ['admin', 'spv', 'karyawan']);
             $table->float('total_cuti', 8, 2)->default(0);
