@@ -590,6 +590,7 @@ class InputJadwalKaryawanController extends Controller
         $karyawanIds = JadwalKaryawan::where('minggu_ke', $minggu_ke)
             ->join('users', 'jadwal_karyawan.user_id', '=', 'users.id')
             ->where('users.role', '!=', 'admin')
+            ->where('users.status', '=', 'aktif')
             ->orderBy('users.toko_id')
             ->orderBy('users.nama_karyawan')
             ->pluck('jadwal_karyawan.user_id')

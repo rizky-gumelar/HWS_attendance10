@@ -29,12 +29,17 @@ class LaporanMingguanController extends Controller
 
         //------------------------------------------------
         $mingguans = LaporanMingguan::where('minggu_ke', $mingguKe)
-            ->with('users') // Pastikan relasi users dipanggil
+            ->whereHas('users', function ($query) {
+                $query->where('status', 'aktif');
+            })
+            ->with(['users' => function ($query) {
+                $query->where('status', 'aktif');
+            }])
             ->get();
 
         $karyawans = User::where('status', 'aktif')->get();
         // $mingguan = User::orderBy('status', 'asc')->orderBy('id', 'asc')->get();
-        return view('mingguan_view.index', compact('mingguans', 'karyawans', 'mingguKe', 'startDate', 'endDate'));
+        return view('mingguan_view.index', compact('mingguans', 'mingguKe', 'startDate', 'endDate'));
     }
 
     // Fungsi untuk membuat laporan mingguan untuk seluruh user
@@ -130,6 +135,12 @@ class LaporanMingguanController extends Controller
 
         // Proses setiap user untuk menghasilkan laporan mingguan
         foreach ($jadwalKaryawan as $userId => $jadwals) {
+            $user = $jadwals->first()->users ?? null;
+
+            // Skip jika user tidak ada atau statusnya bukan 'aktif'
+            if (!$user || $user->status !== 'aktif') {
+                continue;
+            }
             // Inisialisasi array untuk menyimpan hari-hari dalam minggu
             $hari = [
                 'd1'  => null,
@@ -203,6 +214,9 @@ class LaporanMingguanController extends Controller
                     $status = 'kurang';
                 } else {
                     $tottelat++;
+                }
+                if ($jadwalKaryawan->cek_keterlambatan == 0 && !$jadwalKaryawan->absensi) {
+                    $status = 'kurang';
                 }
                 $totlembur = $totlembur + $jadwalKaryawan->total_lembur;
             }
