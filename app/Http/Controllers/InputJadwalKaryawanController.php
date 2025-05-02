@@ -1091,8 +1091,6 @@ class InputJadwalKaryawanController extends Controller
                 'start' => $startDateTime,
                 'end' => $endDateTime,
                 'backgroundColor' => $color,
-                'color' => $color,
-                'borderColor' => $color,
                 'textColor' => '#fff'
             ];
         });
