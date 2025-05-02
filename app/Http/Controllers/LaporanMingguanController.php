@@ -158,6 +158,7 @@ class LaporanMingguanController extends Controller
             $kedatangan = 0;
             $totlembur = 0;
             $status = 'selesai';
+            $jumlahBonusMingguan = 0;
 
             // Proses setiap jadwal karyawan untuk user ini
             foreach ($jadwals as $jadwalKaryawan) {
@@ -202,26 +203,37 @@ class LaporanMingguanController extends Controller
                         break;
                 }
 
-                if ($jadwalKaryawan->cek_keterlambatan == 0 || $isLibur) {
+                $isShiftLibur = stripos($jadwalKaryawan->shift->nama_shift, 'Libur') !== false;
+                $isShiftCuti  = stripos($jadwalKaryawan->shift->nama_shift, 'Cuti') !== false;
+                $totalCuti    = $jadwalKaryawan->users->total_cuti;
+
+                if ($jumlahBonusMingguan < 6) {
                     if (
-                        stripos($jadwalKaryawan->shift->nama_shift, 'Libur') === false &&
-                        (stripos($jadwalKaryawan->shift->nama_shift, 'Cuti') === false || $jadwalKaryawan->users->total_cuti > 0)
-                        // stripos($jadwalKaryawan->shift->nama_shift, 'Cuti') === false
+                        ($jadwalKaryawan->cek_keterlambatan == 0) ||
+                        ($isShiftCuti && $totalCuti > 0) ||
+                        $isLibur
                     ) {
-                        $mingguan = $mingguan + 15000;
+                        $mingguan += 15000;
+                        $jumlahBonusMingguan++;
                     }
-                } else if ($jadwalKaryawan->cek_keterlambatan == 2) {
-                    $status = 'kurang';
-                } else {
-                    $tottelat++;
                 }
-                if ($jadwalKaryawan->cek_keterlambatan == 0 && !$jadwalKaryawan->absensi) {
+
+                // Cek keterlambatan dan absensi
+                if ($jadwalKaryawan->cek_keterlambatan == 2) {
+                    if ($isShiftCuti || $isLibur) {
+                        $status = 'selesai';
+                    } else {
+                        $status = 'kurang';
+                    }
+                } elseif ($jadwalKaryawan->cek_keterlambatan == 0 && !$jadwalKaryawan->absensi && !$isShiftCuti && !$isShiftLibur) {
                     $status = 'kurang';
+                } elseif ($jadwalKaryawan->cek_keterlambatan == 1) {
+                    $tottelat++;
                 }
                 $totlembur = $totlembur + $jadwalKaryawan->total_lembur;
             }
 
-            if ($status == 'kurang') {
+            if ($status == 'kurang' || $tottelat > 0) {
                 $kedatangan = 0;
             } else {
                 if ($jadwalKaryawan->users->divisi->nama_divisi != 'Sales') {
