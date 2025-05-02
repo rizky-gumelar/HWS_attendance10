@@ -55,19 +55,18 @@ $layout = 'layouts.karyawan_manage';
                                     <label for="end_date">Sampai Tanggal:</label>
                                     <input type="date" name="end_date" id="end_date" class="form-control" value="{{ request('end_date') }}">
                                 </div>
-                                <div class="col-md-4 d-flex align-items-end">
+                                <div class="col-md-4 d-flex align-items-end mt-3">
                                     <button type="submit" class="btn btn-primary">Cari</button>
                                     <a href="{{ route('input-jadwal.index') }}" class="btn btn-secondary ml-2">Reset</a>
                                 </div>
                             </div>
                         </form>
 
-                        <table id="example1" class="table table-bordered table-striped">
+                        <table id="example3" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Nama Karyawan</th>
                                     <th>Tanggal</th>
+                                    <th>Nama Karyawan</th>
                                     <th>Shift</th>
                                     <th>Jam Masuk</th>
                                     <th>Lembur</th>
@@ -78,9 +77,8 @@ $layout = 'layouts.karyawan_manage';
                             <tbody>
                                 @foreach ($input_jadwals as $input_jadwal)
                                 <tr>
-                                    <td>{{ $input_jadwal->id }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($input_jadwal->tanggal)->locale('id')->isoFormat('YYYY-MM-DD, dddd ') }}</td>
                                     <td>{{ $input_jadwal->users->nama_karyawan }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($input_jadwal->tanggal)->locale('id')->isoFormat('dddd, D MMMM YYYY') }}</td>
                                     <td>{{ $input_jadwal->shift->nama_shift }}</td>
                                     <td>{{ $input_jadwal->absensi->jam_masuk ?? '-' }}</td>
                                     <td>

@@ -42,7 +42,7 @@
                                 <label for="end_date">Sampai Tanggal:</label>
                                 <input type="date" name="end_date" id="end_date" class="form-control" value="{{ request('end_date') }}">
                             </div>
-                            <div class="col-md-4 d-flex align-items-end">
+                            <div class="col-md-4 d-flex align-items-end mt-3">
                                 <button type="submit" class="btn btn-primary">Cari</button>
                                 <a href="{{ route('absensi.index') }}" class="btn btn-secondary ml-2">Reset</a>
                             </div>

@@ -259,7 +259,7 @@ class ExportController extends Controller
         // Sheet 1: Input Karyawan
         $sheet = $spreadsheet->getActiveSheet();
         $sheet->setTitle('Input Jadwal Karyawan');
-        $sheet->setCellValue('A1', 'ID (bisa diabaikan)');
+        $sheet->setCellValue('A1', 'ID');
         $sheet->setCellValue('B1', 'Nama Karyawan');
         $sheet->setCellValue('C1', 'Email');
         $sheet->setCellValue('D1', 'Password');
