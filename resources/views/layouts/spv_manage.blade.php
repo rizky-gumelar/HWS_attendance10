@@ -107,6 +107,23 @@
                 }
             });
         }
+
+        function confirmDelete(id, nama) {
+            Swal.fire({
+                title: 'Yakin ingin menghapus ' + nama + '?',
+                text: "Data yang dihapus tidak dapat dipulihkan!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('delete-form-' + id).submit();
+                }
+            });
+        }
     </script>
     <!-- AdminLTE for demo purposes -->
     <!-- <script src="{{ asset('adminlte/dist/js/demo.js') }}"></script> -->

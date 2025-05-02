@@ -128,10 +128,10 @@
                                 <td>{{ $absensi->tanggal }}</td>
                                 <td>{{ $absensi->jam_masuk }}</td>
                                 <td>
-                                    <a href="{{ route('absensi.edit', $absensi->id) }}" class="btn btn-warning">Edit</a>
-                                    <form action="{{ route('absensi.destroy', $absensi->id) }}" method="POST" class="d-inline">
+                                    <!-- <a href="{{ route('absensi.edit', $absensi->id) }}" class="btn btn-warning">Edit</a> -->
+                                    <form action="{{ route('absensi.destroy', $absensi->id) }}" method="POST" class="d-inline" id="delete-form-{{ $absensi->id }}">
                                         @csrf @method('DELETE')
-                                        <button class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                                        <button type="button" class="btn btn-danger" onclick="confirmDelete({{ $absensi->id }}, '{{ $absensi->users->nama_karyawan }}')">Delete</button>
                                     </form>
                                 </td>
                             </tr>

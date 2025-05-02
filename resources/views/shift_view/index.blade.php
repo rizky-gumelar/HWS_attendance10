@@ -60,7 +60,7 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                                         <a href="{{ route('shift.edit', $shift->id) }}" class="btn btn-warning">Edit</a>
                                         <form action="{{ route('shift.destroy', $shift->id) }}" method="POST" class="d-inline">
                                             @csrf @method('DELETE')
-                                            <button class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                                            <button class="btn btn-danger" onclick="return confirm('Apakah anda yakin?')">Delete</button>
                                         </form>
                                     </td>
                                 </tr>
@@ -77,7 +77,7 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                                         <a href="{{ route('shift.edit', $shift->id) }}" class="btn btn-warning">Edit</a>
                                         <form action="{{ route('shift.destroy', $shift->id) }}" method="POST" class="d-inline">
                                             @csrf @method('DELETE')
-                                            <button class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                                            <button class="btn btn-danger" onclick="return confirm('Apakah anda yakin?')">Delete</button>
                                         </form>
                                     </td>
                                     </tr>

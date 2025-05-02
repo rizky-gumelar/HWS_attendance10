@@ -114,7 +114,7 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                                         <!-- <a href="{{ route('input-jadwal.export', $karyawan->id) }}" class="btn btn-warning">Export</a> -->
                                         <form action="{{ route('manage-karyawan.destroy', $karyawan->id) }}" method="POST" class="d-inline">
                                             @csrf @method('DELETE')
-                                            <button class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                                            <button class="btn btn-danger" onclick="return confirm('Apakah anda yakin?')">Delete</button>
                                         </form>
                                     </td>
                                 </tr>

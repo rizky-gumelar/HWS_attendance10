@@ -175,7 +175,7 @@ $layout = 'layouts.karyawan_manage';
                                         <a href="{{ route('input-jadwal.edit', $input_jadwal->id) }}" class="btn btn-warning">Edit</a>
                                         <form action="{{ route('input-jadwal.destroy', $input_jadwal->id) }}" method="POST" class="d-inline">
                                             @csrf @method('DELETE')
-                                            <button class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                                            <button class="btn btn-danger" onclick="return confirm('Apakah anda yakin?')">Delete</button>
                                         </form>
                                     </td>
                                 </tr>

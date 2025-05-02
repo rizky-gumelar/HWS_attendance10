@@ -235,6 +235,6 @@ class ManageAbsensiController extends Controller
     public function destroy(Absensi $absensi)
     {
         $absensi->delete();
-        return redirect()->route('absensi.index')->with('success', 'Shift deleted successfully.');
+        return redirect()->route('absensi.index')->with('success', 'Absen berhasil dihapus.');
     }
 }

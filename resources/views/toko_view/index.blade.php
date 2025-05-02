@@ -53,7 +53,7 @@
                                         <a href="{{ route('toko.edit', $toko->id) }}" class="btn btn-warning">Edit</a>
                                         <form action="{{ route('toko.destroy', $toko->id) }}" method="POST" class="d-inline">
                                             @csrf @method('DELETE')
-                                            <button class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                                            <button class="btn btn-danger" onclick="return confirm('Apakah anda yakin?')">Delete</button>
                                         </form>
                                     </td>
                                 </tr>

@@ -166,7 +166,6 @@ class PengajuanCutiController extends Controller
         return back()->with('success', 'Cuti telah dibatalkan dan jadwal shift dikembalikan.');
     }
 
-
     public function reject($id)
     {
         $cuti = PengajuanCuti::findOrFail($id);
