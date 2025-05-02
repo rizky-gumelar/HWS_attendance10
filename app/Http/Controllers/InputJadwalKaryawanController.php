@@ -1029,7 +1029,7 @@ class InputJadwalKaryawanController extends Controller
                 'start' => $item->tanggal,
                 'end' => $item->tanggal,
                 'allDay' => true,
-                'backgroundColor' => '#FF4C4C',
+                'backgroundColor' => '#ff8181',
                 'textColor' => '#fff'
             ];
         });
@@ -1104,7 +1104,7 @@ class InputJadwalKaryawanController extends Controller
                 'start' => $item->tanggal,
                 'end' => $item->tanggal,
                 'allDay' => true,
-                'backgroundColor' => '#FF4C4C',
+                'backgroundColor' => '#ff8181',
                 'textColor' => '#fff'
             ];
         });

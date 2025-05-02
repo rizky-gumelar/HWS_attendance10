@@ -6,7 +6,7 @@
 
 @section('content')
 <style>
-    #calendar .fc-event-title {
+    a .fc-event-title {
         color: black !important;
         font-weight: normal !important;
     }
@@ -91,6 +91,9 @@
         var divisiFilter = document.getElementById('filterDivisi');
 
         var calendar = new FullCalendar.Calendar(calendarEl, {
+            themeSystem: 'bootstrap',
+            dayMaxEvents: true,
+            dayMaxEventRows: true,
             initialView: 'dayGridMonth',
             timeZone: 'local',
             eventTimeFormat: {
@@ -125,7 +128,10 @@
         var divisiFilter = document.getElementById('filterDivisi2');
 
         var calendar = new FullCalendar.Calendar(calendarEl, {
+            themeSystem: 'bootstrap',
             initialView: 'dayGridMonth',
+            dayMaxEvents: true,
+            dayMaxEventRows: true,
             timeZone: 'local',
             eventTimeFormat: {
                 hour: '2-digit',

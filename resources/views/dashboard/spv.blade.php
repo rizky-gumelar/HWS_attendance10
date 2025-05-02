@@ -66,6 +66,8 @@
 
         var calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'dayGridMonth',
+            dayMaxEvents: true,
+            dayMaxEventRows: true,
             events: '/calendar', // ganti sesuai route kamu
             timeZone: 'local', // Pastikan sesuai kebutuhanmu
             eventTimeFormat: {
@@ -89,6 +91,8 @@
 
         var calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'dayGridMonth',
+            dayMaxEvents: true,
+            dayMaxEventRows: true,
             events: '/calendar-libur', // ganti sesuai route kamu
             timeZone: 'local', // Pastikan sesuai kebutuhanmu
             eventTimeFormat: {
