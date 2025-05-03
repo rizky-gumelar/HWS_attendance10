@@ -211,6 +211,8 @@ class ManageAbsensiController extends Controller
             'jam_masuk' => $request->jam_masuk,
         ]);
 
+        $this->updateJadwalKaryawanWithAbsensi();
+
         return redirect()->route('absensi.index')->with('success', 'Absensi berhasil ditambahkan.');
     }
 
@@ -234,7 +236,7 @@ class ManageAbsensiController extends Controller
                 'tanggal' => $request->tanggal,
                 'jam_masuk' => $request->jam_masuk,
             ]);
-
+            $this->updateJadwalKaryawanWithAbsensi();
             // Redirect ke halaman shift dan beri pesan sukses
             return redirect()->route('absensi.index')->with('success', 'absensi berhasil diperbarui!');
         } catch (\Exception $e) {

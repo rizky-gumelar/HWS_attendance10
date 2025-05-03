@@ -19,6 +19,7 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
     <!-- form start -->
     <form action="{{ route('absensi.update', $absensi->id) }}" method="POST">
         @csrf
+        @method('PUT') <!-- Laravel membutuhkan method PUT untuk update -->
         <div class="card-body">
             <div class="form-group">
                 <label for="user_id">Nama Karyawan</label>
@@ -28,6 +29,7 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                     <option value="{{ $user->id }}" {{ $user->id == $absensi->user_id ? 'selected' : '' }}>{{ $user->nama_karyawan }}</option>
                     @endforeach
                 </select>
+                <input type="hidden" name="user_id" value="{{ $absensi->user_id }}">
             </div>
             <div class="form-group">
                 <label for="tanggal">Tanggal</label>
