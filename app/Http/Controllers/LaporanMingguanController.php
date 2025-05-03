@@ -158,6 +158,7 @@ class LaporanMingguanController extends Controller
             $kedatangan = 0;
             $totlembur = 0;
             $status = 'selesai';
+            $tnull = 0;
             $jumlahBonusMingguan = 0;
 
             // Proses setiap jadwal karyawan untuk user ini
@@ -205,6 +206,7 @@ class LaporanMingguanController extends Controller
 
                 $isShiftLibur = stripos($jadwalKaryawan->shift->nama_shift, 'Libur') !== false;
                 $isShiftCuti  = stripos($jadwalKaryawan->shift->nama_shift, 'Cuti') !== false;
+                $isShiftSakit  = stripos($jadwalKaryawan->shift->nama_shift, 'Sakit') !== false;
                 $totalCuti    = $jadwalKaryawan->users->total_cuti;
                 $isShiftLiburPG = stripos($jadwalKaryawan->shift->nama_shift, 'Libur Pengganti') !== false;
 
@@ -217,21 +219,32 @@ class LaporanMingguanController extends Controller
                         $mingguan += 15000;
                         $jumlahBonusMingguan++;
                     }
+                    // elseif ($jadwalKaryawan->cek_keterlambatan == 1) {
+                    //     $jumlahBonusMingguan++;
+                    // }
+                }
+                if (($jumlahBonusMingguan >= 6) && ($jadwalKaryawan->cek_keterlambatan == 1)) {
+                    $mingguan -= 15000;
                 }
 
                 // Cek keterlambatan dan absensi
-                if (($jadwalKaryawan->cek_keterlambatan == 2) && ($jadwalKaryawan->users->divisi->nama_divisi != 'Sales')) {
-                    if ($isShiftCuti || $isLibur) {
+                if ($jadwalKaryawan->cek_keterlambatan == 2) {
+                    if ($isShiftCuti || $isLibur || $isShiftSakit ||  $isShiftLibur || ($jadwalKaryawan->users->divisi->nama_divisi == 'Sales')) {
                         $status = 'selesai';
                     } else {
-                        $status = 'kurang';
+                        // $status = 'kurang';
+                        $tnull++;
                     }
-                } elseif ($jadwalKaryawan->cek_keterlambatan == 0 && !$jadwalKaryawan->absensi && !$isShiftCuti && !$isShiftLibur) {
+                } elseif ($jadwalKaryawan->cek_keterlambatan == 0 && !$jadwalKaryawan->absensi && !$isShiftCuti && !$isShiftLibur && !$isShiftSakit) {
                     $status = 'kurang';
                 } elseif ($jadwalKaryawan->cek_keterlambatan == 1) {
                     $tottelat++;
                 }
                 $totlembur = $totlembur + $jadwalKaryawan->total_lembur;
+            }
+
+            if ($tnull > 0) {
+                $status = 'kurang';
             }
 
             if ($status == 'kurang' || $tottelat > 0) {
@@ -244,51 +257,69 @@ class LaporanMingguanController extends Controller
                 // $status = 'selesai';
             }
 
-            $existingSchedule = LaporanMingguan::where('user_id', $userId)
-                ->where('minggu_ke', $mingguKe)
-                ->first();
+            LaporanMingguan::updateOrCreate(
+                ['user_id' => $userId, 'minggu_ke' => $mingguKe],
+                [
+                    'd1' => $hari['d1'],
+                    'd2' => $hari['d2'],
+                    'd3' => $hari['d3'],
+                    'd4' => $hari['d4'],
+                    'd5' => $hari['d5'],
+                    'd6' => $hari['d6'],
+                    'd7' => $hari['d7'],
+                    'uang_mingguan' => $mingguan,
+                    'uang_kedatangan' => $kedatangan,
+                    'uang_lembur_mingguan' => $totlembur,
+                    'status' => $status,
+                ]
+            );
 
-            // JIKA JADWAL SUDAH ADA MAKA UPDATE
-            if ($existingSchedule) {
-                // Jika jadwal sudah ada, update jadwal yang ada
-                $existingSchedule->update([
-                    'user_id' => $userId,
-                    'minggu_ke' => $mingguKe,
-                    'd1' => $hari['d1'],
-                    'd2' => $hari['d2'],
-                    'd3' => $hari['d3'],
-                    'd4' => $hari['d4'],
-                    'd5' => $hari['d5'],
-                    'd6' => $hari['d6'],
-                    'd7' => $hari['d7'],
-                    'uang_mingguan' => $mingguan,  // Sementara kosongkan
-                    'uang_kedatangan' => $kedatangan,  // Sementara kosongkan
-                    'uang_lembur_mingguan' => $totlembur,  // Sementara kosongkan
-                    'status' => $status,  // Sementara kosongkan
-                ]);
-            } else {
-                // Simpan laporan mingguan untuk user
-                $laporanMingguan = LaporanMingguan::create([
-                    'user_id' => $userId,
-                    'minggu_ke' => $mingguKe,
-                    'd1' => $hari['d1'],
-                    'd2' => $hari['d2'],
-                    'd3' => $hari['d3'],
-                    'd4' => $hari['d4'],
-                    'd5' => $hari['d5'],
-                    'd6' => $hari['d6'],
-                    'd7' => $hari['d7'],
-                    'uang_mingguan' => $mingguan,  // Sementara kosongkan
-                    'uang_kedatangan' => $kedatangan,  // Sementara kosongkan
-                    'uang_lembur_mingguan' => $totlembur,  // Sementara kosongkan
-                    'status' => $status,  // Sementara kosongkan
-                ]);
-            }
+
+            // $existingSchedule = LaporanMingguan::where('user_id', $userId)
+            //     ->where('minggu_ke', $mingguKe)
+            //     ->first();
+
+            // // JIKA JADWAL SUDAH ADA MAKA UPDATE
+            // if ($existingSchedule) {
+            //     // Jika jadwal sudah ada, update jadwal yang ada
+            //     $existingSchedule->update([
+            //         'user_id' => $userId,
+            //         'minggu_ke' => $mingguKe,
+            //         'd1' => $hari['d1'],
+            //         'd2' => $hari['d2'],
+            //         'd3' => $hari['d3'],
+            //         'd4' => $hari['d4'],
+            //         'd5' => $hari['d5'],
+            //         'd6' => $hari['d6'],
+            //         'd7' => $hari['d7'],
+            //         'uang_mingguan' => $mingguan,  // Sementara kosongkan
+            //         'uang_kedatangan' => $kedatangan,  // Sementara kosongkan
+            //         'uang_lembur_mingguan' => $totlembur,  // Sementara kosongkan
+            //         'status' => $status,  // Sementara kosongkan
+            //     ]);
+            // } else {
+            //     // Simpan laporan mingguan untuk user
+            //     $laporanMingguan = LaporanMingguan::create([
+            //         'user_id' => $userId,
+            //         'minggu_ke' => $mingguKe,
+            //         'd1' => $hari['d1'],
+            //         'd2' => $hari['d2'],
+            //         'd3' => $hari['d3'],
+            //         'd4' => $hari['d4'],
+            //         'd5' => $hari['d5'],
+            //         'd6' => $hari['d6'],
+            //         'd7' => $hari['d7'],
+            //         'uang_mingguan' => $mingguan,  // Sementara kosongkan
+            //         'uang_kedatangan' => $kedatangan,  // Sementara kosongkan
+            //         'uang_lembur_mingguan' => $totlembur,  // Sementara kosongkan
+            //         'status' => $status,  // Sementara kosongkan
+            //     ]);
+            // }
         }
 
         // return response()->json([
         //     'message' => 'Laporan mingguan berhasil dibuat untuk seluruh karyawan.',
         // ]);
-        return redirect()->route('mingguan.index')->with('success', 'Jadwal berhasil diimpor.');
+        return redirect()->back()->with('success', 'Jadwal berhasil diimpor.');
     }
 }

@@ -92,7 +92,11 @@ class PengajuanCutiController extends Controller
 
         // Ganti shift di tabel jadwal
         if ($cuti->jenis_cuti->status == 0) {
-            $shiftId = 9998;
+            if ($cuti->jenis_cuti->nama_cuti == 'Sakit') {
+                $shiftId = 9995;
+            } else {
+                $shiftId = 9998;
+            }
         } elseif ($cuti->jenis_cuti->status == 0.5) {
             $shiftId = 9996;
         } else {

@@ -69,6 +69,12 @@ class ShiftSeeder extends Seeder
             'shift_masuk' => '00:00:01',
             'shift_keluar' => '00:00:01',
         ]);
+        Shift::create([
+            'id' => 9995,
+            'nama_shift' => 'Sakit',
+            'shift_masuk' => '23:59:58',
+            'shift_keluar' => '23:59:59',
+        ]);
 
         // User::create([
         //     'toko_id' => 1,

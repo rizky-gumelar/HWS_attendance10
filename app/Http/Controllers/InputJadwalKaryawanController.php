@@ -178,7 +178,7 @@ class InputJadwalKaryawanController extends Controller
             $user = User::where('nama_karyawan', $userName)->first();
             $shift = Shift::where('nama_shift', $shiftName)->first();
 
-            if (empty(trim($row['A'])) && empty(trim($row['B'])) && empty(trim($row['C'])) && empty(trim($row['D'])) && empty(trim($row['E']))) {
+            if (empty(trim($row['A'])) && empty(trim($row['B'])) && empty(trim($row['C']))) {
                 continue;
             }
 
@@ -662,10 +662,10 @@ class InputJadwalKaryawanController extends Controller
             $sheet->getStyle($headerRange)->getBorders()->getBottom()->setBorderStyle(Border::BORDER_THIN);
             $row++;
 
-            $mingguan = 0;
+            $mingguan = $laporanMingguan->uang_mingguan;
             $tottelat = 0;
-            $kedatangan = 0;
-            $totlembur = 0;
+            $kedatangan = $laporanMingguan->uang_kedatangan;
+            $totlembur = $laporanMingguan->uang_lembur_mingguan;
 
             foreach ($data as $item) {
                 $sheet->setCellValue("{$baseCol}{$row}", Carbon::parse($item->tanggal)->format('d M Y'));
@@ -675,18 +675,18 @@ class InputJadwalKaryawanController extends Controller
                 $jamMasuk = ($item->shift->id != 9999 && $item->absensi) ? $item->absensi->jam_masuk : '-';
                 $sheet->setCellValue("{$nextCol2}{$row}", $jamMasuk);
 
-                if (($item->cek_keterlambatan == 0 && $item->shift->id != 9999) || $isLibur) {
-                    $mingguan += 15000;
-                } else {
-                    $tottelat++;
-                }
+                // if (($item->cek_keterlambatan == 0 && $item->shift->id != 9999) || $isLibur) {
+                //     $mingguan += 15000;
+                // } else {
+                //     $tottelat++;
+                // }
 
-                $totlembur += $item->total_lembur;
+                // $totlembur += $item->total_lembur;
                 $row++;
             }
             $sheet->getStyle("{$baseCol}{$row}:{$nextCol2}{$row}")->getBorders()->getTop()->setBorderStyle(Border::BORDER_THIN);
 
-            $kedatangan = ($tottelat > 0) ? 0 : 40000;
+            // $kedatangan = ($tottelat > 0) ? 0 : 40000;
             $total = $mingguan + $kedatangan + $totlembur;
 
             $sheet->setCellValue("{$baseCol}" . ($row + 1), 'Mingguan');
