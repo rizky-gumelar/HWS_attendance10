@@ -33,6 +33,7 @@ class GenerateJadwalAdmin extends Command
         $karyawanList = DB::table('users')
             ->join('shift', 'users.default_shift_id', '=', 'shift.id')
             ->where('users.status', 'aktif')
+            ->where('role', '!=', 'admin')
             // ->where('users.divisi_id', $divisiId)
             ->select('users.id as KaryawanID', 'shift.id as ShiftID', 'shift.nama_shift')
             ->get();

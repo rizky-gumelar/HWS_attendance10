@@ -19,6 +19,7 @@ class GenerateJadwalKaryawan extends Command
         $karyawanList = DB::table('users')
             ->join('shift', 'users.default_shift_id', '=', 'shift.id') // Ambil shift berdasarkan default_shift_id
             ->where('users.status', 'aktif')
+            ->where('role', '!=', 'admin')
             ->select('users.id as KaryawanID', 'shift.id as ShiftID', 'shift.nama_shift')
             ->get();
 

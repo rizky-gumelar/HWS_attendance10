@@ -34,7 +34,7 @@ class ExportController extends Controller
         $query = User::with(['shift']);
 
         if ($user->role === 'spv') {
-            $query->where('divisi_id', $user->divisi_id)->where('role', '!=', 'admin');;
+            $query->where('divisi_id', $user->divisi_id)->where('role', '!=', 'admin');
         }
 
         $karyawans = $query->orderBy('nama_karyawan')->pluck('nama_karyawan');
