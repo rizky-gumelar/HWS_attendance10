@@ -172,8 +172,8 @@ Route::middleware(['auth', 'role:admin|spv'])->group(function () {
     // PENGAJUAN CUTI
     Route::prefix('cuti')->group(function () {
         // Route::get('/', [PengajuanCutiController::class, 'index'])->name('cuti.index');
-        Route::get('/create', [PengajuanCutiController::class, 'create'])->name('cuti.create');
-        Route::post('/store', [PengajuanCutiController::class, 'store'])->name('cuti.store');
+        // Route::get('/create', [PengajuanCutiController::class, 'create'])->name('cuti.create');
+        // Route::post('/store', [PengajuanCutiController::class, 'store'])->name('cuti.store');
         Route::get('/approval', [PengajuanCutiController::class, 'approvalIndex'])->name('cuti.approval.index');
         Route::post('/{id}/approve', [PengajuanCutiController::class, 'approve'])->name('cuti.approve');
         Route::post('/{id}/spv_approve', [PengajuanCutiController::class, 'spvapprove'])->name('cuti.spv_approve');
@@ -208,6 +208,8 @@ Route::middleware(['auth', 'role:admin|spv|karyawan'])->group(function () {
     Route::get('/cuti', [PengajuanCutiController::class, 'index'])->name('cuti.index');
     Route::get('/edit-password', [ManageKaryawanController::class, 'editPassword'])->name('manage-karyawan.edit-password');
     Route::put('/update-password', [ManageKaryawanController::class, 'updatePassword'])->name('manage-karyawan.update-password');
+    Route::get('/cuti/create', [PengajuanCutiController::class, 'create'])->name('cuti.create');
+    Route::post('/cuti/store', [PengajuanCutiController::class, 'store'])->name('cuti.store');
 });
 
 Route::get('/run-migrate-1234', function () {

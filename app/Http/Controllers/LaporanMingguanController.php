@@ -206,12 +206,13 @@ class LaporanMingguanController extends Controller
                 $isShiftLibur = stripos($jadwalKaryawan->shift->nama_shift, 'Libur') !== false;
                 $isShiftCuti  = stripos($jadwalKaryawan->shift->nama_shift, 'Cuti') !== false;
                 $totalCuti    = $jadwalKaryawan->users->total_cuti;
+                $isShiftLiburPG = stripos($jadwalKaryawan->shift->nama_shift, 'Libur Pengganti') !== false;
 
                 if ($jumlahBonusMingguan < 6) {
                     if (
                         ($jadwalKaryawan->cek_keterlambatan == 0) ||
                         ($isShiftCuti && $totalCuti > 0) ||
-                        $isLibur || ($jadwalKaryawan->users->divisi->nama_divisi == 'Sales')
+                        $isLibur || ($jadwalKaryawan->users->divisi->nama_divisi == 'Sales' || $isShiftLiburPG)
                     ) {
                         $mingguan += 15000;
                         $jumlahBonusMingguan++;

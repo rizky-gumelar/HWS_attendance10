@@ -172,7 +172,7 @@ $layout = 'layouts.karyawan_manage';
                                     <td>{{ $input_jadwal->keterlambatan_name }}</td>
                                     <td>Minggu ke-{{ $input_jadwal->minggu_ke }}</td>
                                     <td>
-                                        <a href="{{ route('input-jadwal.edit', $input_jadwal->id) }}" class="btn btn-warning">Edit</a>
+                                        <a href="{{ route('input-jadwal.edit', $input_jadwal->id) }}" class="btn btn-warning" target="_blank">Edit</a>
                                         <form action="{{ route('input-jadwal.destroy', $input_jadwal->id) }}" method="POST" class="d-inline">
                                             @csrf @method('DELETE')
                                             <button class="btn btn-danger" onclick="return confirm('Apakah anda yakin?')">Delete</button>
