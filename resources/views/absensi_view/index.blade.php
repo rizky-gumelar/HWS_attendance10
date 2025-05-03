@@ -5,6 +5,41 @@
 @section('page-title', 'Absensi')
 
 @section('content')
+
+<!-- Modal -->
+<div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="importModalLabel">Upload File CSV</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Ambil data dari mesin absen, pilih dari tanggal yang akan diinputkan
+                </p>
+                <form action="{{ route('absensi.import') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="form-group">
+                        <label for="exampleInputFile">File input</label>
+                        <div class="input-group">
+                            <div class="custom-file">
+                                <input type="file" name="file" accept=".csv,.xlsx,.dat" required>
+                                <button type="submit" class="input-group-text">Impor Absen</button>
+                            </div>
+                            <div class="input-group-append">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Main content -->
 <!-- Content Wrapper. Contains page content -->
 <!-- Content Header (Page header) -->
@@ -103,11 +138,16 @@
                                 </div>
                             </div>
                         </div> -->
-                    <form action="{{ route('absensi.import') }}" method="POST" enctype="multipart/form-data">
+                    <a href="{{ route('absensi.create') }}" class="btn btn-success my-4">Input Manual</a>
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#importModal">
+                        Import Absen
+                    </button>
+                    <!-- <form action="{{ route('absensi.import') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <input type="file" name="file" required>
                         <button type="submit">Import</button>
-                    </form>
+                    </form> -->
                     <table id="example1" class="table table-bordered table-striped">
                         <thead>
                             <tr>
@@ -128,7 +168,7 @@
                                 <td>{{ $absensi->tanggal }}</td>
                                 <td>{{ $absensi->jam_masuk }}</td>
                                 <td>
-                                    <!-- <a href="{{ route('absensi.edit', $absensi->id) }}" class="btn btn-warning">Edit</a> -->
+                                    <a href="{{ route('absensi.edit', $absensi->id) }}" class="btn btn-warning">Edit</a>
                                     <form action="{{ route('absensi.destroy', $absensi->id) }}" method="POST" class="d-inline" id="delete-form-{{ $absensi->id }}">
                                         @csrf @method('DELETE')
                                         <button type="button" class="btn btn-danger" onclick="confirmDelete({{ $absensi->id }}, '{{ $absensi->users->nama_karyawan }}')">Delete</button>

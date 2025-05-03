@@ -34,6 +34,16 @@ class PengajuanCutiController extends Controller
 
     public function store(Request $request)
     {
+        $user_id = auth()->user()->id;
+        // Cek apakah jadwal sudah ada untuk user_id, shift_id, dan tanggal
+        $existingSchedule = PengajuanCuti::where('user_id', $user_id)
+            ->whereDate('tanggal', $request->tanggal)
+            ->first();
+        if ($existingSchedule) {
+            // Jika jadwal sudah ada, kembalikan dengan pesan error
+            return redirect()->back()->with('error', 'Sudah ada pengajuan cuti pada tanggal tersebut. Hubungi admin untuk membatalkan');
+        }
+
         $request->validate([
             'jenis_cuti_id' => 'required|exists:jenis_cuti,id',
             'tanggal' => 'required|date',
@@ -89,11 +99,11 @@ class PengajuanCutiController extends Controller
             $shiftId = 9997;
         }
 
-        $absensi = Absensi::create([
-            'user_id' => $cuti->user_id,
-            'tanggal' => $cuti->tanggal,
-            'jam_masuk' => '00:00:00',
-        ]);
+        // $absensi = Absensi::create([
+        //     'user_id' => $cuti->user_id,
+        //     'tanggal' => $cuti->tanggal,
+        //     'jam_masuk' => '00:00:00',
+        // ]);
 
         JadwalKaryawan::updateOrCreate(
             [
@@ -102,7 +112,7 @@ class PengajuanCutiController extends Controller
                 'minggu_ke' => Carbon::parse($cuti->tanggal)->startOfWeek(Carbon::SATURDAY)->weekOfYear,
             ],
             [
-                'absen_id' => $absensi->id, // Masukkan absen_id di bagian "values",
+                // 'absen_id' => $absensi->id, // Masukkan absen_id di bagian "values",
                 'shift_id' => $shiftId,
                 'cek_keterlambatan' => 0,
             ]

@@ -9,6 +9,7 @@ use App\Models\JadwalKaryawan;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use Illuminate\Support\Facades\Log;
 
 class ManageAbsensiController extends Controller
 {
@@ -181,56 +182,67 @@ class ManageAbsensiController extends Controller
         }
     }
 
-    // public function create()
-    // {
-    //     return view('absensi_view.create');
-    // }
+    public function create()
+    {
+        $users = User::orderBy('nama_karyawan')->get();
+        return view('absensi_view.create', compact('users'));
+    }
 
-    // public function store(Request $request)
-    // {
-    //     $request->validate([
-    //         'nama_shift'  => 'required|string|max:255',
-    //         'absensi_masuk' => 'required',
-    //         'absensi_keluar' => 'required|after:absensi_masuk',
-    //     ]);
+    public function store(Request $request)
+    {
+        // Cek apakah jadwal sudah ada untuk user_id, shift_id, dan tanggal
+        $existingSchedule = Absensi::where('user_id', $request->user_id)
+            ->whereDate('tanggal', $request->tanggal)
+            ->first();
+        if ($existingSchedule) {
+            // Jika jadwal sudah ada, kembalikan dengan pesan error
+            return redirect()->back()->with('error', 'Absen sudah ada untuk user dan tanggal tersebut.');
+        }
 
-    //     Absensi::create([
-    //         'nama_shift' => $request->nama_shift,
-    //         'absensi_masuk' => $request->absensi_masuk,
-    //         'absensi_keluar' => $request->absensi_keluar,
-    //     ]);
+        $request->validate([
+            'user_id'  => 'required|exists:users,id',
+            'tanggal' => 'required|date',
+            'jam_masuk' => 'required',
+        ]);
 
-    //     return redirect()->route('shift.index')->with('success', 'Shift berhasil ditambahkan.');
-    // }
+        Absensi::create([
+            'user_id' => $request->user_id,
+            'tanggal' => $request->tanggal,
+            'jam_masuk' => $request->jam_masuk,
+        ]);
 
-    // public function edit(Shift $shift)
-    // {
-    //     return view('absensi_view.edit', compact('shift'));
-    // }
+        return redirect()->route('absensi.index')->with('success', 'Absensi berhasil ditambahkan.');
+    }
 
-    // public function update(Request $request, Shift $shift)
-    // {
-    //     try {
-    //         $request->validate([
-    //             'nama_shift' => 'required|string|max:255',
-    //             'absensi_masuk' => 'required',
-    //             'absensi_keluar' => 'required|after:absensi_masuk',
-    //         ]);
+    public function edit(Absensi $absensi)
+    {
+        $users = User::all();
+        return view('absensi_view.edit', compact('absensi', 'users'));
+    }
 
-    //         $shift->update([
-    //             'nama_shift' => $request->nama_shift,
-    //             'absensi_masuk' => $request->absensi_masuk,
-    //             'absensi_keluar' => $request->absensi_keluar,
-    //         ]);
+    public function update(Request $request, Absensi $absensi)
+    {
+        try {
+            $request->validate([
+                'user_id'  => 'required|exists:users,id',
+                'tanggal' => 'required|date',
+                'jam_masuk' => 'required',
+            ]);
 
-    //         // Redirect ke halaman shift dan beri pesan sukses
-    //         return redirect()->route('shift.index')->with('success', 'Shift berhasil diperbarui!');
-    //     } catch (\Exception $e) {
-    //         // Log error for debugging
-    //         Log::error('Error updating shift: ' . $e->getMessage());
-    //         return redirect()->route('shift.index')->with('error', 'Failed to update shift.');
-    //     }
-    // }
+            $absensi->update([
+                'user_id' => $request->user_id,
+                'tanggal' => $request->tanggal,
+                'jam_masuk' => $request->jam_masuk,
+            ]);
+
+            // Redirect ke halaman shift dan beri pesan sukses
+            return redirect()->route('absensi.index')->with('success', 'absensi berhasil diperbarui!');
+        } catch (\Exception $e) {
+            // Log error for debugging
+            Log::error('Error updating absensi: ' . $e->getMessage());
+            return redirect()->route('absensi.index')->with('error', 'Failed to update absensi.');
+        }
+    }
 
     public function destroy(Absensi $absensi)
     {
