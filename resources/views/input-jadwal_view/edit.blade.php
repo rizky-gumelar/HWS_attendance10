@@ -30,6 +30,7 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                     <option value="{{ $user->id }}" {{ $user->id == $input_jadwal->user_id ? 'selected' : '' }}>{{ $user->nama_karyawan }}</option>
                     @endforeach
                 </select>
+                <input type="hidden" name="user_id" value="{{ $input_jadwal->user_id }}">
             </div>
             <div class="form-group">
                 <label>Shift</label>
@@ -56,6 +57,7 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                 <label for="tanggal">Tanggal</label>
                 <input type="date" value="{{ $input_jadwal->tanggal }}" class="form-control" id="tanggal" name="tanggal" required>
             </div>
+            <input type="hidden" name="lembur_id" value="No">
             <!-- <div class="form-group">
                 <label for="alamat">Jam Lembur</label>
                 <input type="numeric" class="form-control" id="lembur_jam" name="lembur_jam" value="{{ old('lembur_jam', $input_jadwal->lembur_jam) }}" required>

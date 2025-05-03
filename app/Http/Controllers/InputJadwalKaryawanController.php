@@ -437,7 +437,7 @@ class InputJadwalKaryawanController extends Controller
             // $keterlambatan = $terlambat ? $absenJamMasuk->diffInMinutes($shiftJamMasuk) : 0;
             if ($request->lembur_id == "No") {
                 $input_jadwal->update([
-                    // 'user_id' => $request->user_id,
+                    'user_id' => $request->user_id,
                     'shift_id' => $request->shift_id,
                     // 'absen_id' => $request->absen_id,
                     'lembur_id' => null,
@@ -450,13 +450,13 @@ class InputJadwalKaryawanController extends Controller
                 ]);
             } else {
                 // Ambil data lembur berdasarkan lembur_id
-                $lembur = Lembur::findOrFail($request->lembur_id);
+                $lembur = Lembur::find($request->lembur_id);
 
                 // Menghitung total lembur: biaya_per_jam * lembur_jam
                 $totalLembur = $lembur->biaya * ($request->lembur_jam ?? 0);
 
                 $input_jadwal->update([
-                    // 'user_id' => $request->user_id,
+                    'user_id' => $request->user_id,
                     'shift_id' => $request->shift_id,
                     // 'absen_id' => $request->absen_id,
                     'lembur_id' => $request->lembur_id,
