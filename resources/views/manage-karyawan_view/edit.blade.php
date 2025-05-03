@@ -28,6 +28,7 @@ $isSpv = auth()->user()->role === 'spv';
                 <input type="number" {{ $isSpv ? 'disabled' : '' }} class="form-control  @error('id') is-invalid @enderror" id="id" name="id"
                     value="{{ old('id', $karyawan->id) }}"
                     placeholder="Masukkan id" required>
+                <input type="hidden" name="id" value="{{ $karyawan->id }}">
                 @error('id')
                 <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
@@ -37,6 +38,7 @@ $isSpv = auth()->user()->role === 'spv';
                 <input type="text" {{ $isSpv ? 'disabled' : '' }} class="form-control  @error('nama_karyawan') is-invalid @enderror" id="nama_karyawan" name="nama_karyawan"
                     value="{{ old('nama_karyawan', $karyawan->nama_karyawan) }}"
                     placeholder="Masukkan nama" required>
+                <input type="hidden" name="nama_karyawan" value="{{ $karyawan->nama_karyawan }}">
                 @error('nama_karyawan')
                 <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
@@ -45,6 +47,7 @@ $isSpv = auth()->user()->role === 'spv';
             <div class="form-group">
                 <label for="tanggal_masuk">Tanggal Masuk</label>
                 <input type="date" {{ $isSpv ? 'disabled' : '' }} class="form-control  @error('tanggal_masuk') is-invalid @enderror" id="tanggal_masuk" name="tanggal_masuk" value="{{ old('tanggal_masuk', $karyawan->tanggal_masuk) }}" required>
+                <input type="hidden" name="tanggal_masuk" value="{{ $karyawan->tanggal_masuk }}">
                 @error('tanggal_masuk')
                 <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
@@ -57,6 +60,7 @@ $isSpv = auth()->user()->role === 'spv';
                     @foreach($tokos as $toko)
                     <option value="{{ $toko->id }}" {{ $karyawan->toko_id == $toko->id ? 'selected' : '' }}>{{ $toko->nama_toko }}</option>
                     @endforeach
+                    <input type="hidden" name="toko_id" value="{{ $karyawan->toko_id }}">
                 </select>
             </div>
 
@@ -78,6 +82,7 @@ $isSpv = auth()->user()->role === 'spv';
                     @foreach($divisis as $divisi)
                     <option value="{{ $divisi->id }}" {{$karyawan->divisi_id == $divisi->id ? 'selected' : '' }}>{{ $divisi->nama_divisi }}</option>
                     @endforeach
+                    <input type="hidden" name="divisi_id" value="{{ $karyawan->divisi_id }}">
                 </select>
             </div>
 
@@ -113,6 +118,7 @@ $isSpv = auth()->user()->role === 'spv';
                     <option value="spv" {{ $karyawan->role == 'spv' ? 'selected' : '' }}>Supervisor</option>
                     <option value="karyawan" {{ $karyawan->role == 'karyawan' ? 'selected' : '' }}>Karyawan</option>
                 </select>
+                <input type="hidden" name="role" value="{{ $karyawan->role }}">
             </div>
             @if(auth()->user()->role === 'admin')
             <div class="form-group">
@@ -128,6 +134,7 @@ $isSpv = auth()->user()->role === 'spv';
                 <label for="total_cuti">Total Cuti</label>
                 <input type="text" class="form-control  @error('total_cuti') is-invalid @enderror" id="total_cuti" name="total_cuti" placeholder="Masukkan total cuti"
                     value="{{ old('total_cuti', $karyawan->total_cuti) }}" disabled required>
+                <input type="hidden" name="total_cuti" value="{{ $karyawan->total_cuti }}">
                 @error('total_cuti')
                 <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
@@ -139,6 +146,7 @@ $isSpv = auth()->user()->role === 'spv';
                     <option value="aktif" {{ $karyawan->status == 'aktif' ? 'selected' : '' }}>Aktif</option>
                     <option value="nonaktif" {{ $karyawan->status == 'nonaktif' ? 'selected' : '' }}>Nonaktif</option>
                 </select>
+                <input type="hidden" name="status" value="{{ $karyawan->status }}">
             </div>
         </div>
         <!-- /.card-body -->
