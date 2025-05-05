@@ -10,7 +10,7 @@ class Divisi extends Model
     public $table = 'divisi';
     use HasFactory;
 
-    protected $fillable = ['nama_divisi'];
+    protected $fillable = ['nama_divisi', 'finger', 'mingguan', 'kedatangan'];
 
 
     // Relasi ke tabel User

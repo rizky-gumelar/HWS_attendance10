@@ -14,6 +14,9 @@ return new class extends Migration
         Schema::create('divisi', function (Blueprint $table) {
             $table->id();
             $table->string('nama_divisi');
+            $table->boolean('finger')->default(true);
+            $table->boolean('mingguan')->default(true);
+            $table->boolean('kedatangan')->default(true);
             $table->timestamps();
         });
     }

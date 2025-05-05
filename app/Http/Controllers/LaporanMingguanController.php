@@ -214,7 +214,7 @@ class LaporanMingguanController extends Controller
                     if (
                         ($jadwalKaryawan->cek_keterlambatan == 0) ||
                         ($isShiftCuti && $totalCuti > 0) ||
-                        $isLibur || ($jadwalKaryawan->users->divisi->nama_divisi == 'Sales' || $isShiftLiburPG)
+                        $isLibur || ($jadwalKaryawan->users->divisi->finger == false || $isShiftLiburPG)
                     ) {
                         $mingguan += 15000;
                         $jumlahBonusMingguan++;
@@ -229,7 +229,7 @@ class LaporanMingguanController extends Controller
 
                 // Cek keterlambatan dan absensi
                 if ($jadwalKaryawan->cek_keterlambatan == 2) {
-                    if ($isShiftCuti || $isLibur || $isShiftSakit ||  $isShiftLibur || ($jadwalKaryawan->users->divisi->nama_divisi == 'Sales')) {
+                    if ($isShiftCuti || $isLibur || $isShiftSakit ||  $isShiftLibur || ($jadwalKaryawan->users->divisi->finger == false)) {
                         $status = 'selesai';
                     } else {
                         // $status = 'kurang';
@@ -250,7 +250,7 @@ class LaporanMingguanController extends Controller
             if ($status == 'kurang' || $tottelat > 0) {
                 $kedatangan = 0;
             } else {
-                if ($jadwalKaryawan->users->divisi->nama_divisi != 'Sales') {
+                if ($jadwalKaryawan->users->divisi->kedatangan == true) {
                     // if ($jadwalKaryawan->users->total_cuti > 0) 
                     $kedatangan = 40000;
                 }
