@@ -17,6 +17,7 @@ use App\Http\Controllers\ManageLemburController;
 use App\Http\Controllers\InputJadwalKaryawanController;
 use App\Http\Controllers\LaporanMingguanController;
 use App\Http\Controllers\PengajuanCutiController;
+use App\Http\Controllers\KeuanganController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 
@@ -122,6 +123,12 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         // Route::get('/{lembur}/edit', [LaporanMingguanController::class, 'edit'])->name('mingguan.edit');
         // Route::put('/{lembur}', [LaporanMingguanController::class, 'update'])->name('mingguan.update');
         // Route::delete('/{lembur}', [LaporanMingguanController::class, 'destroy'])->name('mingguan.destroy');
+    });
+    //KEUANGAN
+    Route::prefix('keuangan')->group(function () {
+        Route::get('/', [KeuanganController::class, 'index'])->name('keuangan.index');
+        Route::get('/{keuangan}/edit', [KeuanganController::class, 'edit'])->name('keuangan.edit');
+        Route::put('/{keuangan}', [KeuanganController::class, 'update'])->name('keuangan.update');
     });
 
     Route::post('/generate-jadwal-admin', [InputJadwalKaryawanController::class, 'generateBulananAdmin'])->name('generate.jadwal.admin');

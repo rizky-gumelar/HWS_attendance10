@@ -177,6 +177,14 @@ $nama_user = auth()->user()->nama_karyawan;
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="{{ route('keuangan.index') }}" class="nav-link">
+                        <i class="nav-icon fas fa-calendar-times"></i>
+                        <p>
+                            Keuangan Mingguan
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="{{ route('manage-karyawan.edit-password') }}" class="nav-link">
                         <i class="nav-icon fas fa-calendar-times"></i>
                         <p>

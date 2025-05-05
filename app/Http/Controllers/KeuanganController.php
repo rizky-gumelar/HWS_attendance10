@@ -11,23 +11,23 @@ class KeuanganController extends Controller
     public function index()
     {
         $keuangan = Keuangan::first();
-        return view('keuangan_view.index', compact('Keuangan'));
+        return view('keuangan_view.index', compact('keuangan'));
     }
 
-    public function edit(Keuangan $Keuangan)
+    public function edit(Keuangan $keuangan)
     {
-        return view('keuangan_view.edit', compact('Keuangan'));
+        return view('keuangan_view.edit', compact('keuangan'));
     }
 
-    public function update(Request $request, Keuangan $Keuangan)
+    public function update(Request $request, Keuangan $keuangan)
     {
         try {
             $request->validate([
-                'uang_mingguan' => 'required|string|max:255',
-                'uang_kedatangan' => 'required',
+                'uang_mingguan' => 'required|numeric',
+                'uang_kedatangan' => 'required|numeric',
             ]);
 
-            $Keuangan->update([
+            $keuangan->update([
                 'uang_mingguan' => $request->uang_mingguan,
                 'uang_kedatangan' => $request->uang_kedatangan,
             ]);
