@@ -23,11 +23,14 @@ class ManageDivisiController extends Controller
     {
         $request->validate([
             'nama_divisi'  => 'required|string|max:255',
+            'mingguan'  => 'required|boolean',
+            'kedatangan'  => 'required|boolean',
         ]);
 
         Divisi::create([
             'nama_divisi' => $request->nama_divisi,
-            'alamat' => $request->alamat,
+            'mingguan' => $request->mingguan,
+            'kedatangan' => $request->kedatangan,
         ]);
 
         return redirect()->route('divisi.index')->with('success', 'Divisi berhasil ditambahkan.');
@@ -43,10 +46,14 @@ class ManageDivisiController extends Controller
         try {
             $request->validate([
                 'nama_divisi' => 'required|string|max:255',
+                'mingguan'  => 'required|boolean',
+                'kedatangan'  => 'required|boolean',
             ]);
 
             $divisi->update([
                 'nama_divisi' => $request->nama_divisi,
+                'mingguan' => $request->mingguan,
+                'kedatangan' => $request->kedatangan,
             ]);
 
             // Redirect ke halaman Divisi dan beri pesan sukses

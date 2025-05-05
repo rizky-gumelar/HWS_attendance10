@@ -24,6 +24,16 @@
                     value="{{ old('nama_divisi', $divisi->nama_divisi) }}"
                     placeholder="Masukkan nama" required>
             </div>
+            <div class="form-group">
+                <label for="mingguan">Mingguan</label>
+                <input type="text" class="form-control" id="mingguan" name="mingguan"
+                    value="{{ old('mingguan', $divisi->mingguan) }}" placeholder="Apakah divisi ini mendapatkan uang mingguan?" required>
+            </div>
+            <div class="form-group">
+                <label for="kedatangan">Kedatangan</label>
+                <input type="text" class="form-control" id="kedatangan" name="kedatangan"
+                    value="{{ old('kedatangan', $divisi->kedatangan) }}" placeholder="Apakah divisi ini wajib presensi dan mendapatkan uang mingguan?" required>
+            </div>
         </div>
         <!-- /.card-body -->
 

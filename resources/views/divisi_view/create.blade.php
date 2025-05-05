@@ -20,6 +20,14 @@
                 <label for="nama_divisi">Nama Divisi</label>
                 <input type="text" class="form-control" id="nama_divisi" name="nama_divisi" placeholder="Masukkan nama" required>
             </div>
+            <div class="form-group">
+                <label for="mingguan">Mingguan</label>
+                <input type="text" class="form-control" id="mingguan" name="mingguan" placeholder="Apakah divisi ini mendapatkan uang mingguan?" required>
+            </div>
+            <div class="form-group">
+                <label for="kedatangan">Kedatangan</label>
+                <input type="text" class="form-control" id="kedatangan" name="kedatangan" placeholder="Apakah divisi ini wajib presensi dan mendapatkan uang mingguan?" required>
+            </div>
         </div>
         <!-- /.card-body -->
 

@@ -39,6 +39,8 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Nama Divisi</th>
+                                    <th>Mingguan</th>
+                                    <th>Kedatangan</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
@@ -47,6 +49,8 @@
                                 <tr>
                                     <td>{{ $divisi->id }}</td>
                                     <td>{{ $divisi->nama_divisi }}</td>
+                                    <td>{{ $divisi->mingguan_name }}</td>
+                                    <td>{{ $divisi->kedatangan_name }}</td>
                                     <td>
                                         <a href="{{ route('divisi.edit', $divisi->id) }}" class="btn btn-warning">Edit</a>
                                         <form action="{{ route('divisi.destroy', $divisi->id) }}" method="POST" class="d-inline">
