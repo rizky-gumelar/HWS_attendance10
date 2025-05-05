@@ -18,6 +18,7 @@ use App\Http\Controllers\InputJadwalKaryawanController;
 use App\Http\Controllers\LaporanMingguanController;
 use App\Http\Controllers\PengajuanCutiController;
 use App\Http\Controllers\KeuanganController;
+use App\Http\Controllers\RekapTahunanController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 
@@ -132,6 +133,9 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     });
 
     Route::post('/generate-jadwal-admin', [InputJadwalKaryawanController::class, 'generateBulananAdmin'])->name('generate.jadwal.admin');
+
+    Route::get('/rekap', [RekapTahunanController::class, 'index'])->name('rekap_tahunan.index');
+    Route::get('/rekap-tahunan/generate/{tahun}', [RekapTahunanController::class, 'generateRekapTahunan'])->name('rekap_tahunan.generate');
 });
 
 Route::middleware(['auth', 'role:spv'])->group(function () {
