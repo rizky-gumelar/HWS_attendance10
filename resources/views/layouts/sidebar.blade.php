@@ -75,7 +75,7 @@ $nama_user = auth()->user()->nama_karyawan;
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-calendar-check"></i>
                         <p>
-                            Kehadiran
+                            Kedatangan
                         </p>
                     </a>
                     <ul class="nav nav-treeview">

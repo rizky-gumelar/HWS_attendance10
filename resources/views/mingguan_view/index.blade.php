@@ -124,7 +124,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="modalDetailLabel{{ $mingguan->users->id }}">Detail Kehadiran - {{ $mingguan->users->nama_karyawan }}</h1>
+                <h1 class="modal-title fs-5" id="modalDetailLabel{{ $mingguan->users->id }}">Detail Kedatangan - {{ $mingguan->users->nama_karyawan }}</h1>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
