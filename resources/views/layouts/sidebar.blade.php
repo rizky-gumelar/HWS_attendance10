@@ -177,20 +177,34 @@ $nama_user = auth()->user()->nama_karyawan;
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('keuangan.index') }}" class="nav-link">
-                        <i class="nav-icon fas fa-calendar-times"></i>
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-cog"></i>
                         <p>
-                            Keuangan Mingguan
+                            Pengaturan
                         </p>
                     </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('manage-karyawan.edit-password') }}" class="nav-link">
-                        <i class="nav-icon fas fa-calendar-times"></i>
-                        <p>
-                            Ubah Password
-                        </p>
-                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('keuangan.index') }}" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Ubah Biaya Mingguan</p>
+                            </a>
+                        </li>
+                        <!-- <li class="nav-item">
+                            <a href="{{ route('absensi.index') }}" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Upload Absen</p>
+                            </a>
+                        </li> -->
+                        <li class="nav-item">
+                            <a href="{{ route('manage-karyawan.edit-password') }}" class="nav-link">
+                                <i class="nav-icon fas fa-calendar-times"></i>
+                                <p>
+                                    Ubah Password
+                                </p>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
             </ul>
         </nav>

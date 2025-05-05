@@ -9,7 +9,7 @@
 <!-- general form elements -->
 <div class="card card-primary m-4">
     <div class="card-header">
-        <h3 class="card-title">Edit Divisi</h3>
+        <h3 class="card-title">Edit Divisi {{$divisi->nama_divisi}} </h3>
     </div>
     <!-- /.card-header -->
     <!-- form start -->
@@ -26,13 +26,18 @@
             </div>
             <div class="form-group">
                 <label for="mingguan">Mingguan</label>
-                <input type="text" class="form-control" id="mingguan" name="mingguan"
-                    value="{{ old('mingguan', $divisi->mingguan) }}" placeholder="Apakah divisi ini mendapatkan uang mingguan?" required>
+                <select class="form-control" name="mingguan" required>
+                    <option value="1" {{ $divisi->mingguan == '1' ? 'selected' : '' }}>Ya</option>
+                    <option value="0" {{ $divisi->mingguan == '0' ? 'selected' : '' }}>Tidak</option>
+                </select>
+                <!-- <input type="text" class="form-control" id="mingguan" name="mingguan" value="{{ old('mingguan', $divisi->mingguan) }}" placeholder="Apakah divisi ini mendapatkan uang mingguan?" required> -->
             </div>
             <div class="form-group">
                 <label for="kedatangan">Kedatangan</label>
-                <input type="text" class="form-control" id="kedatangan" name="kedatangan"
-                    value="{{ old('kedatangan', $divisi->kedatangan) }}" placeholder="Apakah divisi ini wajib presensi dan mendapatkan uang mingguan?" required>
+                <select class="form-control" name="kedatangan" required>
+                    <option value="1" {{ $divisi->kedatangan == '1' ? 'selected' : '' }}>Ya</option>
+                    <option value="0" {{ $divisi->kedatangan == '0' ? 'selected' : '' }}>Tidak</option>
+                </select>
             </div>
         </div>
         <!-- /.card-body -->

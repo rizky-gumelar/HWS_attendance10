@@ -22,11 +22,19 @@
             </div>
             <div class="form-group">
                 <label for="mingguan">Mingguan</label>
-                <input type="text" class="form-control" id="mingguan" name="mingguan" placeholder="Apakah divisi ini mendapatkan uang mingguan?" required>
+                <select class="form-control" name="mingguan" required>
+                    <option value="1">Ya</option>
+                    <option value="0">Tidak</option>
+                </select>
+                <!-- <input type="text" class="form-control" id="mingguan" name="mingguan" placeholder="Apakah divisi ini mendapatkan uang mingguan?" required> -->
             </div>
             <div class="form-group">
                 <label for="kedatangan">Kedatangan</label>
-                <input type="text" class="form-control" id="kedatangan" name="kedatangan" placeholder="Apakah divisi ini wajib presensi dan mendapatkan uang mingguan?" required>
+                <select class="form-control" name="kedatangan" required>
+                    <option value="1">Ya</option>
+                    <option value="0">Tidak</option>
+                </select>
+                <!-- <input type="text" class="form-control" id="kedatangan" name="kedatangan" placeholder="Apakah divisi ini wajib presensi dan mendapatkan uang mingguan?" required> -->
             </div>
         </div>
         <!-- /.card-body -->
