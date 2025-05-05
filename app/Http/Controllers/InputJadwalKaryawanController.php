@@ -484,102 +484,6 @@ class InputJadwalKaryawanController extends Controller
         return redirect()->back()->with('success', 'input-jadwal deleted successfully.');
     }
 
-    public function export(Request $request)
-    {
-        $user_id = $request->query('user_id');
-        $minggu_ke = $request->query('minggu_ke');
-        // Fetch the data from the database for a specific employee
-        $employee = JadwalKaryawan::with(['users', 'shift', 'lembur', 'absensi'])
-            ->where('user_id', $user_id) // Replace with actual employee ID or loop through employees
-            ->where('minggu_ke', $minggu_ke)
-            // ->whereBetween('tanggal', ['2025-03-26', '2025-04-04'])
-            ->get();
-
-        // Create a new Spreadsheet object
-        $spreadsheet = new Spreadsheet();
-        $sheet = $spreadsheet->getActiveSheet();
-
-        // Setting the period
-        $sheet->setCellValue('B1', 'Periode');
-        $sheet->setCellValue('C1', 'Minggu ke-' . $minggu_ke);
-
-        // Employee name
-        $sheet->setCellValue('B3', 'Nama');
-        $sheet->setCellValue('C3', $employee->first()->users->nama_karyawan);
-        // Shift (BJ or other)
-        $sheet->setCellValue('C4', 'BJ'); // Replace with shift info (e.g., from the shift relationship)
-
-        // Daily Attendance (Date and Time)
-        $sheet->setCellValue('B6', 'Tanggal');
-        $sheet->setCellValue('C6', 'Shift');
-        $sheet->setCellValue('D6', 'Jam Masuk');
-        // $sheet->setCellValue('E6', 'Keterangan');
-
-        $row = 7;
-        $mingguan = 0;
-        $tottelat = 0;
-        $kedatangan = 0;
-        $totlembur = 0;
-        $total = 0;
-        foreach ($employee as $item) {
-            $sheet->setCellValue('B' . $row, \Carbon\Carbon::parse($item->tanggal)->format('d-m-y'));
-            $sheet->setCellValue('C' . $row, $item->shift->nama_shift); // Change as per the condition
-            if ($item->shift->id == 9999) {
-                $sheet->setCellValue('D' . $row, ''); // Change as per the condition
-                // $sheet->setCellValue('E' . $row, ''); // Change as per the condition
-            } else {
-                $sheet->setCellValue('D' . $row, $item->absensi->jam_masuk); // Change as per the condition
-                // $sheet->setCellValue('E' . $row, $item->keterlambatan_name); // Change as per the condition
-            }
-            if ($item->cek_keterlambatan == 0) {
-                if ($item->shift->id != 9999) {
-                    $mingguan = $mingguan + 15000;
-                }
-            } else {
-                $tottelat++;
-            }
-            $totlembur = $totlembur + $item->total_lembur;
-            $row++;
-        }
-
-        if ($tottelat > 0) {
-            $kedatangan = 0;
-        } else {
-            $kedatangan = 40000;
-        }
-
-        // Weekly Summary
-        $sheet->setCellValue('B15', 'Mingguan');
-        $sheet->setCellValue('C15', $mingguan); // Replace with actual weekly total
-
-        $sheet->setCellValue('B16', 'Kedatangan');
-        $sheet->setCellValue('C16', $kedatangan); // Replace with actual attendance total
-
-        $sheet->setCellValue('B17', 'Lembur');
-        $sheet->setCellValue('C17', $totlembur); // Replace with actual overtime hours
-
-        $sheet->setCellValue('B18', 'Total');
-        $sheet->setCellValue('C18', $mingguan + $kedatangan + $totlembur); // Replace with the actual total
-
-        $sheet->setCellValue('B19', 'Tanda Tangan');
-
-        // Create a Writer instance
-        $writer = new Xlsx($spreadsheet);
-
-        // Set the response headers for downloading the Excel file
-        $filename = $employee->first()->users->nama_karyawan . '_' . now()->format('Y_m_d_H_i_s') . '.xlsx';
-        return response()->stream(
-            function () use ($writer) {
-                $writer->save('php://output');
-            },
-            200,
-            [
-                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                'Content-Disposition' => 'attachment;filename="' . $filename . '"',
-                'Cache-Control' => 'max-age=0',
-            ]
-        );
-    }
 
     public function export_all($minggu_ke)
     {
@@ -761,7 +665,7 @@ class InputJadwalKaryawanController extends Controller
         );
     }
 
-    public function export2(Request $request)
+    public function export(Request $request)
     {
         $user_id = $request->query('user_id');
         $minggu_ke = $request->query('minggu_ke');
@@ -841,10 +745,10 @@ class InputJadwalKaryawanController extends Controller
             $sheet->getStyle($headerRange)->getBorders()->getBottom()->setBorderStyle(Border::BORDER_THIN);
             $row++;
 
-            $mingguan = 0;
+            $mingguan = $laporanMingguan->uang_mingguan;
             $tottelat = 0;
-            $kedatangan = 0;
-            $totlembur = 0;
+            $kedatangan = $laporanMingguan->uang_kedatangan;
+            $totlembur = $laporanMingguan->uang_lembur_mingguan;
 
             foreach ($data as $item) {
                 $sheet->setCellValue("{$baseCol}{$row}", Carbon::parse($item->tanggal)->format('d M Y'));
@@ -854,18 +758,18 @@ class InputJadwalKaryawanController extends Controller
                 $jamMasuk = ($item->shift->id != 9999 && $item->absensi) ? $item->absensi->jam_masuk : '-';
                 $sheet->setCellValue("{$nextCol2}{$row}", $jamMasuk);
 
-                if (($item->cek_keterlambatan == 0 && $item->shift->id != 9999) || $isLibur) {
-                    $mingguan += 15000;
-                } else {
-                    $tottelat++;
-                }
+                // if (($item->cek_keterlambatan == 0 && $item->shift->id != 9999) || $isLibur) {
+                //     $mingguan += 15000;
+                // } else {
+                //     $tottelat++;
+                // }
 
-                $totlembur += $item->total_lembur;
+                // $totlembur += $item->total_lembur;
                 $row++;
             }
             $sheet->getStyle("{$baseCol}{$row}:{$nextCol2}{$row}")->getBorders()->getTop()->setBorderStyle(Border::BORDER_THIN);
 
-            $kedatangan = ($tottelat > 0) ? 0 : 40000;
+            // $kedatangan = ($tottelat > 0) ? 0 : 40000;
             $total = $mingguan + $kedatangan + $totlembur;
 
             $sheet->setCellValue("{$baseCol}" . ($row + 1), 'Mingguan');

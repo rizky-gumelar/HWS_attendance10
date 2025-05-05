@@ -10,6 +10,7 @@ use App\Models\Divisi;
 use App\Models\LaporanMingguan;
 use App\Models\JadwalKaryawan;
 use App\Models\Libur;
+use App\Models\Keuangan;
 use Carbon\Carbon;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -42,89 +43,7 @@ class LaporanMingguanController extends Controller
         return view('mingguan_view.index', compact('mingguans', 'mingguKe', 'startDate', 'endDate'));
     }
 
-    // Fungsi untuk membuat laporan mingguan untuk seluruh user
-    public function buatLaporanMingguan(Request $request)
-    {
-        // Validasi input untuk minggu_ke
-        $request->validate([
-            'minggu_ke' => 'required|integer'
-        ]);
 
-        // Ambil seluruh jadwal karyawan untuk minggu_ke tertentu
-        $jadwalKaryawan = JadwalKaryawan::where('minggu_ke', $request->minggu_ke)
-            ->orderBy('user_id') // Mengurutkan berdasarkan user_id
-            ->get();
-
-        // Jika tidak ada data jadwal, return error
-        if ($jadwalKaryawan->isEmpty()) {
-            return response()->json(['message' => 'Data jadwal karyawan tidak ditemukan untuk minggu ini.'], 404);
-        }
-
-        // Loop untuk setiap user yang ada dalam minggu_ke tersebut
-        $laporanMingguans = [];
-        $userIds = $jadwalKaryawan->pluck('user_id')->unique(); // Ambil seluruh user_id yang unik
-
-        foreach ($userIds as $userId) {
-            // Ambil data jadwal karyawan untuk masing-masing user
-            $userJadwal = $jadwalKaryawan->where('user_id', $userId);
-
-            // Menyusun laporan mingguan untuk user ini
-            $laporanMingguan = new LaporanMingguan();
-            $laporanMingguan->user_id = $userId;
-            $laporanMingguan->minggu_ke = $request->minggu_ke;
-
-            // D1-D7 diambil berdasarkan hari Sabtu hingga Jumat
-            $laporanMingguan->D1 = $userJadwal->where('tanggal', 'Saturday')->first()->shift_id ?? 'N/A';
-            $laporanMingguan->D2 = $userJadwal->where('tanggal', 'Sunday')->first()->shift_id ?? 'N/A';
-            $laporanMingguan->D3 = $userJadwal->where('tanggal', 'Monday')->first()->shift_id ?? 'N/A';
-            $laporanMingguan->D4 = $userJadwal->where('tanggal', 'Tuesday')->first()->shift_id ?? 'N/A';
-            $laporanMingguan->D5 = $userJadwal->where('tanggal', 'Wednesday')->first()->shift_id ?? 'N/A';
-            $laporanMingguan->D6 = $userJadwal->where('tanggal', 'Thursday')->first()->shift_id ?? 'N/A';
-            $laporanMingguan->D7 = $userJadwal->where('tanggal', 'Friday')->first()->shift_id ?? 'N/A';
-
-            // Menghitung uang mingguan, uang kedatangan, dan uang lembur
-            $laporanMingguan->uang_mingguan = $this->hitungUangMingguan($userId, $request->minggu_ke);
-            $laporanMingguan->uang_kedatangan = $this->hitungUangKedatangan($userId, $request->minggu_ke);
-            $laporanMingguan->uang_lembur_mingguan = $this->hitungUangLemburMingguan($userId, $request->minggu_ke);
-
-            // Simpan laporan mingguan untuk user ini
-            $laporanMingguan->save();
-
-            // Masukkan laporan mingguan ke array agar bisa di-return atau dilihat lebih lanjut
-            $laporanMingguans[] = $laporanMingguan;
-        }
-
-        // Return response dengan data laporan mingguan yang telah digenerate
-        return response()->json([
-            'message' => 'Laporan mingguan berhasil dibuat untuk seluruh user.',
-            'laporan_mingguan' => $laporanMingguans
-        ]);
-    }
-
-    // Fungsi untuk menghitung uang mingguan
-    private function hitungUangMingguan($userId, $mingguKe)
-    {
-        return JadwalKaryawan::where('user_id', $userId)
-            ->where('minggu_ke', $mingguKe)
-            ->sum('total_lembur');
-    }
-
-    // Fungsi untuk menghitung uang kedatangan
-    private function hitungUangKedatangan($userId, $mingguKe)
-    {
-        return JadwalKaryawan::where('user_id', $userId)
-            ->where('minggu_ke', $mingguKe)
-            ->whereNotNull('cek_keterlambatan')
-            ->count() * 5000; // Misalnya, 5000 untuk setiap kedatangan tepat waktu
-    }
-
-    // Fungsi untuk menghitung uang lembur mingguan
-    private function hitungUangLemburMingguan($userId, $mingguKe)
-    {
-        return JadwalKaryawan::where('user_id', $userId)
-            ->where('minggu_ke', $mingguKe)
-            ->sum('total_lembur');
-    }
 
     public function generateLaporanMingguanForAll($mingguKe)
     {
@@ -160,6 +79,7 @@ class LaporanMingguanController extends Controller
             $status = 'selesai';
             $tnull = 0;
             $jumlahBonusMingguan = 0;
+            $db_keuangan = Keuangan::first();
 
             // Proses setiap jadwal karyawan untuk user ini
             foreach ($jadwals as $jadwalKaryawan) {
@@ -216,7 +136,7 @@ class LaporanMingguanController extends Controller
                         ($isShiftCuti && $totalCuti > 0) ||
                         $isLibur || ($jadwalKaryawan->users->divisi->kedatangan == false || $isShiftLiburPG)
                     ) {
-                        $mingguan += 15000;
+                        $mingguan += $db_keuangan->uang_mingguan;
                         $jumlahBonusMingguan++;
                     }
                     // elseif ($jadwalKaryawan->cek_keterlambatan == 1) {
@@ -224,7 +144,7 @@ class LaporanMingguanController extends Controller
                     // }
                 }
                 if (($jumlahBonusMingguan >= 6) && ($jadwalKaryawan->cek_keterlambatan == 1)) {
-                    $mingguan -= 15000;
+                    $mingguan -= $db_keuangan->uang_mingguan;
                 }
 
                 // Cek keterlambatan dan absensi
@@ -252,7 +172,7 @@ class LaporanMingguanController extends Controller
             } else {
                 if ($jadwalKaryawan->users->divisi->kedatangan == true) {
                     // if ($jadwalKaryawan->users->total_cuti > 0) 
-                    $kedatangan = 40000;
+                    $kedatangan = $db_keuangan->uang_kedatangan;
                 }
                 // $status = 'selesai';
             }
