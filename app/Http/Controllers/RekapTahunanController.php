@@ -23,7 +23,7 @@ class RekapTahunanController extends Controller
 
     public function generateRekapTahunan($tahun)
     {
-        $users = User::all();
+        $users = User::where('role', '!=', 'admin')->get();
 
         foreach ($users as $user) {
             $userId = $user->id;

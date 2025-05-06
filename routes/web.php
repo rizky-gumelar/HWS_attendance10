@@ -136,6 +136,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
     Route::get('/rekap', [RekapTahunanController::class, 'index'])->name('rekap_tahunan.index');
     Route::get('/rekap-tahunan/generate/{tahun}', [RekapTahunanController::class, 'generateRekapTahunan'])->name('rekap_tahunan.generate');
+
+    Route::get('/pengaturan', [AdminController::class, 'pengaturan'])->name('pengaturan.index');
 });
 
 Route::middleware(['auth', 'role:spv'])->group(function () {

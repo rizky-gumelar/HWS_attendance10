@@ -35,11 +35,23 @@ class GenerateJadwalAdmin extends Command
             ->where('users.status', 'aktif')
             ->where('role', '!=', 'admin')
             // ->where('users.divisi_id', $divisiId)
-            ->select('users.id as KaryawanID', 'shift.id as ShiftID', 'shift.nama_shift')
+            ->select(
+                'users.id as KaryawanID',
+                'shift.id as ShiftID',
+                'shift.nama_shift',
+                'users.tanggal_masuk'
+            )
             ->get();
 
         foreach ($karyawanList as $karyawan) {
+            $tanggalMasuk = Carbon::parse($karyawan->tanggal_masuk);
+
             for ($tanggal = $startDate->copy(); $tanggal <= $endDate; $tanggal->addDay()) {
+                // Skip jika tanggal < tanggal_masuk
+                if ($tanggal->lt($tanggalMasuk)) {
+                    continue;
+                }
+
                 $shift_id = ($tanggal->isSunday()) ? 9999 : $karyawan->ShiftID;
 
                 $existing = JadwalKaryawan::where('user_id', $karyawan->KaryawanID)

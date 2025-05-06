@@ -33,11 +33,11 @@ class KeuanganController extends Controller
             ]);
 
             // Redirect ke halaman keuangan dan beri pesan sukses
-            return redirect()->route('keuangan.index')->with('success', 'keuangan berhasil diperbarui!');
+            return redirect()->route('pengaturan.index')->with('success', 'keuangan berhasil diperbarui!');
         } catch (\Exception $e) {
             // Log error for debugging
             Log::error('Error updating keuangan: ' . $e->getMessage());
-            return redirect()->route('keuangan.index')->with('error', 'Failed to update keuangan.');
+            return redirect()->route('pengaturan.index')->with('error', 'Failed to update keuangan.');
         }
     }
 }

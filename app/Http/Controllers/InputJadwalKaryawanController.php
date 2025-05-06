@@ -39,20 +39,26 @@ class InputJadwalKaryawanController extends Controller
                 $q->where('divisi_id', $user->divisi_id)->where('role', '!=', 'admin');
             });
         }
+
         // Ambil nilai rentang tanggal dari request
         $startDate = $request->query('start_date');
         $endDate = $request->query('end_date');
 
-        // Jika ada rentang tanggal, filter berdasarkan tanggal
-        if ($startDate && $endDate) {
-            $query->whereBetween('tanggal', [$startDate, $endDate]);
+        // Jika tidak ada tanggal, gunakan tanggal bulan ini sebagai default
+        if (!$endDate) {
+            $endDate = Carbon::now()->endOfMonth()->toDateString();
+        } elseif (!$startDate || !$endDate) {
+            $startDate = Carbon::now()->startOfMonth()->toDateString();
+            $endDate = Carbon::now()->endOfMonth()->toDateString();
         }
+
+        // Filter berdasarkan tanggal
+        $query->whereBetween('tanggal', [$startDate, $endDate]);
+
         // Ambil data yang sudah difilter
         $input_jadwals = $query->get();
 
         return view('input-jadwal_view.index', compact('input_jadwals', 'startDate', 'endDate'));
-        // $input_jadwals = JadwalKaryawan::all();
-        // return view('input-jadwal_view.index', compact('input_jadwals'));
     }
 
     public function read(Request $request)
