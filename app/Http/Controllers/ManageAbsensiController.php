@@ -6,6 +6,8 @@ use App\Models\Absensi;
 use App\Models\Shift;
 use App\Models\User;
 use App\Models\JadwalKaryawan;
+use App\Models\Setting;
+use Illuminate\Support\Collection;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -37,7 +39,6 @@ class ManageAbsensiController extends Controller
     {
         $errors = [];
 
-        // Validasi file
         $request->validate([
             'file' => 'required|file|mimes:csv,txt,xlsx,xls,dat|max:10240',
         ]);
@@ -49,7 +50,6 @@ class ManageAbsensiController extends Controller
         $rows = [];
 
         if (in_array($extension, ['dat', 'txt'])) {
-            // Baca manual jika file teks tab-delimited
             $handle = fopen($filePath, 'r');
             if ($handle) {
                 while (($line = fgets($handle)) !== false) {
@@ -60,12 +60,11 @@ class ManageAbsensiController extends Controller
                 return back()->with('error', 'Gagal membuka file.');
             }
         } else {
-            // Gunakan PHPSpreadsheet jika format Excel/CSV
             try {
                 $spreadsheet = IOFactory::load($filePath);
                 $sheet = $spreadsheet->getActiveSheet();
                 $rows = $sheet->toArray(null, true, true, true);
-                $rows = array_map("array_values", $rows); // buang key huruf (A, B, C)
+                $rows = array_map("array_values", $rows);
             } catch (\Exception $e) {
                 return back()->with('error', 'File tidak dapat dibaca. Pastikan formatnya benar.');
             }
@@ -76,13 +75,13 @@ class ManageAbsensiController extends Controller
         $mingguKe = Carbon::now()->weekOfYear;
         JadwalKaryawan::where('minggu_ke', $mingguKe)->update(['absen_id' => null]);
 
+        $importedAbsensi = [];
+
         foreach ($rows as $row) {
             $userId = trim(str_replace("\xEF\xBB\xBF", '', $row[0] ?? ''));
             $tanggalJamMasuk = $row[1] ?? '';
 
-            if (!$userId || !$tanggalJamMasuk) {
-                continue;
-            }
+            if (!$userId || !$tanggalJamMasuk) continue;
 
             try {
                 $tanggal = Carbon::parse(explode(' ', $tanggalJamMasuk)[0])->format('Y-m-d');
@@ -92,8 +91,8 @@ class ManageAbsensiController extends Controller
                 continue;
             }
 
-            $userExists = User::where('id', $userId)->exists();
-            if (!$userExists) {
+            $user = User::find($userId);
+            if (!$user) {
                 $errors[] = "User ID tidak ditemukan: $userId";
                 continue;
             }
@@ -103,13 +102,17 @@ class ManageAbsensiController extends Controller
                 continue;
             }
 
-            Absensi::updateOrCreate(
+            $absensi = Absensi::updateOrCreate(
                 ['user_id' => $userId, 'tanggal' => $tanggal],
                 ['jam_masuk' => $jamMasuk]
             );
+
+            $absensi->setRelation('users', $user); // agar tidak query ulang nanti
+            $importedAbsensi[] = $absensi;
         }
 
-        $this->updateJadwalKaryawanWithAbsensi();
+        // Kirim hanya absensi yang baru diimpor
+        $this->updateJadwalKaryawanWithAbsensi(collect($importedAbsensi));
 
         if (!empty($errors)) {
             return redirect()->back()
@@ -120,58 +123,39 @@ class ManageAbsensiController extends Controller
         return redirect()->back()->with('success', 'Data berhasil diimpor!');
     }
 
-    private function updateJadwalKaryawanWithAbsensi()
-    {
-        // Ambil semua data absensi yang baru diimpor
-        $absensi = Absensi::all();
 
-        // Loop untuk setiap absensi
+    private function updateJadwalKaryawanWithAbsensi(Collection $absensi)
+    {
+        $toleransi = Setting::where('key', 'toleransi_masuk')->value('value');
+
         foreach ($absensi as $item) {
-            /// Ambil shift_id dari jadwal karyawan berdasarkan user_id dan tanggal
             $jadwalKaryawan = JadwalKaryawan::where('user_id', $item->user_id)
                 ->where('tanggal', $item->tanggal)
                 ->first();
 
-            // Cek jika jadwal karyawan ditemukan
+            $shift = null;
+
             if ($jadwalKaryawan && $jadwalKaryawan->shift_id) {
-                // Ambil shift dari jadwal karyawan
-                $shift = Shift::where('id', $jadwalKaryawan->shift_id)->first();
-
-                // Cek jika shift ditemukan dan shift_masuk tidak kosong
-                if ($shift && $shift->shift_masuk) {
-                    // Bandingkan jam_masuk dengan shift_masuk
-                    $shiftMasuk = Carbon::parse($shift->shift_masuk);
-                    $jamMasuk = Carbon::parse($item->jam_masuk);
-
-                    // Cek keterlambatan
-                    $cekKeterlambatan = $jamMasuk->gt($shiftMasuk); // Perbandingan jika jam_masuk > shift_masuk
-                    // $user = $jadwalKaryawan->users;
-                    // if ($cekKeterlambatan) {
-                    //     $user->poin_tidak_hadir = $user->poin_tidak_hadir - 0.5;
-                    // }
-                    // $user->save();
-
-                    // Update jadwal karyawan
-                    JadwalKaryawan::where('user_id', $item->user_id)
-                        ->where('tanggal', $item->tanggal)
-                        ->update([
-                            'absen_id' => $item->id,
-                            'cek_keterlambatan' => $cekKeterlambatan,  // Update keterlambatan
-                        ]);
-                }
+                $shift = Shift::find($jadwalKaryawan->shift_id);
             } else {
-                $shift = Shift::where('id', $item->users->default_shift_id)->first();
-                if ($shift && $shift->shift_masuk) {
+                $shift = Shift::find($item->users->default_shift_id);
+            }
 
-                    $shiftMasuk = Carbon::parse($shift->shift_masuk);
-                    $jamMasuk = Carbon::parse($item->jam_masuk);
+            if ($shift && $shift->shift_masuk) {
+                $shiftMasuk = Carbon::parse($shift->shift_masuk);
+                $jamMasuk = Carbon::parse($item->jam_masuk);
+                $shiftMasukWithTolerance = $shiftMasuk->copy()->addMinutes($toleransi);
+                $cekKeterlambatan = $jamMasuk->gt($shiftMasukWithTolerance);
 
-                    // Cek keterlambatan
-                    $cekKeterlambatan = $jamMasuk->gt($shiftMasuk); // Perbandingan jika jam_masuk > shift_masuk
-                    // Jika jadwal belum ada, buat jadwal baru
+                if ($jadwalKaryawan) {
+                    $jadwalKaryawan->update([
+                        'absen_id' => $item->id,
+                        'cek_keterlambatan' => $cekKeterlambatan,
+                    ]);
+                } else {
                     JadwalKaryawan::create([
                         'user_id' => $item->user_id,
-                        'shift_id' => $item->users->default_shift_id,
+                        'shift_id' => $shift->id,
                         'absen_id' => $item->id,
                         'cek_keterlambatan' => $cekKeterlambatan,
                         'tanggal' => Carbon::parse($item->tanggal),
@@ -181,6 +165,7 @@ class ManageAbsensiController extends Controller
             }
         }
     }
+
 
     public function create()
     {
@@ -205,13 +190,14 @@ class ManageAbsensiController extends Controller
             'jam_masuk' => 'required',
         ]);
 
-        Absensi::create([
+        $absensi = Absensi::create([
             'user_id' => $request->user_id,
             'tanggal' => $request->tanggal,
             'jam_masuk' => $request->jam_masuk,
         ]);
 
-        $this->updateJadwalKaryawanWithAbsensi();
+        $absensi->setRelation('users', $absensi->user); // preload user untuk efisiensi
+        $this->updateJadwalKaryawanWithAbsensi(collect([$absensi]));
 
         return redirect()->route('absensi.index')->with('success', 'Absensi berhasil ditambahkan.');
     }
@@ -236,15 +222,20 @@ class ManageAbsensiController extends Controller
                 'tanggal' => $request->tanggal,
                 'jam_masuk' => $request->jam_masuk,
             ]);
-            $this->updateJadwalKaryawanWithAbsensi();
-            // Redirect ke halaman shift dan beri pesan sukses
-            return redirect()->route('absensi.index')->with('success', 'absensi berhasil diperbarui!');
+
+            // Preload user relasi agar tidak query ulang
+            $absensi->setRelation('users', $absensi->user);
+
+            // Proses hanya absensi yang baru di-update
+            $this->updateJadwalKaryawanWithAbsensi(collect([$absensi]));
+
+            return redirect()->route('absensi.index')->with('success', 'Absensi berhasil diperbarui!');
         } catch (\Exception $e) {
-            // Log error for debugging
             Log::error('Error updating absensi: ' . $e->getMessage());
-            return redirect()->route('absensi.index')->with('error', 'Failed to update absensi.');
+            return redirect()->route('absensi.index')->with('error', 'Gagal memperbarui absensi.');
         }
     }
+
 
     public function destroy(Absensi $absensi)
     {

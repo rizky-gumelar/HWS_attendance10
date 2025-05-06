@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\JadwalKaryawan;
 use App\Models\Absensi;
 use App\Models\Shift;
+use App\Models\Setting;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -16,6 +17,7 @@ class GenerateJadwalBulanan extends Command
 
     public function handle()
     {
+        $toleransi = Setting::where('key', 'toleransi_masuk')->value('value');
         $bulan = $this->argument('bulan');       // Misal: 4 untuk April
         $divisiId = $this->argument('divisi_id'); // Misal: 2
         $overwrite = $this->option('overwrite');
@@ -64,7 +66,8 @@ class GenerateJadwalBulanan extends Command
                             $shiftJamMasuk = \Carbon\Carbon::parse($shift->shift_masuk);
                             $absenJamMasuk = \Carbon\Carbon::parse($absensi->jam_masuk);
 
-                            $terlambat = $absenJamMasuk->greaterThan($shiftJamMasuk) ? 1 : 0;
+                            $shiftMasukWithTolerance = $shiftJamMasuk->copy()->addMinutes($toleransi);
+                            $terlambat = $absenJamMasuk->greaterThan($shiftMasukWithTolerance) ? 1 : 0;
                         }
                         $existing->update([
                             'shift_id' => $shift_id,

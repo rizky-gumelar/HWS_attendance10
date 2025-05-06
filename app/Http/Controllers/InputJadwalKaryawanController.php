@@ -10,6 +10,7 @@ use App\Models\Absensi;
 use App\Models\LaporanMingguan;
 use App\Models\Lembur;
 use App\Models\Libur;
+use App\Models\Setting;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -412,6 +413,7 @@ class InputJadwalKaryawanController extends Controller
 
     public function update(Request $request, JadwalKaryawan $input_jadwal)
     {
+        $toleransi = Setting::where('key', 'toleransi_masuk')->value('value');
         try {
             $request->validate([
                 'user_id' => 'required',
@@ -436,7 +438,8 @@ class InputJadwalKaryawanController extends Controller
                 $shiftJamMasuk = \Carbon\Carbon::parse($shift->shift_masuk);
                 $absenJamMasuk = \Carbon\Carbon::parse($absensi->jam_masuk);
 
-                $terlambat = $absenJamMasuk->greaterThan($shiftJamMasuk);
+                $shiftMasukWithTolerance = $shiftJamMasuk->copy()->addMinutes($toleransi);
+                $terlambat = $absenJamMasuk->greaterThan($shiftMasukWithTolerance) ? 1 : 0;
             }
 
             // Hitung keterlambatan dalam menit

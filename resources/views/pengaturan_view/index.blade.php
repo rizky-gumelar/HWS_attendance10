@@ -59,6 +59,29 @@
                 </div>
                 <!-- /.card -->
 
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Toleransi Keterlambatan</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <form action="{{ route('pengaturan.update') }}" method="POST">
+                            @csrf
+
+                            <div class="form-group">
+                                <label for="toleransi_masuk">Toleransi Masuk (menit)</label>
+                                <input type="number" name="toleransi_masuk" class="form-control"
+                                    value="{{ old('toleransi_masuk', $toleransi) }}">
+                                @error('toleransi_masuk')
+                                <small class=" text-danger">{{ $message }}</small>
+                                @enderror
+                            </div>
+
+                            <button type="submit" class="btn btn-primary mt-2">Simpan</button>
+                        </form>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
 
             </div>
             <!-- /.col -->

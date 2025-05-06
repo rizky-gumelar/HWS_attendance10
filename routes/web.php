@@ -21,6 +21,7 @@ use App\Http\Controllers\KeuanganController;
 use App\Http\Controllers\RekapTahunanController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\SettingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -138,6 +139,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/rekap-tahunan/generate/{tahun}', [RekapTahunanController::class, 'generateRekapTahunan'])->name('rekap_tahunan.generate');
 
     Route::get('/pengaturan', [AdminController::class, 'pengaturan'])->name('pengaturan.index');
+    Route::post('/pengaturan', [AdminController::class, 'update'])->name('pengaturan.update');
 });
 
 Route::middleware(['auth', 'role:spv'])->group(function () {
