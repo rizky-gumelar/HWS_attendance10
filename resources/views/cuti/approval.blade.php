@@ -50,6 +50,11 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
 <!-- general form elements -->
 <div class="card card-primary">
 
+    <!-- <form action="{{ route('cuti.approveAll') }}" method="POST" onsubmit="return confirm('Yakin ingin menyetujui semua cuti yang pending?')">
+        @csrf
+        <button type="submit" class="btn btn-success">Approve Semua Cuti Pending</button>
+    </form> -->
+
     <div class="card-body">
         <table id="example3" class="table table-bordered table-striped">
             <thead>

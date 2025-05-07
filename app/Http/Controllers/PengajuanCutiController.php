@@ -135,6 +135,46 @@ class PengajuanCutiController extends Controller
         return back()->with('success', 'Cuti telah disetujui dan jadwal shift diperbarui.');
     }
 
+    public function approveAll()
+    {
+        $cutis = PengajuanCuti::where('status', 'pending')->get();
+        foreach ($cutis as $cuti) {
+            $cuti->status = 'disetujui admin';
+            $cuti->save();
+
+            // Tentukan shift
+            if ($cuti->jenis_cuti->status == 0) {
+                $shiftId = $cuti->jenis_cuti->nama_cuti == 'Sakit' ? 9995 : 9998;
+            } elseif ($cuti->jenis_cuti->status == 0.5) {
+                $shiftId = 9996;
+            } else {
+                $shiftId = 9997;
+            }
+
+            // Update jadwal
+            JadwalKaryawan::updateOrCreate(
+                [
+                    'user_id' => $cuti->user_id,
+                    'tanggal' => $cuti->tanggal,
+                    'minggu_ke' => Carbon::parse($cuti->tanggal)->startOfWeek(Carbon::SATURDAY)->weekOfYear,
+                ],
+                [
+                    'shift_id' => $shiftId,
+                    'cek_keterlambatan' => 0,
+                ]
+            );
+
+            // Jika ingin update total_cuti user juga:
+            // $user = $cuti->users;
+            // $user->total_cuti -= $cuti->jenis_cuti->status;
+            // $user->poin_tidak_hadir -= ($cuti->jenis_cuti->status == 0.5) ? 0.5 : 1;
+            // $user->save();
+        }
+
+        return back()->with('success', 'Semua cuti pending telah disetujui dan jadwal diperbarui.');
+    }
+
+
     public function spvapprove($id)
     {
         $cuti = PengajuanCuti::findOrFail($id);

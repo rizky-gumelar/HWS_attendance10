@@ -8,8 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class RekapTahunan extends Model
 {
     protected $table = 'rekap_tahunan';
+    protected $primaryKey = ['user_id', 'tahun'];
 
+    // Matikan auto incrementing karena primary key gabungan tidak auto increment
+    public $incrementing = false;
     use HasFactory;
+    public function getKeyName()
+    {
+        return ['user_id', 'tahun']; // Mengembalikan primary key gabungan
+    }
     protected $fillable = [
         'user_id',
         'tahun',
