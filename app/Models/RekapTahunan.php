@@ -7,16 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class RekapTahunan extends Model
 {
-    protected $table = 'rekap_tahunan';
-    protected $primaryKey = ['user_id', 'tahun'];
-
-    // Matikan auto incrementing karena primary key gabungan tidak auto increment
-    public $incrementing = false;
     use HasFactory;
-    public function getKeyName()
-    {
-        return ['user_id', 'tahun']; // Mengembalikan primary key gabungan
-    }
+
+    protected $table = 'rekap_tahunan';
+
+    // Tentukan kolom primary key yang digunakan
+    protected $primaryKey = ['user_id', 'tahun']; // Kombinasi user_id dan tahun sebagai primary key
+
+    // Karena kita tidak menggunakan auto-increment pada primary key, set incrementing ke false
+    public $incrementing = false;
+
     protected $fillable = [
         'user_id',
         'tahun',
@@ -31,8 +31,9 @@ class RekapTahunan extends Model
         'cuti_akhir',
         'poin_akhir',
     ];
+
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id'); // Menggunakan user_id untuk relasi
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

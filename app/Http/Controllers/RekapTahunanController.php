@@ -23,48 +23,74 @@ class RekapTahunanController extends Controller
 
     public function generateRekapTahunan($tahun)
     {
-        $users = User::where('role', '!=', 'admin')->get();
-
+        // Ambil semua pengguna (user)
+        $users = User::all();
+        $rekapSemuaUser = [];
         foreach ($users as $user) {
             $userId = $user->id;
 
-            // Ambil semua pengajuan cuti user ini pada tahun tersebut
-            $cutis = PengajuanCuti::where('user_id', $userId)
+            // 1. Cuti
+            $totalCuti = $this->pengajuan_cuti($userId, $tahun)
                 ->where('status', 'disetujui admin')
                 ->whereYear('tanggal', $tahun)
-                ->with('jenis_cuti')
-                ->get();
+                ->whereHas('jenis_cuti', function ($query) {
+                    $query->where('status', '1');
+                })
+                ->count();
 
-            // 1. Cuti (menjumlahkan semua status 1 dan 0.5, anggap sebagai bobot cuti)
-            $totalBobotCuti = $cutis->sum(function ($cuti) {
-                $status = $cuti->jenis_cuti->status;
-                return in_array($status, [1, 0.5]) ? $status : 0;
-            });
 
-            // 2. CF (status 0, tapi bukan cuti sakit)
-            $totalCF = $cutis->sum(function ($cuti) {
-                return ($cuti->jenis_cuti->status == 0 && $cuti->jenis_cuti->nama_cuti != 'Sakit') ? 1 : 0;
-            });
 
-            // 3. Sakit (status 0 dan nama cuti = 'Sakit')
-            $totalSakit = $cutis->sum(function ($cuti) {
-                return ($cuti->jenis_cuti->status == 0 && $cuti->jenis_cuti->nama_cuti == 'Sakit') ? 1 : 0;
-            });
+            // 2. CF
+            $totalCF = $this->pengajuan_cuti($userId, $tahun)
+                ->where('status', 'disetujui admin')
+                ->whereYear('tanggal', $tahun)
+                ->whereHas('jenis_cuti', function ($query) {
+                    $query->where('status', '0')
+                        ->where('nama_cuti', '!=', 'Sakit');
+                })
+                ->count();
 
-            // 4. Setengah Hari (status 0.5)
-            $totalSetengahHari = $cutis->sum(function ($cuti) {
-                return $cuti->jenis_cuti->status == 0.5 ? 1 : 0;
-            });
 
-            // 5. Saldo Cuti & Poin Ketidakhadiran
-            $saldoCuti = $user->total_cuti;
-            $poinKetidakhadiran = $user->poin_tidak_hadir;
+            // 3. Sakit
+            $totalSakit = $this->pengajuan_cuti($userId, $tahun)
+                ->where('status', 'disetujui admin')
+                ->whereYear('tanggal', $tahun)
+                ->whereHas('jenis_cuti', function ($query) {
+                    $query->where('status', '0')
+                        ->where('nama_cuti', 'Sakit');
+                })
+                ->count();
 
-            // Simpan ke database
+
+            // 4. Setengah Hari
+            $totalSetengahHari = $this->pengajuan_cuti($userId, $tahun)
+                ->where('status', 'disetujui admin')
+                ->whereYear('tanggal', $tahun)
+                ->whereHas('jenis_cuti', function ($query) {
+                    $query->where('status', '0.5');
+                })
+                ->count() / 2;
+
+
+            // 5. Saldo Cuti dan Poin Ketidakhadiran
+            $saldoCuti = $user->total_cuti;  // Ambil saldo cuti dari relasi atau atribut lain
+            $poinKetidakhadiran = $user->poin_tidak_hadir;  // Ambil poin ketidakhadiran
+
+            $rekapSemuaUser[] = [
+                'user_id' => $userId,
+                'cuti' => $totalCuti,
+                'cf' => $totalCF,
+                'sakit' => $totalSakit,
+                'setengah_hari' => $totalSetengahHari,
+                'saldo_cuti' => $saldoCuti,
+                'poin_ketidakhadiran' => $poinKetidakhadiran,
+            ];
+
+            // Simpan data ke tabel 'rekap_tahunan'
             RekapTahunan::updateOrCreate(
                 ['user_id' => $userId, 'tahun' => $tahun],
                 [
-                    'cuti' => $totalBobotCuti,
+                    'cuti' => $totalCuti,
                     'cf' => $totalCF,
                     'sakit' => $totalSakit,
                     'setengah_hari' => $totalSetengahHari,
@@ -73,16 +99,14 @@ class RekapTahunanController extends Controller
                 ]
             );
         }
-
+        // dd($rekapSemuaUser); // Dump semua data
         return redirect()->route('rekap_tahunan.index', ['tahun' => $tahun])
             ->with('success', 'Rekap tahunan berhasil diperbarui.');
     }
 
-
-
     // Helper function untuk mengambil pengajuan cuti yang relevan
-    private function pengajuan_cuti()
+    private function pengajuan_cuti($userId, $tahun)
     {
-        return PengajuanCuti::query();
+        return PengajuanCuti::where('user_id', $userId)->whereYear('tanggal', $tahun);
     }
 }
