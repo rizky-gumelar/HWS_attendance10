@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\User;
 use Carbon\Carbon;
+use App\Models\Libur;
 use App\Models\JadwalKaryawan;
 use Illuminate\Support\Facades\DB;
 
@@ -31,6 +32,12 @@ class GenerateJadwalKaryawan extends Command
 
         foreach ($karyawanList as $karyawan) {
             for ($tanggal = $startOfWeek->copy(); $tanggal <= $endOfWeek; $tanggal->addDay()) {
+
+                // Cek apakah tanggal tersebut adalah hari libur
+                if (Libur::isLibur($tanggal)) {
+                    continue; // Lewati jika libur
+                }
+
                 // Jika hari tersebut adalah Minggu, shift_id = 999
                 $shift_id = ($tanggal->dayOfWeek == Carbon::SUNDAY) ? 9999 : $karyawan->ShiftID;
 

@@ -6,6 +6,7 @@ use App\Models\JadwalKaryawan;
 use App\Models\Absensi;
 use App\Models\Shift;
 use App\Models\Setting;
+use App\Models\Libur;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -49,6 +50,10 @@ class GenerateJadwalAdmin extends Command
             $tanggalMasuk = Carbon::parse($karyawan->tanggal_masuk);
 
             for ($tanggal = $startDate->copy(); $tanggal <= $endDate; $tanggal->addDay()) {
+                // Cek apakah tanggal tersebut adalah hari libur
+                if (Libur::isLibur($tanggal)) {
+                    continue; // Lewati jika libur
+                }
                 // Skip jika tanggal < tanggal_masuk
                 if ($tanggal->lt($tanggalMasuk)) {
                     continue;

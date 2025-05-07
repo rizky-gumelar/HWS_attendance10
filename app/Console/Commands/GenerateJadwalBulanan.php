@@ -7,6 +7,7 @@ use App\Models\Absensi;
 use App\Models\Shift;
 use App\Models\Setting;
 use Carbon\Carbon;
+use App\Models\Libur;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
@@ -42,6 +43,10 @@ class GenerateJadwalBulanan extends Command
 
         foreach ($karyawanList as $karyawan) {
             for ($tanggal = $startDate->copy(); $tanggal <= $endDate; $tanggal->addDay()) {
+                // Cek apakah tanggal tersebut adalah hari libur
+                if (Libur::isLibur($tanggal)) {
+                    continue; // Lewati jika libur
+                }
                 $shift_id = ($tanggal->isSunday()) ? 9999 : $karyawan->ShiftID;
 
                 $existing = JadwalKaryawan::where('user_id', $karyawan->KaryawanID)

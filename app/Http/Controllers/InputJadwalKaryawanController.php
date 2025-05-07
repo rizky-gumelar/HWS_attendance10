@@ -155,6 +155,7 @@ class InputJadwalKaryawanController extends Controller
     public function import(Request $request)
     {
         $errors = [];
+        $toleransi = Setting::where('key', 'toleransi_masuk')->value('value');
         // Validasi file CSV yang di-upload
         $request->validate([
             'csv_file' => 'required|mimes:csv,txt,xlsx|max:10240', // Maksimal 10MB
@@ -227,12 +228,25 @@ class InputJadwalKaryawanController extends Controller
                     ->whereDate('tanggal', $tanggal)
                     ->first();
 
+
                 // 1. JIKA JADWAL SUDAH ADA MAKA UPDATE
                 if ($existingSchedule) {
+                    // Ambil data absen dan shift berdasarkan ID
+                    $absensi = Absensi::find($existingSchedule->absen_id);
+                    if (!$absensi || $absensi->jam_masuk == null) {
+                        $terlambat = 2;
+                    } else {
+                        $shiftJamMasuk = \Carbon\Carbon::parse($shift->shift_masuk);
+                        $absenJamMasuk = \Carbon\Carbon::parse($absensi->jam_masuk);
+
+                        $shiftMasukWithTolerance = $shiftJamMasuk->copy()->addMinutes($toleransi);
+                        $terlambat = $absenJamMasuk->greaterThan($shiftMasukWithTolerance) ? 1 : 0;
+                    }
                     // Jika jadwal sudah ada, update jadwal yang ada
                     $existingSchedule->update([
                         'shift_id' => $shift->id,
                         'tanggal' => Carbon::parse($tanggal),
+                        'cek_keterlambatan' => $terlambat,
                         'minggu_ke' => Carbon::parse($tanggal)->startOfWeek(Carbon::SATURDAY)->weekOfYear,
                     ]);
                 } else {
