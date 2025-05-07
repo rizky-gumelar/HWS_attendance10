@@ -1,8 +1,8 @@
 @extends('layouts.manage')
 
-@section('title', 'Manage Karyawan')
+@section('title', 'Mingguan')
 
-@section('page-title', 'Manage Karyawan')
+@section('page-title', 'Mingguan')
 
 @section('content')
 
@@ -121,7 +121,7 @@
 <!-- Modal Detail (harus ada di dalam foreach) -->
 
 <div class="modal fade" id="modalDetail{{ $mingguan->users->id }}" tabindex="-1" aria-labelledby="modalDetailLabel{{ $mingguan->users->id }}" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="modalDetailLabel{{ $mingguan->users->id }}">Detail Kedatangan - {{ $mingguan->users->nama_karyawan }}</h1>
@@ -134,13 +134,27 @@
                     <thead>
                         <tr>
                             <th></th>
-                            <th>Sabtu</th>
-                            <th>Minggu</th>
-                            <th>Senin</th>
-                            <th>Selasa</th>
-                            <th>Rabu</th>
-                            <th>Kamis</th>
-                            <th>Jumat</th>
+                            <th>Sabtu, <br>
+                                {{\Carbon\Carbon::parse($startDate)->translatedFormat('d M Y')}}
+                            </th>
+                            <th>Minggu, <br>
+                                {{\Carbon\Carbon::parse($startDate->copy()->addDays(1))->translatedFormat('d M Y')}}
+                            </th>
+                            <th>Senin, <br>
+                                {{\Carbon\Carbon::parse($startDate->copy()->addDays(2))->translatedFormat('d M Y')}}
+                            </th>
+                            <th>Selasa, <br>
+                                {{\Carbon\Carbon::parse($startDate->copy()->addDays(3))->translatedFormat('d M Y')}}
+                            </th>
+                            <th>Rabu, <br>
+                                {{\Carbon\Carbon::parse($startDate->copy()->addDays(4))->translatedFormat('d M Y')}}
+                            </th>
+                            <th>Kamis, <br>
+                                {{\Carbon\Carbon::parse($startDate->copy()->addDays(5))->translatedFormat('d M Y')}}
+                            </th>
+                            <th>Jumat, <br>
+                                {{\Carbon\Carbon::parse($startDate->copy()->addDays(6))->translatedFormat('d M Y')}}
+                            </th>
                         </tr>
                     </thead>
                     <tbody>

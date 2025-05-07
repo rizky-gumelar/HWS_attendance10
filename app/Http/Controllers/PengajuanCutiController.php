@@ -37,6 +37,7 @@ class PengajuanCutiController extends Controller
         $user_id = auth()->user()->id;
         // Cek apakah jadwal sudah ada untuk user_id, shift_id, dan tanggal
         $existingSchedule = PengajuanCuti::where('user_id', $user_id)
+            ->where('status',  '!=', 'batal')
             ->whereDate('tanggal', $request->tanggal)
             ->first();
         if ($existingSchedule) {
@@ -195,10 +196,10 @@ class PengajuanCutiController extends Controller
             ->where('tanggal', $cuti->tanggal)
             ->first();
 
-        // Hapus absensi jika ada
-        if ($jadwal && $jadwal->absen_id) {
-            Absensi::where('id', $jadwal->absen_id)->delete();
-        }
+        // // Hapus absensi jika ada
+        // if ($jadwal && $jadwal->absen_id) {
+        //     Absensi::where('id', $jadwal->absen_id)->delete();
+        // }
 
         //Kondisi shift/libur
         if (Carbon::parse($cuti->tanggal)->isSunday()) {
@@ -214,6 +215,7 @@ class PengajuanCutiController extends Controller
                 'shift_id' => $shiftId,
                 'absen_id' => null,
                 'cek_keterlambatan' => 2,
+                'minggu_ke' => Carbon::parse($cuti->tanggal)->startOfWeek(Carbon::SATURDAY)->weekOfYear,
             ]
         );
 
