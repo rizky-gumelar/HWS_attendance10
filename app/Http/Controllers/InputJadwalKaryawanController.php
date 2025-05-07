@@ -46,9 +46,7 @@ class InputJadwalKaryawanController extends Controller
         $endDate = $request->query('end_date');
 
         // Jika tidak ada tanggal, gunakan tanggal bulan ini sebagai default
-        if (!$endDate) {
-            $endDate = Carbon::now()->endOfMonth()->toDateString();
-        } elseif (!$startDate || !$endDate) {
+        if (!$startDate || !$endDate) {
             $startDate = Carbon::now()->startOfMonth()->toDateString();
             $endDate = Carbon::now()->endOfMonth()->toDateString();
         }

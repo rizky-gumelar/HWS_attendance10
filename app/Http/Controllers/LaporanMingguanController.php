@@ -149,7 +149,7 @@ class LaporanMingguanController extends Controller
 
                 // Cek keterlambatan dan absensi
                 if ($jadwalKaryawan->cek_keterlambatan == 2) {
-                    if ($isShiftCuti || ($isLibur && $jadwalKaryawan->users->tanggal_masuk >= $tanggal) || $isShiftSakit ||  $isShiftLibur || ($jadwalKaryawan->users->divisi->kedatangan == false)) {
+                    if ($isShiftCuti || ($isLibur) || $isShiftSakit ||  $isShiftLibur || ($jadwalKaryawan->users->divisi->kedatangan == false)) {
                         $status = 'selesai';
                     } else {
                         // $status = 'kurang';
