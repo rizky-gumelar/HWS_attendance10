@@ -47,7 +47,7 @@ class ExportController extends Controller
         $spreadsheet->addSheet($shiftSheet);
 
         $shifts = Shift::where('id', '<', 100)
-            ->orWhereIn('id', [999, 9999])
+            ->orWhereIn('id', [999, 9999])->orderBy('nama_shift')
             ->pluck('nama_shift');
         foreach ($shifts as $index => $nama) {
             $shiftSheet->setCellValue('A' . ($index + 1), $nama);
@@ -286,7 +286,7 @@ class ExportController extends Controller
         $defaultShiftSheet = new Worksheet($spreadsheet, 'DefaultShiftList');
         $spreadsheet->addSheet($defaultShiftSheet);
 
-        $defaultShifts = Shift::where('id', '<', 100)->pluck('nama_shift');
+        $defaultShifts = Shift::where('id', '<', 100)->orderBy('nama_shift')->pluck('nama_shift');
         foreach ($defaultShifts as $index => $nama) {
             $defaultShiftSheet->setCellValue('A' . ($index + 1), $nama);
         }

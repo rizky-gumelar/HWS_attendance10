@@ -143,9 +143,9 @@ class LaporanMingguanController extends Controller
                     //     $jumlahBonusMingguan++;
                     // }
                 }
-                if (($jumlahBonusMingguan >= 6) && ($jadwalKaryawan->cek_keterlambatan == 1)) {
-                    $mingguan -= $db_keuangan->uang_mingguan;
-                }
+                // if (($jumlahBonusMingguan >= 6) && ($jadwalKaryawan->cek_keterlambatan == 1)) {
+                //     $mingguan -= $db_keuangan->uang_mingguan;
+                // }
 
                 // Cek keterlambatan dan absensi
                 if ($jadwalKaryawan->cek_keterlambatan == 2) {
@@ -159,12 +159,16 @@ class LaporanMingguanController extends Controller
                     $status = 'kurang';
                 } elseif ($jadwalKaryawan->cek_keterlambatan == 1) {
                     $tottelat++;
+                    // $tnull++;
                 }
                 $totlembur = $totlembur + $jadwalKaryawan->total_lembur;
             }
 
             if ($tnull > 0) {
                 $status = 'kurang';
+            }
+            if ($jumlahBonusMingguan >= 6 && ($tottelat > 0 || $tnull > 0)) {
+                $mingguan -= $db_keuangan->uang_mingguan;
             }
 
             if ($status == 'kurang' || $tottelat > 0 || (count($jadwals) < 7)) {
