@@ -228,17 +228,17 @@ Route::middleware(['auth', 'role:admin|spv|karyawan'])->group(function () {
     Route::post('/cuti/store', [PengajuanCutiController::class, 'store'])->name('cuti.store');
 });
 
-Route::get('/run-migrate-1234', function () {
-    Artisan::call('migrate:fresh');
-    return 'Migration dijalankan!';
-});
+// Route::get('/run-migrate-1234', function () {
+//     Artisan::call('migrate:fresh');
+//     return 'Migration dijalankan!';
+// });
 
-Route::get('/run-seed-1234', function () {
-    Artisan::call('db:seed');
-    return 'Seeder dijalankan!';
-});
+// Route::get('/run-seed-1234', function () {
+//     Artisan::call('db:seed');
+//     return 'Seeder dijalankan!';
+// });
 
-Route::get('/link-storage-1234', function () {
-    Artisan::call('storage:link');
-    return 'Storage link berhasil dibuat!';
-});
+// Route::get('/link-storage-1234', function () {
+//     Artisan::call('storage:link');
+//     return 'Storage link berhasil dibuat!';
+// });

@@ -670,6 +670,68 @@ class InputJadwalKaryawanController extends Controller
             }
         }
 
+        // Buat Sheet baru untuk Detail Lembur
+        $sheetLembur = $spreadsheet->createSheet();
+        $sheetLembur->setTitle('Detail Lembur');
+
+        $sheetLembur->setCellValue("A1", 'Detail Lembur Mingguan');
+        $sheetLembur->getStyle('A1')->getFont()
+            ->setBold(true)
+            ->setSize(18);
+        // Header kolom
+        $sheetLembur->setCellValue('A3', 'Tanggal');
+        $sheetLembur->setCellValue('B3', 'Nama');
+        $sheetLembur->setCellValue('C3', 'Tipe Lembur');
+        $sheetLembur->setCellValue('D3', 'Durasi');
+        $sheetLembur->setCellValue('E3', 'Total');
+        $sheetLembur->setCellValue('F3', 'Keterangan');
+        $sheetLembur->getColumnDimension('A')->setWidth(13);
+        $sheetLembur->getColumnDimension('B')->setWidth(20);
+        $sheetLembur->getColumnDimension('C')->setWidth(13);
+        $sheetLembur->getColumnDimension('D')->setWidth(13);
+        $sheetLembur->getColumnDimension('E')->setWidth(13);
+        $sheetLembur->getColumnDimension('F')->setWidth(20);
+
+        // Ambil data lembur
+        $lemburData = JadwalKaryawan::with(['users', 'lembur'])
+            ->where('minggu_ke', $minggu_ke)
+            ->whereNotNull('lembur_id') // hanya yang ada lembur
+            ->orderBy('tanggal', 'desc')
+            ->get();
+
+        $row = 4;
+        $grandTotal = 0;
+
+        foreach ($lemburData as $item) {
+            $sheetLembur->setCellValue("A{$row}", Carbon::parse($item->tanggal)->format('d M Y'));
+            $sheetLembur->setCellValue("B{$row}", $item->users->nama_karyawan ?? '-');
+            $sheetLembur->setCellValue("C{$row}", $item->lembur->tipe_lembur ?? '-');
+            $sheetLembur->setCellValue("D{$row}", $item->lembur_jam ?? 0);
+            $sheetLembur->setCellValue("E{$row}", $item->total_lembur ?? 0);
+            $sheetLembur->setCellValue("F{$row}", $item->keterangan ?? '-');
+
+            $grandTotal += $item->total_lembur ?? 0;
+            $row++;
+        }
+
+        // Tambahkan baris total
+        $sheetLembur->setCellValue("D{$row}", 'Grand Total');
+        $sheetLembur->setCellValue("E{$row}", $grandTotal);
+
+        // Format angka pada kolom E
+        $sheetLembur->getStyle("E2:E{$row}")
+            ->getNumberFormat()
+            ->setFormatCode('"Rp" #,##0');
+
+        // Tambahkan border untuk semua data
+        $sheetLembur->getStyle("A3:F{$row}")->applyFromArray([
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                ],
+            ],
+        ]);
+
         $writer = new Xlsx($spreadsheet);
         $filename = 'Rekap_Mingguan_' . now()->format('Y_m_d_H_i_s') . '.xlsx';
 

@@ -101,4 +101,20 @@ class ManageLemburController extends Controller
             'jadwal' => $jadwalList
         ]);
     }
+
+    //CORETAN QUERY
+    // public function getDetail2(Request $request)
+    // {
+    //     $lembur_id = $request->input('lembur_id');
+
+    //     $jadwalList = JadwalKaryawan::with(['users', 'lembur'])
+    //         ->where('minggu_ke', $minggu_ke)
+    //         ->where('lembur_id', $lembur_id)
+    //         ->orderBy('tanggal', 'desc')
+    //         ->get();
+
+    //     return response()->json([
+    //         'jadwal' => $jadwalList
+    //     ]);
+    // }
 }
