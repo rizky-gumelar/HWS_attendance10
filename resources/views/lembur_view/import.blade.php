@@ -4,9 +4,9 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
 
 @extends($layout)
 
-@section('title', 'Manage Karyawan')
+@section('title', 'Lembur')
 
-@section('page-title', 'Manage Karyawan')
+@section('page-title', 'Lembur')
 
 @section('content')
 <!-- Modal -->
@@ -129,7 +129,7 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
 
 <!-- Modal -->
 <div class="modal fade" id="jadwalModal" tabindex="-1" role="dialog" aria-labelledby="jadwalModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Detail <!-- ur --></h5>
@@ -139,6 +139,7 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                 <table class="table table-bordered" id="jadwalDetailTable">
                     <thead>
                         <tr>
+                            <th>Tanggal</th>
                             <th>Nama</th>
                             <th>Tipe Lembur</th>
                             <th>Durasi</th>
@@ -170,29 +171,48 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                         const tbody = document.querySelector('#jadwalDetailTable tbody');
                         tbody.innerHTML = '';
 
+                        // Clear existing DataTable instance if exists
+                        if ($.fn.DataTable.isDataTable('#jadwalDetailTable')) {
+                            $('#jadwalDetailTable').DataTable().clear().destroy();
+                        }
+
                         if (data.jadwal.length === 0) {
-                            tbody.innerHTML = '<tr><td colspan="4">Tidak ada data</td></tr>';
+                            tbody.innerHTML = '<tr><td colspan="6">Tidak ada data</td></tr>';
                         } else {
                             data.jadwal.forEach(item => {
                                 tbody.innerHTML += `
-                                    <tr>
-                                        <td>${item.users?.nama_karyawan || 'User Tidak Ditemukan'}</td>
-                                        <td>${item.lembur?.tipe_lembur || 'Lembur Tidak Ditemukan'}</td>
-                                        <td>${item.lembur_jam || '-'}</td>
-                                        <td>${item.total_lembur || '-'}</td>
-                                        <td>${item.keterangan || '-'}</td>
-                                        <td>
-            <form action="${deleteLemburUrl}/${item.id}" method="POST" class="d-inline">
-                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                <input type="hidden" name="_method" value="PUT">
-                <button class="btn btn-danger" onclick="return confirm('Yakin ingin menghapus lembur ini?')">Delete</button>
-            </form>
-        </td>
-                                    </tr>`;
+            <tr>
+                <td>${item.tanggal || 'Tanggal Tidak Ditemukan'}</td>
+                <td>${item.users?.nama_karyawan || 'User Tidak Ditemukan'}</td>
+                <td>${item.lembur?.tipe_lembur || 'Lembur Tidak Ditemukan'}</td>
+                <td>${item.lembur_jam || '-'}</td>
+                <td>${item.total_lembur || '-'}</td>
+                <td>${item.keterangan || '-'}</td>
+                <td>
+                    <form action="${deleteLemburUrl}/${item.id}" method="POST" class="d-inline">
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                        <input type="hidden" name="_method" value="PUT">
+                        <button class="btn btn-danger" onclick="return confirm('Yakin ingin menghapus lembur ini?')">Delete</button>
+                    </form>
+                </td>
+            </tr>`;
                             });
                         }
 
-                        // SHOW MODAL - BOOTSTRAP 4 WAY (jQuery required)
+                        // Apply DataTables
+                        $('#jadwalDetailTable').DataTable({
+                            responsive: true,
+                            destroy: true,
+                            lengthChange: false,
+                            autoWidth: false,
+                            pageLength: 15,
+                            order: [
+                                [0, "desc"]
+                            ],
+                            buttons: ["copy", "csv", "excel", "pdf", "print", "colvis"]
+                        }).buttons().container().appendTo('#jadwalModal .modal-body .col-md-6:eq(0)');
+
+                        // Tampilkan modal
                         $('#jadwalModal').modal('show');
                     });
             });
