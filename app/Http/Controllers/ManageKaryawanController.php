@@ -107,7 +107,7 @@ class ManageKaryawanController extends Controller
     public function edit(User $karyawan)
     {
         $tokos = Toko::all();
-        $shifts = Shift::all();
+        $shifts = Shift::orderBy('nama_shift')->get();
         $divisis = Divisi::all();
         return view('manage-karyawan_view.edit', compact('karyawan', 'tokos', 'shifts', 'divisis'));
     }

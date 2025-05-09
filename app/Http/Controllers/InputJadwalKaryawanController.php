@@ -687,16 +687,17 @@ class InputJadwalKaryawanController extends Controller
         $sheetLembur->setCellValue('F3', 'Keterangan');
         $sheetLembur->getColumnDimension('A')->setWidth(13);
         $sheetLembur->getColumnDimension('B')->setWidth(20);
-        $sheetLembur->getColumnDimension('C')->setWidth(13);
+        $sheetLembur->getColumnDimension('C')->setWidth(15);
         $sheetLembur->getColumnDimension('D')->setWidth(13);
         $sheetLembur->getColumnDimension('E')->setWidth(13);
-        $sheetLembur->getColumnDimension('F')->setWidth(20);
+        $sheetLembur->getColumnDimension('F')->setWidth(25);
 
         // Ambil data lembur
         $lemburData = JadwalKaryawan::with(['users', 'lembur'])
             ->where('minggu_ke', $minggu_ke)
             ->whereNotNull('lembur_id') // hanya yang ada lembur
-            ->orderBy('tanggal', 'desc')
+            ->orderBy('tanggal', 'asc')
+            ->orderBy('lembur_id')
             ->get();
 
         $row = 4;

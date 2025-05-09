@@ -25,20 +25,23 @@ $isSpv = auth()->user()->role === 'spv';
         <div class="card-body">
             <div class="form-group">
                 <label for="id">ID Karyawan</label>
-                <input type="number" {{ $isSpv ? 'disabled' : '' }} class="form-control  @error('id') is-invalid @enderror" id="id" name="id"
+                <input type="number"
+                    {{ $isSpv ? 'readonly' : '' }} class="form-control  @error('id') is-invalid @enderror" id="id" name="id"
                     value="{{ old('id', $karyawan->id) }}"
                     placeholder="Masukkan id" required>
-                <input type="hidden" name="id" value="{{ $karyawan->id }}">
                 @error('id')
                 <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
             <div class="form-group">
                 <label for="nama_karyawan">Nama Karyawan</label>
-                <input type="text" {{ $isSpv ? 'disabled' : '' }} class="form-control  @error('nama_karyawan') is-invalid @enderror" id="nama_karyawan" name="nama_karyawan"
+                <input type="text"
+                    class="form-control @error('nama_karyawan') is-invalid @enderror"
+                    id="nama_karyawan"
+                    name="nama_karyawan"
                     value="{{ old('nama_karyawan', $karyawan->nama_karyawan) }}"
-                    placeholder="Masukkan nama" required>
-                <input type="hidden" name="nama_karyawan" value="{{ $karyawan->nama_karyawan }}">
+                    {{ $isSpv ? 'readonly' : '' }}>
+
                 @error('nama_karyawan')
                 <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
@@ -46,8 +49,8 @@ $isSpv = auth()->user()->role === 'spv';
 
             <div class="form-group">
                 <label for="tanggal_masuk">Tanggal Masuk</label>
-                <input type="date" {{ $isSpv ? 'disabled' : '' }} class="form-control  @error('tanggal_masuk') is-invalid @enderror" id="tanggal_masuk" name="tanggal_masuk" value="{{ old('tanggal_masuk', $karyawan->tanggal_masuk) }}" required>
-                <input type="hidden" name="tanggal_masuk" value="{{ $karyawan->tanggal_masuk }}">
+                <input type="date"
+                    {{ $isSpv ? 'readonly' : '' }} class="form-control  @error('tanggal_masuk') is-invalid @enderror" id="tanggal_masuk" name="tanggal_masuk" value="{{ old('tanggal_masuk', $karyawan->tanggal_masuk) }}" required>
                 @error('tanggal_masuk')
                 <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
@@ -55,35 +58,54 @@ $isSpv = auth()->user()->role === 'spv';
 
             <div class="form-group">
                 <label>Toko</label>
-                <select class="form-control" name="toko_id" required {{ $isSpv ? 'disabled' : '' }}>
-                    <option value="" disabled selected>Pilih Toko</option>
+                @if($isSpv)
+                <input type="text" class="form-control" value="{{ $karyawan->toko->nama_toko }}" readonly>
+                <input type="hidden" name="toko_id" value="{{ $karyawan->toko_id }}">
+                @else
+                <select class="form-control @error('toko_id') is-invalid @enderror" name="toko_id" required>
+                    <option value="" disabled>Pilih Toko</option>
                     @foreach($tokos as $toko)
-                    <option value="{{ $toko->id }}" {{ $karyawan->toko_id == $toko->id ? 'selected' : '' }}>{{ $toko->nama_toko }}</option>
+                    <option value="{{ $toko->id }}" {{ old('toko_id', $karyawan->toko_id) == $toko->id ? 'selected' : '' }}>
+                        {{ $toko->nama_toko }}
+                    </option>
                     @endforeach
-                    <input type="hidden" name="toko_id" value="{{ $karyawan->toko_id }}">
                 </select>
+                @error('toko_id')
+                <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+                @endif
             </div>
 
             <div class="form-group">
                 <label>Shift Default</label>
-                <select class="form-control" id="default_shift_id" name="default_shift_id" required>
-                    <option value="" disabled selected>Pilih Shift</option>
+                <select class="form-control @error('default_shift_id') is-invalid @enderror" name="default_shift_id" required>
+                    <option value="" disabled>Pilih Shift</option>
                     @foreach($shifts as $shift)
                     @if ($shift->id >= 1 && $shift->id <= 1000)
                         <option value="{{ $shift->id }}" {{ $karyawan->default_shift_id == $shift->id ? 'selected' : '' }}>{{ $shift->nama_shift }}</option>
                         @endif
                         @endforeach
                 </select>
+                @error('default_shift_id')
+                <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
             <div class="form-group">
                 <label>Divisi</label>
-                <select class="form-control" id="divisi_id" name="divisi_id" required {{ $isSpv ? 'disabled' : '' }}>
+                @if($isSpv)
+                <input type="text" class="form-control" value="{{ $karyawan->divisi->nama_divisi }}" readonly>
+                <input type="hidden" name="divisi_id" value="{{ $karyawan->divisi_id }}">
+                @else
+                <select class="form-control @error('divisi_id') is-invalid @enderror" name="divisi_id" required>
                     <option value="" disabled selected>Pilih Divisi</option>
                     @foreach($divisis as $divisi)
                     <option value="{{ $divisi->id }}" {{$karyawan->divisi_id == $divisi->id ? 'selected' : '' }}>{{ $divisi->nama_divisi }}</option>
                     @endforeach
-                    <input type="hidden" name="divisi_id" value="{{ $karyawan->divisi_id }}">
                 </select>
+                @error('divisi_id')
+                <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+                @endif
             </div>
 
             <div class="form-group">
@@ -113,12 +135,19 @@ $isSpv = auth()->user()->role === 'spv';
 
             <div class="form-group">
                 <label>Role</label>
-                <select class="form-control" name="role" required {{ $isSpv ? 'disabled' : '' }}>
+                @if($isSpv)
+                <input type="text" class="form-control" value="{{ $karyawan->role_name }}" readonly>
+                <input type="hidden" name="role" value="{{ $karyawan->role }}">
+                @else
+                <select class="form-control @error('role') is-invalid @enderror" name="role" required>
                     <option value="admin" {{ $karyawan->role == 'admin' ? 'selected' : '' }}>Admin</option>
                     <option value="spv" {{ $karyawan->role == 'spv' ? 'selected' : '' }}>Supervisor</option>
                     <option value="karyawan" {{ $karyawan->role == 'karyawan' ? 'selected' : '' }}>Karyawan</option>
                 </select>
-                <input type="hidden" name="role" value="{{ $karyawan->role }}">
+                @error('role')
+                <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+                @endif
             </div>
             @if(auth()->user()->role === 'admin')
             <div class="form-group">
@@ -133,8 +162,7 @@ $isSpv = auth()->user()->role === 'spv';
             <div class="form-group">
                 <label for="total_cuti">Total Cuti</label>
                 <input type="text" class="form-control  @error('total_cuti') is-invalid @enderror" id="total_cuti" name="total_cuti" placeholder="Masukkan total cuti"
-                    value="{{ old('total_cuti', $karyawan->total_cuti) }}" disabled required>
-                <input type="hidden" name="total_cuti" value="{{ $karyawan->total_cuti }}">
+                    value="{{ old('total_cuti', $karyawan->total_cuti) }}" readonly required>
                 @error('total_cuti')
                 <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
@@ -142,11 +170,18 @@ $isSpv = auth()->user()->role === 'spv';
             @endif
             <div class="form-group">
                 <label>Status</label>
-                <select class="form-control" name="status" required {{ $isSpv ? 'disabled' : '' }}>
+                @if($isSpv)
+                <input type="text" class="form-control" value="{{ $karyawan->status }}" readonly>
+                <input type="hidden" name="status" value="{{ $karyawan->status }}">
+                @else
+                <select class="form-control @error('status') is-invalid @enderror" name="status" required>
                     <option value="aktif" {{ $karyawan->status == 'aktif' ? 'selected' : '' }}>Aktif</option>
                     <option value="nonaktif" {{ $karyawan->status == 'nonaktif' ? 'selected' : '' }}>Nonaktif</option>
                 </select>
-                <input type="hidden" name="status" value="{{ $karyawan->status }}">
+                @error('status')
+                <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+                @endif
             </div>
         </div>
         <!-- /.card-body -->

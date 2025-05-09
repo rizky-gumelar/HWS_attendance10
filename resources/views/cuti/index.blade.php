@@ -11,8 +11,9 @@ $layout = 'layouts.karyawan_manage'; // fallback jika peran tidak cocok
 @endphp
 
 @php
-$percentCuti = $user->sisa_cuti/$user->total_cuti*100;
-$percentPoin = $user->poin_terakhir/$user->poin_tidak_hadir*100;
+
+$percentCuti = ($user->total_cuti != 0) ? $user->sisa_cuti / $user->total_cuti * 100 : 0;
+$percentPoin = ($user->poin_tidak_hadir != 0) ? $user->poin_terakhir / $user->poin_tidak_hadir * 100 : 0;
 @endphp
 
 @extends($layout)

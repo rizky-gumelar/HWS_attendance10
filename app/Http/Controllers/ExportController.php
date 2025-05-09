@@ -26,6 +26,9 @@ class ExportController extends Controller
         $sheet->setCellValue('A1', 'Nama Karyawan');
         $sheet->setCellValue('B1', 'Shift');
         $sheet->setCellValue('C1', 'Tanggal');
+        $sheet->setCellValue('D1', 'Hari');
+        $sheet->getColumnDimension('A')->setWidth(20);
+
 
         // Sheet 2: Karyawan List
         $karyawanSheet = new Worksheet($spreadsheet, 'KaryawanList');
@@ -93,6 +96,12 @@ class ExportController extends Controller
             $dateValidation->setPrompt('Format tanggal: YYYY-MM-DD');
             $dateValidation->setErrorTitle('Format Tidak Valid');
             $dateValidation->setError('Harap masukkan tanggal dengan format YYYY-MM-DD');
+
+            // Isi kolom Hari dengan rumus =TEXT(Cx;"dddd")
+            $sheet->setCellValue("D$row", '=TEXT(C' . $row . ',"dddd")');
+
+            // Optional: Format teks kolom Hari agar capitalized
+            $sheet->getStyle("D$row")->getFont()->setName('Calibri')->setSize(11);
         }
 
         // Sembunyikan sheet daftar
@@ -165,6 +174,8 @@ class ExportController extends Controller
         $sheet->setCellValue('E1', 'Durasi (jam)');
         $sheet->setCellValue('F1', 'Total');
         $sheet->setCellValue('G1', 'Keterangan Lembur');
+        $sheet->getColumnDimension('B')->setWidth(20);
+
 
         // Sheet 2: Karyawan List
         $karyawanSheet = new Worksheet($spreadsheet, 'KaryawanList');
