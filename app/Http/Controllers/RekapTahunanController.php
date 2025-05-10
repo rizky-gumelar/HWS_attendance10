@@ -70,7 +70,8 @@ class RekapTahunanController extends Controller
                 ->count() / 2;
 
 
-            $totalTerlambat = $this->jadwal_karyawan($userId, $tahun)->where('cek_keterlambatan', 1)->count() / 2;  // Menghitung keterlambatan
+            $totalTerlambat = $this->jadwal_karyawan($userId, $tahun)->where('cek_keterlambatan', 1)
+                ->whereYear('tanggal', $tahun)->count() / 2;  // Menghitung keterlambatan
             // 5. Saldo Cuti dan Poin Ketidakhadiran
             $saldoCuti = $user->total_cuti;  // Ambil saldo cuti dari relasi atau atribut lain
             $poinKetidakhadiran = $user->poin_tidak_hadir;  // Ambil poin ketidakhadiran

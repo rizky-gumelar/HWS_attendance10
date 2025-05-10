@@ -1,5 +1,12 @@
 @php
-$layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_manage';
+$role = auth()->user()->role;
+if (in_array($role, ['admin', 'super_admin'])) {
+$layout = 'layouts.manage';
+} elseif (in_array($role, ['spv', 'supervisor'])) {
+$layout = 'layouts.spv_manage';
+} else {
+$layout = 'layouts.karyawan_manage'; // fallback jika peran tidak cocok
+}
 $isAdmin = auth()->user()->role === 'admin';
 @endphp
 

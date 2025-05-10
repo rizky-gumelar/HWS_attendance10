@@ -17,7 +17,22 @@ $percentPoin = ($karyawan->poin_tidak_hadir != 0) ? $karyawan->poin_terakhir / $
 
 @section('page-title', 'Dashboard')
 
-@section('content')
+@section('content')<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Dashboard</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active">Dashboard</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
 <section class="content">
     <div class="container-fluid">
         <!-- Menambahkan penyesuaian kolom untuk layar besar -->
@@ -62,6 +77,47 @@ $percentPoin = ($karyawan->poin_tidak_hadir != 0) ? $karyawan->poin_terakhir / $
                 </div>
             </div>
         </div>
+        <div class="card">
+            <div class="card-body">
+                <h3>Riwayat Keterlambatan</h3>
+                <table id="example3" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <!-- <th>ID</th> -->
+                            <th>Tanggal</th>
+                            <th>Nama Karyawan</th>
+                            <th>Shift</th>
+                            <th>Jam Masuk</th>
+                            <th>Lembur</th>
+                            <th>Keterangan</th>
+                            <th>Minggu ke</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($telats as $telat)
+                        <tr>
+                            <!-- <td>{{ $telat->id }}</td> -->
+                            <td>{{ \Carbon\Carbon::parse($telat->tanggal)->locale('id')->isoFormat('YYYY-MM-DD, dddd ') }}</td>
+                            <td>{{ $telat->users->nama_karyawan }}</td>
+                            <td>{{ $telat->shift->nama_shift }}</td>
+                            <td>{{ $telat->absensi->jam_masuk ?? '-' }}</td>
+                            <td>
+                                @if($telat->lembur && $telat->lembur_jam)
+                                {{ $telat->lembur->tipe_lembur . ' - ' . $telat->lembur_jam . ' jam' }}
+                                @else
+                                -
+                                @endif
+                            </td>
+
+                            <td>{{ $telat->keterlambatan_name }}</td>
+                            <td>Minggu ke-{{ $telat->minggu_ke }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
     </div>
 </section>
 
