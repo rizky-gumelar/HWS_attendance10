@@ -34,16 +34,7 @@ use App\Http\Controllers\SettingController;
 |
 */
 
-Route::get('/', function () {
-    if (!Auth::check()) {
-        return redirect()->route('login'); // Jika belum login
-    }
 
-    $user = Auth::user();
-    $role = $user->role; // pastikan 'role' adalah nama kolom pada tabel users
-
-    return redirect("/{$role}/dashboard");
-});
 
 // Route::get('/{role}/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
@@ -58,10 +49,35 @@ Route::get('/', function () {
 // Route::middleware(['auth', 'karyawan'])->group(function () {
 //     Route::get('/karyawan/dashboard', [DashboardController::class, 'karyawan'])->name('karyawan.dashboard');
 // });
+Route::get('/', function () {
+    if (!Auth::check()) {
+        return redirect()->route('login');
+    }
 
-Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    $role = Auth::user()->role;
+
+    // Cek role valid sebelum redirect
+    if (in_array($role, ['admin', 'spv', 'karyawan'])) {
+        return redirect("/{$role}/dashboard");
+    }
+
+    // Jika role tidak valid
+    Auth::logout();
+    return redirect()->route('login')->withErrors('Akun Anda tidak memiliki hak akses.');
+});
+// Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+// Route::post('/login', [AuthController::class, 'login']);
+// Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [AuthController::class, 'login']);
+});
+// Handle GET ke /logout secara manual (redirect)
+Route::get('/logout', function () {
+    return redirect('/');
+});
+Route::middleware('auth')->post('/logout', [AuthController::class, 'logout'])->name('logout');
+
 
 //dashboard route
 

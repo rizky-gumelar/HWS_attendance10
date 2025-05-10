@@ -1,5 +1,6 @@
 @php
 $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_manage';
+$isAdmin = auth()->user()->role === 'admin';
 @endphp
 
 @extends($layout)
@@ -23,7 +24,19 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
         <div class="card-body">
             <div class="form-group">
                 <label>Nama Karyawan</label>
-                <input type="text" class="form-control" value="{{ auth()->user()->nama_karyawan }}" disabled>
+                @if(!$isAdmin)
+                <input type="text" class="form-control" value="{{ auth()->user()->nama_karyawan }}" readonly>
+                @else
+                <select class="form-control select2" id="user_id" name="user_id" required>
+                    <option value="" disabled selected>Pilih Karyawan</option>
+                    @foreach($users as $user)
+                    <option value="{{ $user->id }}">{{ $user->nama_karyawan }}</option>
+                    @endforeach
+                </select>
+                @error('user_id')
+                <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+                @endif
             </div>
             <div class="form-group">
                 <label>Jenis Cuti</label>

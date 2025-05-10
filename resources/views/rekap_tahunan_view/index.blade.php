@@ -98,6 +98,7 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                                     <th class="col-group-2">CF</th>
                                     <th class="col-group-2">Sakit</th>
                                     <th class="col-group-2">Setengah Hari</th>
+                                    <th class="col-group-2">Terlambat</th>
                                     <th class="col-group-3">Saldo Cuti</th>
                                     <th class="col-group-3">Poin Tidak Hadir</th>
                                     <th class="col-group-4">Cuti Terpakai</th>
@@ -115,6 +116,7 @@ $layout = auth()->user()->role === 'admin' ? 'layouts.manage' : 'layouts.spv_man
                                     <td class="col-group-2">{{ $data->cf }}</td>
                                     <td class="col-group-2">{{ $data->sakit }}</td>
                                     <td class="col-group-2">{{ $data->setengah_hari }}</td>
+                                    <td class="col-group-2">{{ $data->terlambat }}</td>
                                     <td class="col-group-3">{{ $data->saldo_cuti }}</td>
                                     <td class="col-group-3">{{ $data->poin_ketidakhadiran }}</td>
                                     <td class="col-group-4">{{ $data->cuti_terpakai }}</td>

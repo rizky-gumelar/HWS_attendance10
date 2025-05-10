@@ -8,8 +8,8 @@
 <!-- $saldo = auth()->user()->total_cuti;
 $poin = auth()->user()->poin_tidak_hadir; -->
 @php
-$percentCuti = $karyawan->sisa_cuti/$karyawan->total_cuti*100;
-$percentPoin = $karyawan->poin_terakhir/$karyawan->poin_tidak_hadir*100;
+$percentCuti = ($karyawan->total_cuti != 0) ? $karyawan->sisa_cuti / $karyawan->total_cuti * 100 : 0;
+$percentPoin = ($karyawan->poin_tidak_hadir != 0) ? $karyawan->poin_terakhir / $karyawan->poin_tidak_hadir * 100 : 0;
 @endphp
 @extends('layouts.karyawan_manage')
 

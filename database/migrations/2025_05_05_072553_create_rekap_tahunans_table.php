@@ -12,20 +12,22 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('rekap_tahunan', function (Blueprint $table) {
-            $table->integer('user_id');
+            $table->id();
+            $table->foreignId('user_id')->constrained('users')
+                ->onUpdate('cascade')->onDelete('cascade');
             $table->integer('tahun');
             $table->integer('cuti')->default(0);
             $table->integer('cf')->default(0);
             $table->integer('sakit')->default(0);
             $table->float('setengah_hari', 8, 2)->default(0);
+            $table->float('terlambat', 8, 2)->default(0);
             $table->integer('saldo_cuti')->default(0);
             $table->integer('poin_ketidakhadiran')->default(0);
 
             $table->float('cuti_terpakai', 8, 2)->storedAs('cuti + setengah_hari');
-            $table->float('poin_terpakai', 8, 2)->storedAs('cuti + cf + setengah_hari + sakit');
+            $table->float('poin_terpakai', 8, 2)->storedAs('cuti + cf + setengah_hari + sakit + terlambat')->nullable();
             $table->float('cuti_akhir', 8, 2)->storedAs('saldo_cuti - cuti_terpakai');
             $table->float('poin_akhir', 8, 2)->storedAs('poin_ketidakhadiran - poin_terpakai');
-            $table->primary(['user_id', 'tahun']); // Primary key gabungan
             $table->timestamps(); // Menambahkan created_at dan updated_at jika diperlukan
         });
     }

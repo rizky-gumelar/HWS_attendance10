@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\PengajuanCuti;
 use App\Models\JenisCuti;
 use App\Models\JadwalKaryawan;
+use App\Models\User;
 use App\Models\Absensi;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
@@ -29,12 +30,21 @@ class PengajuanCutiController extends Controller
     public function create()
     {
         $jenisCuti = JenisCuti::all();
-        return view('cuti.create', compact('jenisCuti'));
+        $users = User::orderBy('nama_karyawan')->get();
+        return view('cuti.create', compact('users', 'jenisCuti'));
     }
 
     public function store(Request $request)
     {
-        $user_id = auth()->user()->id;
+        $user = auth()->user();
+        if ($user->role === 'admin') {
+            $user_id = $request->user_id;
+        } elseif ($user->role === 'spv') {
+            $user_id = auth()->user()->id;
+        } elseif ($user->role === 'karyawan') {
+            $user_id = auth()->user()->id;
+        }
+
         // Cek apakah jadwal sudah ada untuk user_id, shift_id, dan tanggal
         $existingSchedule = PengajuanCuti::where('user_id', $user_id)
             ->where('status',  '!=', 'batal')
@@ -59,7 +69,7 @@ class PengajuanCutiController extends Controller
         }
 
         PengajuanCuti::create([
-            'user_id' => auth()->id(),
+            'user_id' => $user_id,
             'jenis_cuti_id' => $request->jenis_cuti_id,
             'tanggal' => $request->tanggal,
             'keterangan' => $request->keterangan,

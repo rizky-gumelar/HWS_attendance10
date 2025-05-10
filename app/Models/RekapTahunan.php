@@ -11,19 +11,15 @@ class RekapTahunan extends Model
 
     protected $table = 'rekap_tahunan';
 
-    // Tentukan kolom primary key yang digunakan
-    protected $primaryKey = ['user_id', 'tahun']; // Kombinasi user_id dan tahun sebagai primary key
-
-    // Karena kita tidak menggunakan auto-increment pada primary key, set incrementing ke false
-    public $incrementing = false;
-
     protected $fillable = [
+        'id',
         'user_id',
         'tahun',
         'cuti',
         'cf',
         'sakit',
         'setengah_hari',
+        'terlambat',
         'saldo_cuti',
         'poin_ketidakhadiran',
         'cuti_terpakai',
