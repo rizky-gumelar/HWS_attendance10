@@ -55,11 +55,12 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function hitungPoin()
+    public function hitungPoin($tahun)
     {
         $totalBobotCuti = $this->pengajuan_cuti()
             ->where('status', 'disetujui admin')
             ->with('jenis_cuti')  // pastikan relasi diload
+            ->whereYear('tanggal', $tahun)
             ->get()
             ->sum(function ($cuti) {
                 $status = $cuti->jenis_cuti->status;
@@ -83,11 +84,12 @@ class User extends Authenticatable
         return $poinAkhir;  // Pastikan poin tidak kurang dari 0
     }
 
-    public function hitungCuti()
+    public function hitungCuti($tahun)
     {
         $totalBobotCuti = $this->pengajuan_cuti()
             ->where('status', 'disetujui admin')
-            ->with('jenis_cuti')  // pastikan relasi diload
+            ->with('jenis_cuti')
+            ->whereYear('tanggal', $tahun) // pastikan relasi diload
             ->get()
             ->sum(function ($cuti) {
                 return $cuti->jenis_cuti->status;  // asumsi kolom bobot bernama 'status' di jenis_cuti

@@ -43,6 +43,41 @@ class LaporanMingguanController extends Controller
         return view('mingguan_view.index', compact('mingguans', 'mingguKe', 'startDate', 'endDate'));
     }
 
+    public function view(Request $request)
+    {
+        $user = auth()->user();
+        // $karyawans = User::where('status', 'aktif')->get();
+        // $mingguans = LaporanMingguan::all();
+        // $karyawans = User::all();
+        $mingguKe = $request->query('minggu_ke', Carbon::today()->startOfWeek(Carbon::SATURDAY)->weekOfYear);
+        // Hitung tanggal awal dan akhir dari minggu_ke
+        $tahun = Carbon::now()->year;
+        $startDate = Carbon::now()->setISODate($tahun, $mingguKe + 1)->startOfWeek(Carbon::SATURDAY);
+        $endDate = $startDate->copy()->addDays(6);
+
+        //------------------------------------------------
+        $mingguans = LaporanMingguan::where('minggu_ke', $mingguKe)
+            ->whereHas('users', function ($query) use ($user) {
+                $query->where('id', $user->id)->where('status', 'aktif');
+            })
+            ->with(['users' => function ($query) use ($user) {
+                $query->where('id', $user->id)->where('status', 'aktif');
+            }])
+            ->get();
+
+        // $mingguans = LaporanMingguan::where('minggu_ke', $mingguKe)
+        //     ->whereHas('users', function ($query) {
+        //         $query->where('status', 'aktif');
+        //     })
+        //     ->with(['users' => function ($query) {
+        //         $query->where('status', 'aktif');
+        //     }])
+        //     ->get();
+
+        $karyawans = User::where('status', 'aktif')->get();
+        // $mingguan = User::orderBy('status', 'asc')->orderBy('id', 'asc')->get();
+        return view('mingguan_view.view-mingguan', compact('mingguans', 'mingguKe', 'startDate', 'endDate'));
+    }
 
 
     public function generateLaporanMingguanForAll($mingguKe)

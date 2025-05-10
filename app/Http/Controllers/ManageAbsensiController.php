@@ -25,6 +25,10 @@ class ManageAbsensiController extends Controller
         // Jika ada rentang tanggal, filter berdasarkan tanggal
         if ($startDate && $endDate) {
             $query->whereBetween('tanggal', [$startDate, $endDate]);
+        } elseif (!$startDate || !$endDate) {
+            $startDate = Carbon::now()->subMonth()->startOfMonth()->toDateString(); // Start of the previous month
+            $endDate = Carbon::now()->endOfMonth()->toDateString(); // End of the current month
+            $query->whereBetween('tanggal', [$startDate, $endDate]);
         }
         // Ambil data yang sudah difilter
         $absensis = $query->get();

@@ -11,10 +11,10 @@ class KaryawanController extends Controller
 {
     public function index()
     {
-        $user = auth()->user();
-        $user->poin_terakhir = $user->hitungPoin();
-        $user->sisa_cuti = $user->hitungCuti();
         $tahun = Carbon::now()->year;
+        $user = auth()->user();
+        $user->poin_terakhir = $user->hitungPoin($tahun);
+        $user->sisa_cuti = $user->hitungCuti($tahun);
 
         $telats = JadwalKaryawan::with(['users', 'shift', 'absensi', 'lembur'])
             ->where('user_id', $user->id)

@@ -16,19 +16,21 @@ use PhpOffice\PhpSpreadsheet\Style\Font;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
+use Carbon\Carbon;
 
 class ManageKaryawanController extends Controller
 {
     public function index()
     {
         $user = auth()->user();
+        $tahun = Carbon::now()->year;
         // $karyawans = User::where('status', 'aktif')->get();
         if ($user->role === 'admin') {
             // $karyawans = User::all(); // atau pakai filter status jika perlu
             $karyawans = User::all()->map(function ($user) {
                 // Tambahkan poin ketidakhadiran setiap karyawan
-                $user->poin_terakhir = $user->hitungPoin();
-                $user->sisa_cuti = $user->hitungCuti();
+                $user->poin_terakhir = $user->hitungPoin($tahun);
+                $user->sisa_cuti = $user->hitungCuti($tahun);
                 return $user;
             });
         } else if ($user->role === 'spv') {
@@ -37,8 +39,8 @@ class ManageKaryawanController extends Controller
                 ->where('role', '!=', 'admin')
                 ->get()
                 ->map(function ($user) {
-                    $user->poin_terakhir = $user->hitungPoin();
-                    $user->sisa_cuti = $user->hitungCuti();
+                    $user->poin_terakhir = $user->hitungPoin($tahun);
+                    $user->sisa_cuti = $user->hitungCuti($tahun);
                     return $user;
                 });
             // ->where('id', '!=', $user->id) // kalau kamu ingin SPV tidak melihat dirinya sendiri

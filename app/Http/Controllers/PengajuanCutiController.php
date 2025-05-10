@@ -15,12 +15,13 @@ class PengajuanCutiController extends Controller
 {
     public function index()
     {
+        $tahun = Carbon::now()->year;
         $user = auth()->user();
 
         $query = PengajuanCuti::with('users', 'jenis_cuti')->orderBy('created_at', 'desc')->where('user_id', $user->id);
 
-        $user->poin_terakhir = $user->hitungPoin();
-        $user->sisa_cuti = $user->hitungCuti();
+        $user->poin_terakhir = $user->hitungPoin($tahun);
+        $user->sisa_cuti = $user->hitungCuti($tahun);
 
         // Ambil data yang sudah difilter
         $pengajuanCuti = $query->get();

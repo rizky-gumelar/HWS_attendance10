@@ -63,6 +63,14 @@ $nama_user = auth()->user()->nama_karyawan;
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="{{ route('mingguan.view') }}" class="nav-link">
+                        <i class="nav-icon fas fa-file-alt"></i>
+                        <p>
+                            Laporan Mingguan
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="{{ route('manage-karyawan.edit-password') }}" class="nav-link">
                         <i class="nav-icon fas fa-calendar-times"></i>
                         <p>

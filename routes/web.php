@@ -242,6 +242,7 @@ Route::middleware(['auth', 'role:admin|spv|karyawan'])->group(function () {
     Route::put('/update-password', [ManageKaryawanController::class, 'updatePassword'])->name('manage-karyawan.update-password');
     Route::get('/cuti/create', [PengajuanCutiController::class, 'create'])->name('cuti.create');
     Route::post('/cuti/store', [PengajuanCutiController::class, 'store'])->name('cuti.store');
+    Route::get('/cek-mingguan', [LaporanMingguanController::class, 'view'])->name('mingguan.view');
 });
 
 // Route::get('/run-migrate-1234', function () {
